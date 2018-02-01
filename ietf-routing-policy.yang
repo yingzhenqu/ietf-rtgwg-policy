@@ -100,7 +100,8 @@ module ietf-routing-policy {
     description
       "Initial revision.";
     reference
-     "RFC XXXX: Routing Policy Configuration Model for Service Provider Networks";
+     "RFC XXXX: Routing Policy Configuration Model for Service 
+      Provider Networks";
   }
 
 

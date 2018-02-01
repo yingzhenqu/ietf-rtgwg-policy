@@ -87,7 +87,8 @@
       consistent, intuitive way in heterogeneous
       environments with routers supplied by multiple vendors.
       </t>
-      <t>The YANG modules in this document conform to the Network Management Datastore Architecture (NMDA)<xref target="I-D.ietf-netmod-revised-datastores"/>.
+      <t>The YANG modules in this document conform to the Network Management Datastore
+         Architecture (NMDA)<xref target="I-D.ietf-netmod-revised-datastores"/>.
       </t>
       <section title = "Goals and approach" anchor="goals">
       <t>
@@ -291,26 +292,28 @@
 
         <figure>
           <artwork>
-    +--rw routing-policy
-      +--rw policy-definitions
-          +--rw policy-definition* [name]
-             +--rw name          string
-             +--rw statements
-                +--rw statement* [name]
-                   +--rw conditions
-                   |  +--rw call-policy?           
-                   |  +--rw install-protocol-eq?   
-                   |  +--rw match-interface
-                   |  |  +--rw interface?  
-                   |  +--rw match-prefix-set
-                   |  |  +--rw prefix-set?       
-                   |  |  +--rw match-set-options?  
-                   |  +--rw match-neighbor-set
-                   |  |  +--rw neighbor-set?        
-                   |  |  +--rw match-set-options?   match-set-options-restricted-type
-                   |  +--rw match-tag-set
-                   |     +--rw tag-set?            
-                   |     +--rw match-set-options?   match-set-options-restricted-type
++--rw routing-policy
+  +--rw policy-definitions
+      +--rw policy-definition* [name]
+         +--rw name          string
+         +--rw statements
+            +--rw statement* [name]
+               +--rw conditions
+               |  +--rw call-policy?           
+               |  +--rw install-protocol-eq?   
+               |  +--rw match-interface
+               |  |  +--rw interface?  
+               |  +--rw match-prefix-set
+               |  |  +--rw prefix-set?       
+               |  |  +--rw match-set-options?  
+               |  +--rw match-neighbor-set
+               |  |  +--rw neighbor-set?        
+               |  |  +--rw match-set-options?   
+               |  |        match-set-options-restricted-type
+               |  +--rw match-tag-set
+               |     +--rw tag-set?            
+               |     +--rw match-set-options?   
+                           match-set-options-restricted-type
 
         </artwork>
         </figure>
@@ -462,37 +465,38 @@
 
       <figure>
         <artwork>
- +--rw routing-policy
-    +--rw defined-sets
-       +--rw prefix-sets
-       |  +--rw prefix-set* [prefix-set-name]
-       |     +--rw prefix-set-name
-       |     +--rw prefix* [ip-prefix masklength-range]
-       |        +--rw ip-prefix
-       |        +--rw masklength-range
-       +--rw neighbor-sets
-       |  +--rw neighbor-set* [neighbor-set-name]
-       |     +--rw neighbor-set-name
-       |     +--rw neighbor* [address]
-       |        +--rw address
-       +--rw tag-sets
-       |  +--rw tag-set* [tag-set-name]
-       |     +--rw tag-set-name
-       |     +--rw tag* [value]
-       |        +--rw value
-       +--rw bgp-pol:bgp-defined-sets
-          +--rw bgp-pol:community-sets
-          |  +--rw bgp-pol:community-set* [community-set-name]
-          |     +--rw bgp-pol:community-set-name
-          |     +--rw bgp-pol:community-member*
-          +--rw bgp-pol:ext-community-sets
-          |  +--rw bgp-pol:ext-community-set* [ext-community-set-name]
-          |     +--rw bgp-pol:ext-community-set-name
-          |     +--rw bgp-pol:ext-community-member*
-          +--rw bgp-pol:as-path-sets
-             +--rw bgp-pol:as-path-set* [as-path-set-name]
-                +--rw bgp-pol:as-path-set-name
-                +--rw bgp-pol:as-path-set-member*
++--rw routing-policy
+  +--rw defined-sets
+     +--rw prefix-sets
+     |  +--rw prefix-set* [prefix-set-name]
+     |     +--rw prefix-set-name
+     |     +--rw prefix* [ip-prefix masklength-range]
+     |        +--rw ip-prefix
+     |        +--rw masklength-range
+     +--rw neighbor-sets
+     |  +--rw neighbor-set* [neighbor-set-name]
+     |     +--rw neighbor-set-name
+     |     +--rw neighbor* [address]
+     |        +--rw address
+     +--rw tag-sets
+     |  +--rw tag-set* [tag-set-name]
+     |     +--rw tag-set-name
+     |     +--rw tag* [value]
+     |        +--rw value
+     +--rw bgp-pol:bgp-defined-sets
+        +--rw bgp-pol:community-sets
+        |  +--rw bgp-pol:community-set* [community-set-name]
+        |     +--rw bgp-pol:community-set-name
+        |     +--rw bgp-pol:community-member*
+        +--rw bgp-pol:ext-community-sets
+        |  +--rw bgp-pol:ext-community-set* 
+        |         [ext-community-set-name]
+        |     +--rw bgp-pol:ext-community-set-name
+        |     +--rw bgp-pol:ext-community-member*
+        +--rw bgp-pol:as-path-sets
+           +--rw bgp-pol:as-path-set* [as-path-set-name]
+              +--rw bgp-pol:as-path-set-name
+              +--rw bgp-pol:as-path-set-member*
         </artwork>
       </figure>
 
@@ -644,7 +648,8 @@ module ietf-routing-policy {
     description
       "Initial revision.";
     reference
-     "RFC XXXX: Routing Policy Configuration Model for Service Provider Networks";
+     "RFC XXXX: Routing Policy Configuration Model for Service
+      Provider Networks";
   }
 
 
@@ -1510,7 +1515,6 @@ module ietf-routing-policy {
 
     <references title="Informative references">
       <?rfc include="http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-bgp-model.xml"?>
-      <?rfc include="http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.openconfig-netmod-opstate.xml"?>
     </references>
 
     <section title="Acknowledgements">
