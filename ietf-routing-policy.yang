@@ -111,11 +111,11 @@ module ietf-routing-policy {
     // this typedef retained for name compatibiity with default
     // import and export policy
     type enumeration {
-      enum ACCEPT_ROUTE {
+      enum accept-route {
         description
           "Default policy to accept the route";
       }
-      enum REJECT_ROUTE {
+      enum reject-route {
         description
           "Default policy to reject the route";
       }
@@ -127,10 +127,10 @@ module ietf-routing-policy {
 
   typedef policy-result-type {
     type enumeration {
-      enum ACCEPT_ROUTE {
+      enum accept-route {
         description "Policy accepts the route";
       }
-      enum REJECT_ROUTE {
+      enum reject-route {
         description "Policy rejects the route";
       }
     }
@@ -155,20 +155,20 @@ module ietf-routing-policy {
 
   typedef match-set-options-type {
     type enumeration {
-      enum ANY {
+      enum any {
         description "match is true if given value matches any member
         of the defined set";
       }
-      enum ALL {
+      enum all {
         description "match is true if given value matches all
         members of the defined set";
       }
-      enum INVERT {
+      enum invert {
         description "match is true if given value does not match any
         member of the defined set";
       }
     }
-    default ANY;
+    default any;
     description
       "Options that govern the behavior of a match statement.  The
       default behavior is ANY, i.e., the given value matches any
@@ -177,16 +177,16 @@ module ietf-routing-policy {
 
   typedef match-set-options-restricted-type {
     type enumeration {
-      enum ANY {
+      enum any {
         description "match is true if given value matches any member
         of the defined set";
       }
-      enum INVERT {
+      enum invert {
         description "match is true if given value does not match any
         member of the defined set";
       }
     }
-    default ANY;
+    default any;
     description
       "Options that govern the behavior of a match statement.  The
       default behavior is ANY, i.e., the given value matches any
@@ -198,7 +198,7 @@ module ietf-routing-policy {
 
   // grouping statements
 
-  grouping prefix-set-config {
+  grouping prefix-set {
     description
       "Configuration data for prefix sets used in policy
       definitions.";
@@ -212,15 +212,15 @@ module ietf-routing-policy {
 
     leaf mode {
       type enumeration {
-        enum IPV4 {
+        enum ipv4 {
           description
             "Prefix set contains IPv4 prefixes only";
         }
-        enum IPV6 {
+        enum ipv6 {
           description
             "Prefix set contains IPv6 prefixes only";
         }
-        enum MIXED {
+        enum mixed {
           description
             "Prefix set contains mixed IPv4 and IPv6 prefixes";
         }
@@ -237,11 +237,6 @@ module ietf-routing-policy {
 
   }
 
-  grouping prefix-set-state {
-    description
-      "Operational state data for prefix sets";
-  }
-
   grouping prefix-set-top {
     description
       "Top-level data definitions for a list of IPv4 or IPv6
@@ -256,15 +251,14 @@ module ietf-routing-policy {
         description
           "List of the defined prefix sets";
 
-        uses prefix-set-config;
-        uses prefix-set-state;
+        uses prefix-set;
 
         uses prefix-top;
       }
     }
   }
 
-  grouping prefix-config {
+  grouping prefix {
     description
       "Configuration data for a prefix definition";
 
@@ -297,10 +291,6 @@ module ietf-routing-policy {
     }
   }
 
-  grouping prefix-state {
-    description
-      "Operational state data for prefix definitions";
-  }
 
   grouping prefix-top {
     description
@@ -311,20 +301,19 @@ module ietf-routing-policy {
         "Enclosing container for the list of prefixes in a policy
         prefix list";
 
-      list prefix {
+      list prefix-list {
         key "ip-prefix masklength-range";
         description
           "List of prefixes in the prefix set";
 
-        uses prefix-config;
-        uses prefix-state;
+        uses prefix;
       }
     }
   }
 
-  grouping neighbor-set-config {
+  grouping neighbor-set {
     description
-      "Configuration data for neighbor set definitions";
+      "This grouping provides neighbor set definitions";
 
     leaf name {
       type string;
@@ -338,11 +327,6 @@ module ietf-routing-policy {
       description
         "List of IP addresses in the neighbor set";
     }
-  }
-
-  grouping neighbor-set-state {
-    description
-      "Operational state data for neighbor set definitions";
   }
 
   grouping neighbor-set-top {
@@ -360,15 +344,14 @@ module ietf-routing-policy {
         description
           "List of defined neighbor sets for use in policies.";
 
-        uses neighbor-set-config;
-        uses neighbor-set-state;
+        uses neighbor-set;
       }
     }
   }
 
-  grouping tag-set-config {
+  grouping tag-set {
     description
-      "Configuration data for tag set definitions.";
+      "This grouping provides tag set definitions.";
 
     leaf name {
       type string;
@@ -382,11 +365,6 @@ module ietf-routing-policy {
       description
         "Value of the tag set member";
     }
-  }
-
-  grouping tag-set-state {
-    description
-      "Operational state data for tag set definitions.";
   }
 
   grouping tag-set-top {
@@ -403,8 +381,7 @@ module ietf-routing-policy {
         description
           "List of tag set definitions.";
 
-        uses tag-set-config;
-        uses tag-set-state;
+        uses tag-set;
 
       }
     }
@@ -438,9 +415,9 @@ module ietf-routing-policy {
     }
   }
 
-  grouping match-interface-condition-config {
+  grouping match-interface-condition {
     description
-      "Configuration data for interface match condition";
+      "This grouping defiens interface match condition";
 
     leaf interface {
       type leafref {
@@ -454,10 +431,6 @@ module ietf-routing-policy {
     //@subinterface
   }
 
-  grouping match-interface-condition-state {
-    description
-      "Operational state data for interface match condition";
-  }
 
   grouping match-interface-condition-top {
     description
@@ -468,14 +441,13 @@ module ietf-routing-policy {
         "Top-level container for interface match conditions";
 
 
-      uses match-interface-condition-config;
-      uses match-interface-condition-state;
+      uses match-interface-condition;
     }
   }
 
-  grouping prefix-set-condition-config {
+  grouping prefix-set-condition {
     description
-      "Configuration data for prefix-set conditions";
+      "This grouping provides prefix-set conditions";
 
     leaf prefix-set {
         type leafref {
@@ -487,12 +459,6 @@ module ietf-routing-policy {
       uses match-set-options-restricted-group;
   }
 
-
-  grouping prefix-set-condition-state {
-    description
-      "Operational state data for prefix-set conditions";
-  }
-
   grouping prefix-set-condition-top {
     description
       "Top-level grouping for prefix-set conditions";
@@ -502,14 +468,13 @@ module ietf-routing-policy {
         "Match a referenced prefix-set according to the logic
         defined in the match-set-options leaf";
 
-      uses prefix-set-condition-config; 
-      uses prefix-set-condition-state;
+      uses prefix-set-condition; 
     }
   }
 
-  grouping neighbor-set-condition-config {
+  grouping neighbor-set-condition {
     description
-      "Configuration data for neighbor-set conditions";
+      "Data for neighbor-set conditions";
 
     leaf neighbor-set {
       type leafref {
@@ -525,10 +490,6 @@ module ietf-routing-policy {
     uses match-set-options-restricted-group;
   }
 
-  grouping neighbor-set-condition-state {
-    description
-      "Operational state data for neighbor-set conditions";
-  }
 
   grouping neighbor-set-condition-top {
     description
@@ -539,14 +500,13 @@ module ietf-routing-policy {
         "Match a referenced neighbor set according to the logic
         defined in the match-set-options-leaf";
 
-      uses neighbor-set-condition-config;
-      uses neighbor-set-condition-state;
+      uses neighbor-set-condition;
     }
   }
 
-  grouping tag-set-condition-config {
+  grouping tag-set-condition {
     description
-      "Configuration data for tag-set condition statements";
+      "Data for tag-set condition statements";
 
     leaf tag-set {
       type leafref {
@@ -561,10 +521,6 @@ module ietf-routing-policy {
     uses match-set-options-restricted-group;
   }
 
-  grouping tag-set-condition-state {
-    description
-      "Operational state data for tag-set condition statements";
-  }
 
   grouping tag-set-condition-top {
     description
@@ -575,8 +531,7 @@ module ietf-routing-policy {
         "Match a referenced tag set according to the logic defined
         in the match-options-set leaf";
 
-      uses tag-set-condition-config;
-      uses tag-set-condition-state;
+      uses tag-set-condition;
     }
   }
 
@@ -605,9 +560,9 @@ module ietf-routing-policy {
   }
 
 
-  grouping policy-conditions-config {
+  grouping policy-conditions {
     description
-      "Configuration data for general policy conditions, i.e., those
+      "Data for general policy conditions, i.e., those
       not related to match-sets";
 
       leaf call-policy {
@@ -643,11 +598,6 @@ module ietf-routing-policy {
       }
   }
 
-  grouping policy-conditions-state {
-    description
-      "Operational state data for policy conditions";
-  }
-
   grouping policy-conditions-top {
     description
       "Top-level grouping for policy conditions";
@@ -656,16 +606,15 @@ module ietf-routing-policy {
       description
         "Condition statements for the current policy statement";
 
-      uses policy-conditions-config;
-      uses policy-conditions-state;
+      uses policy-conditions;
 
       uses generic-conditions;
     }
   }
 
-  grouping policy-statements-config {
+  grouping policy-statements {
     description
-      "Configuration data for policy statements";
+      "Data for policy statements";
 
     leaf name {
       type string;
@@ -674,22 +623,14 @@ module ietf-routing-policy {
     }
   }
 
-  grouping policy-statements-state {
-    description
-      "Operational state data for policy statements";
-  }
 
-  grouping policy-actions-config {
+  grouping policy-actions {
     description
-      "Configuration data for policy actions";
+      "Grouping for policy actions";
 
     uses generic-actions;
   }
 
-  grouping policy-actions-state {
-    description
-      "Operational state data for policy actions";
-  }
 
   grouping policy-actions-top {
     description
@@ -699,8 +640,7 @@ module ietf-routing-policy {
       description
         "Top-level container for policy action statements";
 
-      uses policy-actions-config;
-      uses policy-actions-state;
+      uses policy-actions;
     }
   }
 
@@ -721,8 +661,7 @@ module ietf-routing-policy {
           the order specified (see the description of policy
           evaluation at the top of this module.";
 
-        uses policy-statements-config;
-        uses policy-statements-state;
+        uses policy-statements;
 
         uses policy-conditions-top;
         uses policy-actions-top;
@@ -731,9 +670,9 @@ module ietf-routing-policy {
   }
 
 
-  grouping policy-definitions-config {
+  grouping policy-definitions {
     description
-      "Configuration data for policy definitions";
+      "This grouping provides policy definitions";
 
     leaf name {
       type string;
@@ -743,14 +682,9 @@ module ietf-routing-policy {
     }
   }
 
-  grouping policy-definitions-state {
+  grouping apply-policy-import {
     description
-      "Operational state data for policy definitions";
-  }
-
-  grouping apply-policy-import-config {
-    description
-      "Configuration data for applying import policies";
+      "Grouping for applying import policies";
 
     leaf-list import-policy {
       type leafref {
@@ -770,7 +704,7 @@ module ietf-routing-policy {
 
     leaf default-import-policy {
       type default-policy-type;
-      default REJECT_ROUTE;
+      default reject-route;
       description
         "explicitly set a default policy if no policy definition
         in the import policy chain is satisfied.";
@@ -778,9 +712,9 @@ module ietf-routing-policy {
 
   }
 
-  grouping apply-policy-export-config {
+  grouping apply-policy-export {
     description
-      "Configuration data for applying export policies";
+      "Grouping for applying export policies";
 
     leaf-list export-policy {
       type leafref {
@@ -800,7 +734,7 @@ module ietf-routing-policy {
 
     leaf default-export-policy {
       type default-policy-type;
-      default REJECT_ROUTE;
+      default reject-route;
       description
         "explicitly set a default policy if no policy definition
         in the export policy chain is satisfied.";
@@ -808,24 +742,23 @@ module ietf-routing-policy {
   }
 
 
-  grouping apply-policy-config {
+  grouping apply-policy {
     description
       "Configuration data for routing policies";
 
-    uses apply-policy-import-config;
-    uses apply-policy-export-config;
+    uses apply-policy-import;
+    uses apply-policy-export;
+
+    container apply-policy-state {
+      description
+        "Operational state associated with routing policy";
+      
+      //TODO: identify additional state data beyond the intended
+      //policy configuration.
+    }
 
   }
 
-
-
-  grouping apply-policy-state {
-    description
-      "Operational state associated with routing policy";
-
-    //TODO: identify additional state data beyond the intended
-    //policy configuration.
-  }
 
   grouping apply-policy-group {
     description
@@ -840,8 +773,7 @@ module ietf-routing-policy {
         routing table, i.e., export (send) and import (receive),
         depending on the context.";
 
-      uses apply-policy-config;
-      uses apply-policy-state;
+      uses apply-policy;
  
     }
   }
@@ -873,8 +805,7 @@ module ietf-routing-policy {
           referenced (by name) in policy chains specified in import
           or export configuration statements.";
 
-        uses policy-definitions-config;
-        uses policy-definitions-state;
+        uses policy-definitions;
 
         uses policy-statements-top;
       }
