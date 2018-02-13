@@ -20,6 +20,14 @@ module ietf-routing-policy {
     prefix "rt";
   }
 
+  import ietf-interfaces-common {
+    prefix if-cmn;
+  }
+
+  import ietf-if-l3-vlan {
+    prefix "if-l3-vlan";
+  }
+
  
  organization
     "IETF RTGWG - Routing Area Working Group";
@@ -96,7 +104,7 @@ module ietf-routing-policy {
     subroutine performed any changes to the route).";
 
 
-  revision "2017-12-28" {
+  revision "2018-02-14" {
     description
       "Initial revision.";
     reference
@@ -420,7 +428,18 @@ module ietf-routing-policy {
           subinterface is required, this leaf must be specified
           to indicate the base interface.";
       }
-      //@subinterface
+      leaf subinterface {
+        type leafref {
+          path "/if:interfaces/if:interface/if-cmn:encapsulation"
+             + "/if-l3-vlan:dot1q-vlan"
+             + "/if-l3-vlan:outer-tag/if-l3-vlan:vlan-id";
+        }
+        description
+          "Reference to a subinterface -- this requires the base
+           interface to be specified using the interface leaf in
+           this container.  If only a reference to a base interface
+           is requuired, this leaf should not be set.";
+      }
       
       description
         "Container for interface match conditions";
