@@ -28,7 +28,7 @@ module ietf-routing-policy {
     prefix "if-l3-vlan";
   }
 
- 
+
  organization
     "IETF RTGWG - Routing Area Working Group";
   contact
@@ -49,66 +49,67 @@ module ietf-routing-policy {
 
   description
     "This module describes a YANG model for routing policy
-    configuration. It is a limited subset of all of the policy
-    configuration parameters available in the variety of vendor
-    implementations, but supports widely used constructs for managing
-    how routes are imported, exported, and modified across different
-    routing protocols.  This module is intended to be used in
-    conjunction with routing protocol configuration models (e.g.,
-    BGP) defined in other modules.
+     configuration. It is a limited subset of all of the policy
+     configuration parameters available in the variety of vendor
+     implementations, but supports widely used constructs for
+     managing how routes are imported, exported, and modified across
+     different routing protocols.  This module is intended to be used
+     in conjunction with routing protocol configuration modules
+     (e.g., BGP) defined in other models.
 
-    Route policy expression:
+     Route policy expression:
 
-    Policies are expressed as a set of top-level policy definitions,
-    each of which consists of a sequence of policy statements. Policy
-    statements consist of simple condition-action tuples. Conditions
-    may include mutiple match or comparison operations, and similarly
-    actions may be multitude of changes to route attributes or a
-    final disposition of accepting or rejecting the route.
+     Policies are expressed as a set of top-level policy definitions,
+     each of which consists of a sequence of policy statements.
+     Policy statements consist of simple condition-action tuples.
+     Conditions may include mutiple match or comparison operations,
+     and similarly actions may be multitude of changes to route
+     attributes or a final disposition of accepting or rejecting the
+     route.
 
-    Route policy evaluation:
+     Route policy evaluation:
 
-    Policy definitions are referenced in routing protocol
-    configurations using import and export configuration statements.
-    The arguments are members of an ordered list of named policy
-    definitions which comprise a policy chain, and optionally, an
-    explicit default policy action (i.e., reject or accept).
+     Policy definitions are referenced in routing protocol
+     configurations using import and export configuration statements.
+     The arguments are members of an ordered list of named policy
+     definitions which comprise a policy chain, and optionally, an
+     explicit default policy action (i.e., reject or accept).
 
-    Evaluation of each policy definition proceeds by evaluating its
-    corresponding individual policy statements in order.  When a
-    condition statement in a policy statement is satisfied, the
-    corresponding action statement is executed.  If the action
-    statement has either accept-route or reject-route actions, policy
-    evaluation of the current policy definition stops, and no further
-    policy definitions in the chain are evaluated.
+     Evaluation of each policy definition proceeds by evaluating its
+     corresponding individual policy statements in order.  When a
+     condition statement in a policy statement is satisfied, the
+     corresponding action statement is executed.  If the action
+     statement has either accept-route or reject-route actions,
+     policy evaluation of the current policy definition stops, and
+     no further policy definitions in the chain are evaluated.
 
-    If the condition is not satisfied, then evaluation proceeds to
-    the next policy statement.  If none of the policy statement
-    conditions are satisfied, then evaluation of the current policy
-    definition stops, and the next policy definition in the chain is
-    evaluated.  When the end of the policy chain is reached, the
-    default route disposition action is performed (i.e., reject-route
-    unless an an alternate default action is specified for the
-    chain).
+     If the condition is not satisfied, then evaluation proceeds to
+     the next policy statement.  If none of the policy statement
+     conditions are satisfied, then evaluation of the current policy
+     definition stops, and the next policy definition in the chain is
+     evaluated.  When the end of the policy chain is reached, the
+     default route disposition action is performed (i.e.,
+     reject-route unless an alternate default action is specified
+     for the chain).
 
-    Policy 'subroutines' (or nested policies) are supported by
-    allowing policy statement conditions to reference another policy
-    definition which applies conditions and actions from the
-    referenced policy before returning to the calling policy
-    statement and resuming evaluation.  If the called policy
-    results in an accept-route (either explicit or by default), then
-    the subroutine returns an effective true value to the calling
-    policy.  Similarly, a reject-route action returns false.  If the
-    subroutine returns true, the calling policy continues to evaluate
-    the remaining conditions (using a modified route if the
-    subroutine performed any changes to the route).";
+     Policy 'subroutines' (or nested policies) are supported by
+     allowing policy statement conditions to reference another policy
+     definition which applies conditions and actions from the
+     referenced policy before returning to the calling policy
+     statement and resuming evaluation.  If the called policy
+     results in an accept-route (either explicit or by default), then
+     the subroutine returns an effective true value to the calling
+     policy.  Similarly, a reject-route action returns false.  If the
+     subroutine returns true, the calling policy continues to
+     evaluate the remaining conditions (using a modified route if the
+     subroutine performed any changes to the route).";
 
 
-  revision "2018-02-14" {
+  revision "2018-02-26" {
     description
       "Initial revision.";
     reference
-     "RFC XXXX: Routing Policy Configuration Model for Service 
+     "RFC XXXX: Routing Policy Configuration Model for Service
       Provider Networks";
   }
 
@@ -130,7 +131,7 @@ module ietf-routing-policy {
     }
     description
       "Type used to specify route disposition in
-      a policy chain";
+       a policy chain";
   }
 
   typedef policy-result-type {
@@ -144,7 +145,7 @@ module ietf-routing-policy {
     }
     description
       "Type used to specify route disposition in
-      a policy chain";
+       a policy chain";
   }
 
   typedef tag-type {
@@ -152,35 +153,35 @@ module ietf-routing-policy {
       type uint32;
       type yang:hex-string;
     }
-    description "type for expressing route tags on a local system,
-    including IS-IS and OSPF; may be expressed as either decimal or
-    hexidecimal integer";
+    description "Type for expressing route tags on a local system,
+       including IS-IS and OSPF; may be expressed as either decimal
+       or hexadecimal integer";
     reference
-      "RFC 2178 OSPF Version 2
-      RFC 5130 A Policy Control Mechanism in IS-IS Using
-      Administrative Tags";
+      "RFC 2178 - OSPF Version 2
+       RFC 5130 - A Policy Control Mechanism in IS-IS Using
+                  Administrative Tags";
   }
 
   typedef match-set-options-type {
     type enumeration {
       enum any {
-        description "match is true if given value matches any member
-        of the defined set";
+        description "Match is true if given value matches any member
+           of the defined set";
       }
       enum all {
-        description "match is true if given value matches all
-        members of the defined set";
+        description "Match is true if given value matches all
+           members of the defined set";
       }
       enum invert {
-        description "match is true if given value does not match any
-        member of the defined set";
+        description "Match is true if given value does not match any
+           member of the defined set";
       }
     }
     default any;
     description
       "Options that govern the behavior of a match statement.  The
-      default behavior is any, i.e., the given value matches any
-      of the members of the defined set";
+       default behavior is any, i.e., the given value matches any
+       of the members of the defined set";
   }
 
 
@@ -189,13 +190,13 @@ module ietf-routing-policy {
   grouping prefix-set {
     description
       "Configuration data for prefix sets used in policy
-      definitions.";
+       definitions.";
 
     leaf name {
       type string;
       description
-        "name / label of the prefix set -- this is used to
-        reference the set in match conditions";
+        "Name of the prefix set -- this is used as a label to
+         reference the set in match conditions";
     }
 
     leaf mode {
@@ -215,12 +216,12 @@ module ietf-routing-policy {
       }
       description
         "Indicates the mode of the prefix set, in terms of which
-        address families (IPv4, IPv6, or both) are present.  The
-        mode provides a hint, but the device must validate that all
-        prefixes are of the indicated type, and is expected to
-        reject the configuration if there is a discrepancy.  The
-        MIXED mode may not be supported on devices that require
-        prefix sets to be of only one address family.";
+         address families (IPv4, IPv6, or both) are present.  The
+         mode provides a hint, but the device must validate that all
+         prefixes are of the indicated type, and is expected to
+         reject the configuration if there is a discrepancy.  The
+         MIXED mode may not be supported on devices that require
+         prefix sets to be of only one address family.";
     }
 
   }
@@ -255,10 +256,10 @@ module ietf-routing-policy {
       mandatory true;
       description
         "The prefix member in CIDR notation -- while the
-        prefix may be either IPv4 or IPv6, most
-        implementations require all members of the prefix set
-        to be the same address family.  Mixing address types in
-        the same prefix set is likely to cause an error.";
+         prefix may be either IPv4 or IPv6, most
+         implementations require all members of the prefix set
+         to be the same address family.  Mixing address types in
+         the same prefix set is likely to cause an error.";
     }
 
     leaf masklength-range {
@@ -267,15 +268,15 @@ module ietf-routing-policy {
       }
       description
         "Defines a range for the masklength, or 'exact' if
-        the prefix has an exact length.
+         the prefix has an exact length.
 
-        Example: 10.3.192.0/21 through 10.3.192.0/24 would be
-        expressed as prefix: 10.3.192.0/21,
-        masklength-range: 21..24.
+         Example: 10.3.192.0/21 through 10.3.192.0/24 would be
+         expressed as prefix: 10.3.192.0/21,
+         masklength-range: 21..24.
 
-        Example: 10.3.192.0/21 would be expressed as
-        prefix: 10.3.192.0/21,
-        masklength-range: exact";
+         Example: 10.3.192.0/21 would be expressed as
+         prefix: 10.3.192.0/21,
+         masklength-range: exact";
     }
   }
 
@@ -287,7 +288,7 @@ module ietf-routing-policy {
     container prefixes {
       description
         "Enclosing container for the list of prefixes in a policy
-        prefix list";
+         prefix list";
 
       list prefix-list {
         key "ip-prefix masklength-range";
@@ -306,8 +307,8 @@ module ietf-routing-policy {
     leaf name {
       type string;
       description
-          "name / label of the neighbor set -- this is used to
-          reference the set in match conditions";
+          "Name of the neighbor set -- this is used as a label
+           to reference the set in match conditions";
     }
 
     leaf-list address {
@@ -320,12 +321,12 @@ module ietf-routing-policy {
   grouping neighbor-set-top {
     description
       "Top-level data definition for a list of IPv4 or IPv6
-      neighbors which can be matched in a routing policy";
+       neighbors which can be matched in a routing policy";
 
     container neighbor-sets {
       description
         "Enclosing container for the list of neighbor set
-        definitions";
+         definitions";
 
       list neighbor-set {
         key "name";
@@ -344,8 +345,8 @@ module ietf-routing-policy {
     leaf name {
       type string;
       description
-        "name / label of the tag set -- this is used to reference
-        the set in match conditions";
+        "Name of the tag set -- this is used as a label to reference
+         the set in match conditions";
     }
 
     leaf-list tag-value {
@@ -358,7 +359,7 @@ module ietf-routing-policy {
   grouping tag-set-top {
     description
       "Top-level data definitions for a list of tags which can
-      be matched in policies";
+       be matched in policies";
 
     container tag-sets {
       description
@@ -379,13 +380,13 @@ module ietf-routing-policy {
   grouping match-set-options-group {
     description
       "Grouping containing options relating to how a particular set
-      should be matched";
+       should be matched";
 
     leaf match-set-options {
       type match-set-options-type;
       description
-        "Optional parameter that governs the behaviour of the
-        match operation";
+        "Optional parameter that governs the behavior of the
+         match operation";
     }
   }
 
@@ -396,19 +397,19 @@ module ietf-routing-policy {
     leaf match-set-options {
       type match-set-options-type {
         enum any {
-          description "match is true if given value matches any member
-          of the defined set";
+          description "Match is true if given value matches any
+             member of the defined set";
         }
         enum invert {
-          description "match is true if given value does not match any
-          member of the defined set";
+          description "Match is true if given value does not match
+             any member of the defined set";
         }
       }
       description
-        "Optional parameter that governs the behaviour of the
-        match operation.  This leaf only supports matching on ANY
-        member of the set or inverting the match.  Matching on ALL is
-        not supported";
+        "Optional parameter that governs the behavior of the
+         match operation.  This leaf only supports matching on ANY
+         member of the set or inverting the match.  Matching on ALL
+         is not supported";
     }
   }
 
@@ -425,8 +426,8 @@ module ietf-routing-policy {
         }
         description
           "Reference to a base interface.  If a reference to a
-          subinterface is required, this leaf must be specified
-          to indicate the base interface.";
+           subinterface is required, this leaf must be specified
+           to indicate the base interface.";
       }
       leaf subinterface {
         type leafref {
@@ -440,7 +441,7 @@ module ietf-routing-policy {
            this container.  If only a reference to a base interface
            is requuired, this leaf should not be set.";
       }
-      
+
       description
         "Container for interface match conditions";
     }
@@ -462,7 +463,7 @@ module ietf-routing-policy {
 
       description
         "Match a referenced prefix-set according to the logic
-        defined in the match-set-options leaf";
+         defined in the match-set-options leaf";
     }
   }
 
@@ -482,7 +483,7 @@ module ietf-routing-policy {
 
       description
         "Match a referenced neighbor set according to the logic
-        defined in the match-set-options-leaf";
+         defined in the match-set-options-leaf";
     }
   }
 
@@ -503,13 +504,13 @@ module ietf-routing-policy {
 
       description
         "Match a referenced tag set according to the logic defined
-        in the match-options-set leaf";
+         in the match-options-set leaf";
     }
   }
 
   grouping generic-conditions {
     description "Condition statement definitions for checking
-    membership in a generic defined set";
+       membership in a generic defined set";
 
     uses match-interface-condition;
     uses prefix-set-condition;
@@ -546,16 +547,16 @@ module ietf-routing-policy {
         }
         description
           "Applies the statements from the specified policy
-          definition and then returns control the current
-          policy statement. Note that the called policy may
-          itself call other policies (subject to
-          implementation limitations). This is intended to
-          provide a policy 'subroutine' capability.  The
-          called policy should contain an explicit or a
-          default route disposition that returns an
-          effective true (accept-route) or false
-          (reject-route), otherwise the behavior may be
-          ambiguous and implementation dependent";
+           definition and then returns control the current
+           policy statement. Note that the called policy may
+           itself call other policies (subject to
+           implementation limitations). This is intended to
+           provide a policy 'subroutine' capability.  The
+           called policy should contain an explicit or a
+           default route disposition that returns an
+           effective true (accept-route) or false
+           (reject-route), otherwise the behavior may be
+           ambiguous and implementation dependent";
       }
 
       leaf install-protocol-eq {
@@ -564,7 +565,7 @@ module ietf-routing-policy {
         }
         description
           "Condition to check the protocol / method used to install
-          the route into the local routing table";
+           the route into the local routing table";
       }
   }
 
@@ -589,7 +590,7 @@ module ietf-routing-policy {
     leaf name {
       type string;
       description
-        "name of the policy statement";
+        "Name of the policy statement";
     }
   }
 
@@ -627,9 +628,9 @@ module ietf-routing-policy {
         ordered-by user;
         description
           "Policy statements group conditions and actions
-          within a policy definition.  They are evaluated in
-          the order specified (see the description of policy
-          evaluation at the top of this module.";
+           within a policy definition.  They are evaluated in
+           the order specified (see the description of policy
+           evaluation at the top of this module.";
 
         uses policy-statements;
 
@@ -664,18 +665,18 @@ module ietf-routing-policy {
       }
       ordered-by user;
       description
-        "list of policy names in sequence to be applied on
-        receiving a routing update in the current context, e.g.,
-        for the current peer group, neighbor, address family,
-        etc.";
+        "List of policy names in sequence to be applied on
+         receiving a routing update in the current context, e.g.,
+         for the current peer group, neighbor, address family,
+         etc.";
     }
 
     leaf default-import-policy {
       type default-policy-type;
       default reject-route;
       description
-        "explicitly set a default policy if no policy definition
-        in the import policy chain is satisfied.";
+        "Explicitly set a default policy if no policy definition
+         in the import policy chain is satisfied.";
     }
 
   }
@@ -692,18 +693,18 @@ module ietf-routing-policy {
       }
       ordered-by user;
       description
-        "list of policy names in sequence to be applied on
-        sending a routing update in the current context, e.g.,
-        for the current peer group, neighbor, address family,
-        etc.";
+        "List of policy names in sequence to be applied on
+         sending a routing update in the current context, e.g.,
+         for the current peer group, neighbor, address family,
+         etc.";
     }
 
     leaf default-export-policy {
       type default-policy-type;
       default reject-route;
       description
-        "explicitly set a default policy if no policy definition
-        in the export policy chain is satisfied.";
+        "Explicitly set a default policy if no policy definition
+         in the export policy chain is satisfied.";
     }
   }
 
@@ -718,7 +719,7 @@ module ietf-routing-policy {
     container apply-policy-state {
       description
         "Operational state associated with routing policy";
-      
+
       //TODO: identify additional state data beyond the intended
       //policy configuration.
     }
@@ -729,18 +730,18 @@ module ietf-routing-policy {
   grouping apply-policy-group {
     description
       "Top level container for routing policy applications. This
-      grouping is intended to be used in routing models where
-      needed.";
+       grouping is intended to be used in routing models where
+       needed.";
 
     container apply-policy {
       description
         "Anchor point for routing policies in the model.
-        Import and export policies are with respect to the local
-        routing table, i.e., export (send) and import (receive),
-        depending on the context.";
+         Import and export policies are with respect to the local
+         routing table, i.e., export (send) and import (receive),
+         depending on the context.";
 
       uses apply-policy;
- 
+
     }
   }
 
@@ -751,7 +752,7 @@ module ietf-routing-policy {
     container defined-sets {
       description
         "Predefined sets of attributes used in policy match
-        statements";
+         statements";
 
       uses prefix-set-top;
       uses neighbor-set-top;
@@ -761,15 +762,15 @@ module ietf-routing-policy {
     container policy-definitions {
       description
         "Enclosing container for the list of top-level policy
-          definitions";
+         definitions";
 
       list policy-definition {
         key "name";
         description
           "List of top-level policy definitions, keyed by unique
-          name.  These policy definitions are expected to be
-          referenced (by name) in policy chains specified in import
-          or export configuration statements.";
+           name.  These policy definitions are expected to be
+           referenced (by name) in policy chains specified in import
+           or export configuration statements.";
 
         uses policy-definitions;
 
