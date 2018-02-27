@@ -369,7 +369,12 @@
         the called policy may also modify attributes of the route in
         its action statements. Similarly, a reject-route action
         returns false and the calling policy evaluation will be
-        affected accordingly.
+        affected accordingly. Consequently, a subroutine cannot
+        explicitly accept or reject a route. Rather it merely provides
+        an indication that 'call-policy' condition returns boolean true
+        or false indicating whether or not the condition matches. Route 
+        acceptance or rejection is solely determined by the top-level
+        policy.
         </t>
 
       	<t>
