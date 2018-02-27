@@ -3,7 +3,7 @@
 <rfc docName="draft-ietf-rtgwg-policy-model-02" ipr="trust200902" category="info">
 <?rfc toc="yes"?>
   <front>
-    <title abbrev="Routing Policy Model">Routing Policy Configuration Model for Service Provider Networks</title>
+    <title abbrev="Routing Policy Model">A YANG Data Model for Routing Policy Management</title>
     <author fullname="Yingzhen Qu" initials="Y" surname="Qu">
       <organization>Huawei</organization>
       <address>
@@ -17,7 +17,7 @@
       </address>
     </author>
     <author fullname="Jeff Tantsura" initials="J" surname="Tantsura">
-      <organization>Individual</organization>
+      <organization>Nuage Networks</organization>
       <address>
         <email>jefftant.ietf@gmail.com</email>
       </address>
@@ -551,7 +551,7 @@
       <section title="Routing policy model">
 	<figure>
 	<artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing-policy@2018-02-26.yang"
+<CODE BEGINS> file "ietf-routing-policy@2018-02-27.yang"
 module ietf-routing-policy {
 
   yang-version "1.1";
@@ -663,8 +663,7 @@ module ietf-routing-policy {
     description
       "Initial revision.";
     reference
-     "RFC XXXX: Routing Policy Configuration Model for Service
-      Provider Networks";
+     "RFC XXXX: A YANG Data Model for Routing Policy Management";
   }
 
 
