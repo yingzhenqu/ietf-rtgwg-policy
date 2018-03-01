@@ -229,7 +229,7 @@ module ietf-routing-policy {
   grouping prefix-set-top {
     description
       "Top-level data definitions for a list of IPv4 or IPv6
-      prefixes which are matched as part of a policy";
+       prefixes which are matched as part of a policy";
 
     container prefix-sets {
       description
@@ -522,13 +522,13 @@ module ietf-routing-policy {
   grouping generic-actions {
     description
       "Definitions for common set of policy action statements that
-      manage the disposition or control flow of the policy";
+       manage the disposition or control flow of the policy";
 
     leaf policy-result {
       type policy-result-type;
       description
         "Select the final disposition for the route, either
-        accept or reject.";
+         accept or reject.";
     }
   }
 
@@ -536,7 +536,7 @@ module ietf-routing-policy {
   grouping policy-conditions {
     description
       "Data for general policy conditions, i.e., those
-      not related to match-sets";
+       not related to match-sets";
 
       leaf call-policy {
         type leafref {
