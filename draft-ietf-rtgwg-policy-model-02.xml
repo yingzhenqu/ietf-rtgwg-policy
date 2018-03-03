@@ -63,9 +63,10 @@
     </author>
 
 
-    <date month="January" year="2018" />
+    <date/>
 
     <area>Routing</area>
+    <workgroup>RTGWG</workgroup>
 
     <abstract>
       <t>This document defines a YANG data model for configuring and
