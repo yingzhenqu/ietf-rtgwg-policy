@@ -105,7 +105,7 @@ module ietf-routing-policy {
      subroutine performed any changes to the route).";
 
 
-  revision "2018-02-26" {
+  revision "2018-06-18" {
     description
       "Initial revision.";
     reference
@@ -261,24 +261,39 @@ module ietf-routing-policy {
          to be the same address family.  Mixing address types in
          the same prefix set is likely to cause an error.";
     }
+ 
+    // Defines a range for the masklength, or 'exact' if
+    // the prefix has an exact length.
 
-    leaf masklength-range {
-      type string {
-        pattern '([0-9]{2}\.\.[0-9]{2})|([0-9]{2})';
+    // Example: 10.3.192.0/21 through 10.3.192.0/24 would be
+    // expressed as prefix: 10.3.192.0/21,
+    // masklength-range: masklength-lower=21, masklength-upper=24
+    //
+    // Example: 10.3.192.0/21 would be expressed as
+    // prefix: 10.3.192.0/21,
+    // masklength-range: masklength-lower=masklength-upper=21";
+
+    leaf masklength-lower {
+      type uint8;
+      description
+        "Masklength range lower bound.";
+    }
+    leaf masklength-upper {
+      type uint8 {
+        range "1..128";
+      }
+      must "../masklength-upper >= ../masklength-lower" {
+        error-message "The upper bound should not be less"
+                    + "than lower bound.";
       }
       description
-        "Defines a range for the masklength, or 'exact' if
-         the prefix has an exact length.
-
-         Example: 10.3.192.0/21 through 10.3.192.0/24 would be
-         expressed as prefix: 10.3.192.0/21,
-         masklength-range: 21..24.
-
-         Example: 10.3.192.0/21 would be expressed as
-         prefix: 10.3.192.0/21,
-         masklength-range: exact";
+        "Masklength range upper bound.";
     }
+
+    
+
   }
+
 
 
   grouping prefix-top {
@@ -291,7 +306,7 @@ module ietf-routing-policy {
          prefix list";
 
       list prefix-list {
-        key "ip-prefix masklength-range";
+        key "ip-prefix masklength-lower masklength-upper";
         description
           "List of prefixes in the prefix set";
 
@@ -519,20 +534,6 @@ module ietf-routing-policy {
 
   }
 
-  grouping generic-actions {
-    description
-      "Definitions for common set of policy action statements that
-       manage the disposition or control flow of the policy";
-
-    leaf policy-result {
-      type policy-result-type;
-      description
-        "Select the final disposition for the route, either
-         accept or reject.";
-    }
-  }
-
-
   grouping policy-conditions {
     description
       "Data for general policy conditions, i.e., those
@@ -559,7 +560,7 @@ module ietf-routing-policy {
            ambiguous and implementation dependent";
       }
 
-      leaf install-protocol-eq {
+      leaf source-protocol {
         type identityref {
           base rt:control-plane-protocol;
         }
@@ -597,21 +598,28 @@ module ietf-routing-policy {
 
   grouping policy-actions {
     description
-      "Grouping for policy actions";
-
-    uses generic-actions;
-  }
-
-
-  grouping policy-actions-top {
-    description
       "Top-level grouping for policy actions";
 
     container actions {
       description
         "Top-level container for policy action statements";
 
-      uses policy-actions;
+      leaf policy-result {
+        type policy-result-type;
+        description
+          "Select the final disposition for the route, either
+           accept or reject.";
+      }
+      leaf set-metric {
+        type uint16;
+        description
+          "Set a new metric for the route.";
+      }
+      leaf set-preference {
+        type uint8;
+        description
+          "Set a new preference for the route.";
+      }
     }
   }
 
@@ -635,7 +643,7 @@ module ietf-routing-policy {
         uses policy-statements;
 
         uses policy-conditions-top;
-        uses policy-actions-top;
+        uses policy-actions;
       }
     }
   }
