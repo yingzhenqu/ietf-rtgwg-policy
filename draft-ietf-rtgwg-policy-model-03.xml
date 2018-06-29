@@ -884,17 +884,6 @@ module ietf-routing-policy {
          to be the same address family.  Mixing address types in
          the same prefix set is likely to cause an error.";
     }
- 
-    // Defines a range for the masklength, or 'exact' if
-    // the prefix has an exact length.
-
-    // Example: 10.3.192.0/21 through 10.3.192.0/24 would be
-    // expressed as prefix: 10.3.192.0/21,
-    // masklength-range: masklength-lower=21, masklength-upper=24
-    //
-    // Example: 10.3.192.0/21 would be expressed as
-    // prefix: 10.3.192.0/21,
-    // masklength-range: masklength-lower=masklength-upper=21";
 
     leaf masklength-lower {
       type uint8;
@@ -910,7 +899,21 @@ module ietf-routing-policy {
                     + "than lower bound.";
       }
       description
-        "Masklength range upper bound.";
+        "Masklength range upper bound.
+
+         The combination of masklength-lower and masklength-upper
+         define a range for the mask length, or single 'exact'
+         length if masklength-lower and masklenght-upper are equal.
+
+         Example: 10.3.192.0/21 through 10.3.192.0/24 would be
+         expressed as prefix: 10.3.192.0/21,
+                      masklength-lower=21,
+                      masklength-upper=24
+
+         Example: 10.3.192.0/21 (an exact match) would be
+         expressed as prefix: 10.3.192.0/21,
+                      masklength-lower=21,
+                      masklength-upper=21";
     }
   }
 

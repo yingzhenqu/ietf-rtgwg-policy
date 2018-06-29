@@ -5,14 +5,14 @@
 RTGWG                                                              Y. Qu
 Internet-Draft                                                    Huawei
 Intended status: Informational                               J. Tantsura
-Expires: December 27, 2018                                Nuage Networks
+Expires: December 31, 2018                                Nuage Networks
                                                                A. Lindem
                                                                    Cisco
                                                                   X. Liu
                                                                    Jabil
                                                                A. Shaikh
                                                                   Google
-                                                           June 25, 2018
+                                                           June 29, 2018
 
 
             A YANG Data Model for Routing Policy Management
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 27, 2018.
+   This Internet-Draft will expire on December 31, 2018.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Qu, et al.              Expires December 27, 2018               [Page 1]
+Qu, et al.              Expires December 31, 2018               [Page 1]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Qu, et al.              Expires December 27, 2018               [Page 2]
+Qu, et al.              Expires December 31, 2018               [Page 2]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -165,7 +165,7 @@ Internet-Draft            Routing Policy Model                 June 2018
 
 
 
-Qu, et al.              Expires December 27, 2018               [Page 3]
+Qu, et al.              Expires December 31, 2018               [Page 3]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -221,7 +221,7 @@ Internet-Draft            Routing Policy Model                 June 2018
 
 
 
-Qu, et al.              Expires December 27, 2018               [Page 4]
+Qu, et al.              Expires December 31, 2018               [Page 4]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -277,7 +277,7 @@ Internet-Draft            Routing Policy Model                 June 2018
 
 
 
-Qu, et al.              Expires December 27, 2018               [Page 5]
+Qu, et al.              Expires December 31, 2018               [Page 5]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -333,7 +333,7 @@ Internet-Draft            Routing Policy Model                 June 2018
 
 
 
-Qu, et al.              Expires December 27, 2018               [Page 6]
+Qu, et al.              Expires December 31, 2018               [Page 6]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -389,7 +389,7 @@ Internet-Draft            Routing Policy Model                 June 2018
 
 
 
-Qu, et al.              Expires December 27, 2018               [Page 7]
+Qu, et al.              Expires December 31, 2018               [Page 7]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -445,7 +445,7 @@ module: ietf-routing-policy
 
 
 
-Qu, et al.              Expires December 27, 2018               [Page 8]
+Qu, et al.              Expires December 31, 2018               [Page 8]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -501,7 +501,7 @@ Internet-Draft            Routing Policy Model                 June 2018
 
 
 
-Qu, et al.              Expires December 27, 2018               [Page 9]
+Qu, et al.              Expires December 31, 2018               [Page 9]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -557,7 +557,7 @@ Internet-Draft            Routing Policy Model                 June 2018
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 10]
+Qu, et al.              Expires December 31, 2018              [Page 10]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -613,7 +613,7 @@ Internet-Draft            Routing Policy Model                 June 2018
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 11]
+Qu, et al.              Expires December 31, 2018              [Page 11]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -669,7 +669,7 @@ Internet-Draft            Routing Policy Model                 June 2018
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 12]
+Qu, et al.              Expires December 31, 2018              [Page 12]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -725,7 +725,7 @@ Internet-Draft            Routing Policy Model                 June 2018
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 13]
+Qu, et al.              Expires December 31, 2018              [Page 13]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -781,7 +781,7 @@ Internet-Draft            Routing Policy Model                 June 2018
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 14]
+Qu, et al.              Expires December 31, 2018              [Page 14]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -837,7 +837,7 @@ Internet-Draft            Routing Policy Model                 June 2018
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 15]
+Qu, et al.              Expires December 31, 2018              [Page 15]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -893,7 +893,7 @@ Internet-Draft            Routing Policy Model                 June 2018
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 16]
+Qu, et al.              Expires December 31, 2018              [Page 16]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -916,17 +916,6 @@ Internet-Draft            Routing Policy Model                 June 2018
             the same prefix set is likely to cause an error.";
        }
 
-       // Defines a range for the masklength, or 'exact' if
-       // the prefix has an exact length.
-
-       // Example: 10.3.192.0/21 through 10.3.192.0/24 would be
-       // expressed as prefix: 10.3.192.0/21,
-       // masklength-range: masklength-lower=21, masklength-upper=24
-       //
-       // Example: 10.3.192.0/21 would be expressed as
-       // prefix: 10.3.192.0/21,
-       // masklength-range: masklength-lower=masklength-upper=21";
-
        leaf masklength-lower {
          type uint8;
          description
@@ -941,19 +930,33 @@ Internet-Draft            Routing Policy Model                 June 2018
                        + "than lower bound.";
          }
          description
-           "Masklength range upper bound.";
+           "Masklength range upper bound.
+
+            The combination of masklength-lower and masklength-upper
+            define a range for the mask length, or single 'exact'
+            length if masklength-lower and masklenght-upper are equal.
+
+            Example: 10.3.192.0/21 through 10.3.192.0/24 would be
+            expressed as prefix: 10.3.192.0/21,
+                         masklength-lower=21,
+                         masklength-upper=24
+
+            Example: 10.3.192.0/21 (an exact match) would be
+            expressed as prefix: 10.3.192.0/21,
+                         masklength-lower=21,
+                         masklength-upper=21";
        }
-     }
-
-     grouping prefix-top {
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 17]
+Qu, et al.              Expires December 31, 2018              [Page 17]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
 
+     }
+
+     grouping prefix-top {
        description
          "Top-level grouping for prefixes in a prefix list";
 
@@ -1000,16 +1003,15 @@ Internet-Draft            Routing Policy Model                 June 2018
            "Enclosing container for the list of neighbor set
             definitions";
 
-         list neighbor-set {
-           key "name";
 
 
-
-Qu, et al.              Expires December 27, 2018              [Page 18]
+Qu, et al.              Expires December 31, 2018              [Page 18]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
 
+         list neighbor-set {
+           key "name";
            description
              "List of defined neighbor sets for use in policies.";
 
@@ -1057,15 +1059,14 @@ Internet-Draft            Routing Policy Model                 June 2018
      }
 
 
-     grouping match-set-options-group {
 
 
-
-Qu, et al.              Expires December 27, 2018              [Page 19]
+Qu, et al.              Expires December 31, 2018              [Page 19]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
 
+     grouping match-set-options-group {
        description
          "Grouping containing options relating to how a particular set
           should be matched";
@@ -1113,15 +1114,15 @@ Internet-Draft            Routing Policy Model                 June 2018
              path "/if:interfaces/if:interface/if:name";
            }
            description
-             "Reference to a base interface.  If a reference to a
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 20]
+Qu, et al.              Expires December 31, 2018              [Page 20]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
 
+             "Reference to a base interface.  If a reference to a
               subinterface is required, this leaf must be specified
               to indicate the base interface.";
          }
@@ -1169,15 +1170,15 @@ Internet-Draft            Routing Policy Model                 June 2018
 
        container match-neighbor-set {
          leaf neighbor-set {
-           type leafref {
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 21]
+Qu, et al.              Expires December 31, 2018              [Page 21]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
 
+           type leafref {
              path "../../../../../../../defined-sets/neighbor-sets/" +
              "neighbor-set/name";
              require-instance true;
@@ -1225,15 +1226,15 @@ Internet-Draft            Routing Policy Model                 June 2018
 
      grouping policy-conditions {
        description
-         "Data for general policy conditions, i.e., those
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 22]
+Qu, et al.              Expires December 31, 2018              [Page 22]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
 
+         "Data for general policy conditions, i.e., those
           not related to match-sets";
 
          leaf call-policy {
@@ -1281,15 +1282,15 @@ Internet-Draft            Routing Policy Model                 June 2018
        }
      }
 
-     grouping policy-statements {
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 23]
+Qu, et al.              Expires December 31, 2018              [Page 23]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
 
+     grouping policy-statements {
        description
          "Data for policy statements";
 
@@ -1337,15 +1338,15 @@ Internet-Draft            Routing Policy Model                 June 2018
            "Enclosing container for policy statements";
 
          list statement {
-           key "name";
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 24]
+Qu, et al.              Expires December 31, 2018              [Page 24]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
 
+           key "name";
            ordered-by user;
            description
              "Policy statements group conditions and actions
@@ -1393,15 +1394,15 @@ Internet-Draft            Routing Policy Model                 June 2018
        }
 
        leaf default-import-policy {
-         type default-policy-type;
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 25]
+Qu, et al.              Expires December 31, 2018              [Page 25]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
 
+         type default-policy-type;
          default reject-route;
          description
            "Explicitly set a default policy if no policy definition
@@ -1449,15 +1450,15 @@ Internet-Draft            Routing Policy Model                 June 2018
          description
            "Operational state associated with routing policy";
 
-         //TODO: identify additional state data beyond the intended
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 26]
+Qu, et al.              Expires December 31, 2018              [Page 26]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
 
+         //TODO: identify additional state data beyond the intended
          //policy configuration.
        }
 
@@ -1505,15 +1506,15 @@ Internet-Draft            Routing Policy Model                 June 2018
            key "name";
            description
              "List of top-level policy definitions, keyed by unique
-              name.  These policy definitions are expected to be
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 27]
+Qu, et al.              Expires December 31, 2018              [Page 27]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
 
+              name.  These policy definitions are expected to be
               referenced (by name) in policy chains specified in import
               or export configuration statements.";
 
@@ -1564,8 +1565,7 @@ Internet-Draft            Routing Policy Model                 June 2018
 
 
 
-
-Qu, et al.              Expires December 27, 2018              [Page 28]
+Qu, et al.              Expires December 31, 2018              [Page 28]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -1621,7 +1621,7 @@ Authors' Addresses
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 29]
+Qu, et al.              Expires December 31, 2018              [Page 29]
 
 Internet-Draft            Routing Policy Model                 June 2018
 
@@ -1677,4 +1677,4 @@ Internet-Draft            Routing Policy Model                 June 2018
 
 
 
-Qu, et al.              Expires December 27, 2018              [Page 30]
+Qu, et al.              Expires December 31, 2018              [Page 30]
