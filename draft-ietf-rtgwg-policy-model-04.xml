@@ -49,7 +49,7 @@
       </address>
     </author>
     <author fullname="Jeff Tantsura" initials="J" surname="Tantsura">
-      <organization>Nuage Networks</organization>
+      <organization>Apstra</organization>
       <address>
         <email>jefftant.ietf@gmail.com</email>
       </address>
@@ -68,32 +68,11 @@
       </address>
     </author>
     <author fullname="Xufeng Liu" initials="X" surname="Liu">
-      <organization>Jabil</organization>
+      <organization>Volta Networks</organization>
       <address>
-        <postal>
-          <street>8281 Greensboro Drive, Suite 200</street>
-          <city>Mclean</city>
-          <region>VA</region>
-          <code>22102</code>
-          <country>US</country>
-        </postal>
-        <email>xufeng_liu@jabil.com</email>
+        <email>xufeng.liu.ietf@gmail.com</email>
       </address>
     </author>
-    <author initials="A." surname="Shaikh" fullname="Anees Shaikh">
-      <organization>Google</organization>
-      <address>
-        <postal>
-          <street>1600 Amphitheatre Pkwy</street>
-          <city>Mountain View</city>
-          <region>CA</region>
-          <code>94043</code>
-          <country>US</country>
-        </postal>
-        <email>aashaikh@google.com</email>
-      </address>
-    </author>
-
 
     <date/>
 
@@ -1574,11 +1553,11 @@ module ietf-routing-policy {
     <section title="Acknowledgements">
       <t>The routing policy module defined in this draft is based on the OpenConfig
       route policy model. The authors would like to thank to OpenConfig for their contributions,
-      especially Rob Shakir, Kevin D'Souza, and Chris Chase.
+      especially Anees Shaikh, Rob Shakir, Kevin D'Souza, and Chris Chase.
     </t>
       <t>The authors are grateful for valuable contributions to this
       document and the associated models from: Ebben Aires, Luyuan Fang,
-      Josh George, Acee Lindem, Stephane Litkowski, Ina Minei,
+      Josh George, Stephane Litkowski, Ina Minei,
       Carl Moberg, Eric Osborne, Steve Padgett, Juergen Schoenwaelder,
       Jim Uttaro, and Russ White.
       </t>
