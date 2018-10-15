@@ -4,6 +4,8 @@
       'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml'>
     <!ENTITY RFC3688 PUBLIC '' 
       'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3688.xml'>
+    <!ENTITY RFC4271 PUBLIC '' 
+      'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4271.xml'>
     <!ENTITY RFC5246 PUBLIC '' 
       'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5246.xml'>
     <!ENTITY RFC6020 PUBLIC '' 
@@ -30,6 +32,8 @@
       'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8343.xml'> 
     <!ENTITY RFC8349 PUBLIC '' 
       'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8349.xml'>
+    <!ENTITY I-D.draft-ietf-netmod-intf-ext-yang SYSTEM
+      "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-netmod-intf-ext-yang-06.xml">
     ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <rfc docName="draft-ietf-rtgwg-policy-model-04" ipr="trust200902" category="info">
@@ -190,7 +194,7 @@
           <c>rt</c><c>ietf-routing</c><c><xref target="RFC8349"/></c>
           <c>yang</c><c>ietf-yang-types</c><c><xref target="RFC6991"/></c>
           <c>inet</c><c>ietf-inet-types</c><c><xref target="RFC6991"/></c>
-          <c>if-cmn</c><c>ietf-interfaces-common</c><c><xref target="RFC6991"/></c>
+          <c>if-cmn</c><c>ietf-interfaces-common</c><c><xref target="I-D.ietf-netmod-intf-ext-yang"/></c>
         </texttable>
       </section>
     </section>
@@ -540,111 +544,110 @@
 
       <figure>
         <artwork>
-module: ietf-routing-policy
-    +--rw routing-policy
-       +--rw defined-sets
-       |  +--rw prefix-sets
-       |  |  +--rw prefix-set* [name]
-       |  |     +--rw name        string
-       |  |     +--rw mode?       enumeration
-       |  |     +--rw prefixes
-       |  |        +--rw prefix-list* [ip-prefix masklength-lower 
-       |  |                            masklength-upper]
-       |  |           +--rw ip-prefix           inet:ip-prefix
-       |  |           +--rw masklength-lower    uint8
-       |  |           +--rw masklength-upper    uint8
-       |  +--rw neighbor-sets
-       |  |  +--rw neighbor-set* [name]
-       |  |     +--rw name       string
-       |  |     +--rw address*   inet:ip-address
-       |  +--rw tag-sets
-       |  |  +--rw tag-set* [name]
-       |  |     +--rw name         string
-       |  |     +--rw tag-value*   tag-type
-       |  +--rw bgp-pol:bgp-defined-sets
-       |     +--rw bgp-pol:community-sets
-       |     |  +--rw bgp-pol:community-set* [community-set-name]
-       |     |     +--rw bgp-pol:community-set-name    string
-       |     |     +--rw bgp-pol:community-member*     union
-       |     +--rw bgp-pol:ext-community-sets
-       |     |  +--rw bgp-pol:ext-community-set* [ext-community-set-name]
-       |     |     +--rw bgp-pol:ext-community-set-name    string
-       |     |     +--rw bgp-pol:ext-community-member*     union
-       |     +--rw bgp-pol:as-path-sets
-       |        +--rw bgp-pol:as-path-set* [as-path-set-name]
-       |           +--rw bgp-pol:as-path-set-name      string
-       |           +--rw bgp-pol:as-path-set-member*   string
-       +--rw policy-definitions
-          +--rw policy-definition* [name]
-             +--rw name          string
-             +--rw statements
-                +--rw statement* [name]
-                   +--rw name          string
-                   +--rw conditions
-                   |  +--rw call-policy?              
-                   |  +--rw source-protocol?          identityref
-                   |  +--rw match-interface
-                   |  |  +--rw interface?      
-                   |  |  +--rw subinterface?   
-                   |  +--rw match-prefix-set
-                   |  |  +--rw prefix-set?          
-                   |  |  +--rw match-set-options? match-set-options-type
-                   |  +--rw match-neighbor-set
-                   |  |  +--rw neighbor-set?   
-                   |  +--rw match-tag-set
-                   |  |  +--rw tag-set?             
-                   |  |  +--rw match-set-options? match-set-options-type
-                   |  +--rw bgp-pol:bgp-conditions
-                   |     +--rw bgp-pol:med-eq?      uint32
-                   |     +--rw bgp-pol:origin-eq?   
-                   |           bgp-types:bgp-origin-attr-type
-                   |     +--rw bgp-pol:next-hop-in* 
-                   |           inet:ip-address-no-zone
-                   |     +--rw bgp-pol:afi-safi-in*   identityref
-                   |     +--rw bgp-pol:local-pref-eq? uint32
-                   |     +--rw bgp-pol:route-type?    enumeration
-                   |     +--rw bgp-pol:community-count
-                   |     +--rw bgp-pol:as-path-length
-                   |     +--rw bgp-pol:match-community-set
-                   |     |  +--rw bgp-pol:community-set?       
-                   |     |  +--rw bgp-pol:match-set-options?   
-                   |              match-set-options-type
-                   |     +--rw bgp-pol:match-ext-community-set
-                   |     |  +--rw bgp-pol:ext-community-set?   
-                   |     |  +--rw bgp-pol:match-set-options?   
-                   |     |        match-set-options-type
-                   |     +--rw bgp-pol:match-as-path-set
-                   |        +--rw bgp-pol:as-path-set?         
-                   |        +--rw bgp-pol:match-set-options?   
-                   |              match-set-options-type
-                   +--rw actions
-                      +--rw policy-result?         policy-result-type
-                      +--rw set-metric?            union
-                      +--rw set-preference?        union
-                      +--rw bgp-pol:bgp-actions
-                         +--rw bgp-pol:set-route-origin?      
-                               bgp-types:bgp-origin-attr-type
-                         +--rw bgp-pol:set-local-pref?        uint32
-                         +--rw bgp-pol:set-next-hop?   bgp-next-hop-type
-                         +--rw bgp-pol:set-med?        bgp-set-med-type
-                         +--rw bgp-pol:set-as-path-prepend
-                         |  +--rw bgp-pol:repeat-n?   uint8
-                         +--rw bgp-pol:set-community
-                         |  +--rw bgp-pol:method?      enumeration
-                         |  +--rw bgp-pol:options?     
-                                  bgp-set-community-option-type
-                         |  +--rw bgp-pol:inline
-                         |  |  +--rw bgp-pol:communities*   union
-                         |  +--rw bgp-pol:reference
-                         |     +--rw bgp-pol:community-set-ref?   
-                         +--rw bgp-pol:set-ext-community
-                            +--rw bgp-pol:method?       enumeration
-                            +--rw bgp-pol:options?      
-                                  bgp-set-community-option-type
-                            +--rw bgp-pol:inline
-                            |  +--rw bgp-pol:communities*   union
-                            +--rw bgp-pol:reference
-                               +--rw bgp-pol:ext-community-set-ref?   
++--rw routing-policy
+   +--rw defined-sets
+   |  +--rw prefix-sets
+   |  |  +--rw prefix-set* [name]
+   |  |     +--rw name        string
+   |  |     +--rw mode?       enumeration
+   |  |     +--rw prefixes
+   |  |        +--rw prefix-list* [ip-prefix masklength-lower 
+   |  |                            masklength-upper]
+   |  |           +--rw ip-prefix           inet:ip-prefix
+   |  |           +--rw masklength-lower    uint8
+   |  |           +--rw masklength-upper    uint8
+   |  +--rw neighbor-sets
+   |  |  +--rw neighbor-set* [name]
+   |  |     +--rw name       string
+   |  |     +--rw address*   inet:ip-address
+   |  +--rw tag-sets
+   |  |  +--rw tag-set* [name]
+   |  |     +--rw name         string
+   |  |     +--rw tag-value*   tag-type
+   |  +--rw bgp-pol:bgp-defined-sets
+   |     +--rw bgp-pol:community-sets
+   |     |  +--rw bgp-pol:community-set* [community-set-name]
+   |     |     +--rw bgp-pol:community-set-name    string
+   |     |     +--rw bgp-pol:community-member*     union
+   |     +--rw bgp-pol:ext-community-sets
+   |     |  +--rw bgp-pol:ext-community-set* [ext-community-set-name]
+   |     |     +--rw bgp-pol:ext-community-set-name    string
+   |     |     +--rw bgp-pol:ext-community-member*     union
+   |     +--rw bgp-pol:as-path-sets
+   |        +--rw bgp-pol:as-path-set* [as-path-set-name]
+   |           +--rw bgp-pol:as-path-set-name      string
+   |           +--rw bgp-pol:as-path-set-member*   string
+   +--rw policy-definitions
+      +--rw policy-definition* [name]
+         +--rw name          string
+         +--rw statements
+            +--rw statement* [name]
+               +--rw name          string
+               +--rw conditions
+               |  +--rw call-policy?              
+               |  +--rw source-protocol?          identityref
+               |  +--rw match-interface
+               |  |  +--rw interface?      
+               |  |  +--rw subinterface?   
+               |  +--rw match-prefix-set
+               |  |  +--rw prefix-set?          
+               |  |  +--rw match-set-options? match-set-options-type
+               |  +--rw match-neighbor-set
+               |  |  +--rw neighbor-set?   
+               |  +--rw match-tag-set
+               |  |  +--rw tag-set?             
+               |  |  +--rw match-set-options? match-set-options-type
+               |  +--rw bgp-pol:bgp-conditions
+               |     +--rw bgp-pol:med-eq?      uint32
+               |     +--rw bgp-pol:origin-eq?   
+               |           bgp-types:bgp-origin-attr-type
+               |     +--rw bgp-pol:next-hop-in* 
+               |           inet:ip-address-no-zone
+               |     +--rw bgp-pol:afi-safi-in*   identityref
+               |     +--rw bgp-pol:local-pref-eq? uint32
+               |     +--rw bgp-pol:route-type?    enumeration
+               |     +--rw bgp-pol:community-count
+               |     +--rw bgp-pol:as-path-length
+               |     +--rw bgp-pol:match-community-set
+               |     |  +--rw bgp-pol:community-set?       
+               |     |  +--rw bgp-pol:match-set-options?   
+               |              match-set-options-type
+               |     +--rw bgp-pol:match-ext-community-set
+               |     |  +--rw bgp-pol:ext-community-set?   
+               |     |  +--rw bgp-pol:match-set-options?   
+               |     |        match-set-options-type
+               |     +--rw bgp-pol:match-as-path-set
+               |        +--rw bgp-pol:as-path-set?         
+               |        +--rw bgp-pol:match-set-options?   
+               |              match-set-options-type
+               +--rw actions
+                  +--rw policy-result?         policy-result-type
+                  +--rw set-metric?            union
+                  +--rw set-preference?        union
+                  +--rw bgp-pol:bgp-actions
+                     +--rw bgp-pol:set-route-origin?      
+                           bgp-types:bgp-origin-attr-type
+                     +--rw bgp-pol:set-local-pref?        uint32
+                     +--rw bgp-pol:set-next-hop?   bgp-next-hop-type
+                     +--rw bgp-pol:set-med?        bgp-set-med-type
+                     +--rw bgp-pol:set-as-path-prepend
+                     |  +--rw bgp-pol:repeat-n?   uint8
+                     +--rw bgp-pol:set-community
+                     |  +--rw bgp-pol:method?      enumeration
+                     |  +--rw bgp-pol:options?     
+                              bgp-set-community-option-type
+                     |  +--rw bgp-pol:inline
+                     |  |  +--rw bgp-pol:communities*   union
+                     |  +--rw bgp-pol:reference
+                     |     +--rw bgp-pol:community-set-ref?   
+                     +--rw bgp-pol:set-ext-community
+                        +--rw bgp-pol:method?       enumeration
+                        +--rw bgp-pol:options?      
+                              bgp-set-community-option-type
+                        +--rw bgp-pol:inline
+                        |  +--rw bgp-pol:communities*   union
+                        +--rw bgp-pol:reference
+                           +--rw bgp-pol:ext-community-set-ref?   
         </artwork>
       </figure>
 
@@ -1519,6 +1522,7 @@ module ietf-routing-policy {
     <references title="Normative references">
       &RFC2119;
       &RFC3688;
+      &RFC4271;
       &RFC6020;
       &RFC6991;
       &RFC7950;
@@ -1527,22 +1531,6 @@ module ietf-routing-policy {
       &RFC8342;
       &RFC8343;
       &RFC8349;
-      <reference anchor="RFC4271">
-      	<front>
-      	  <title>A Border Gateway Protocol 4 (BGP-4)</title>
-      	  <author initials="Y." surname="Rekhter" fullname="Yakov Rekhter">
-      	    <organization/>
-      	  </author>
-      	  <author initials="T." surname="Li" fullname="Tony Li">
-      	    <organization/>
-      	  </author>
-      	  <author initials="S." surname="Hares" fullname="Susan Hares">
-      	    <organization/>
-      	  </author>
-      	  <date year="2006" month="January"/>
-      	</front>
-      	<seriesInfo name="RFC" value="4271"/>
-      </reference>
       <?rfc include="reference.I-D.ietf-netmod-intf-ext-yang"?>
     </references>
 
