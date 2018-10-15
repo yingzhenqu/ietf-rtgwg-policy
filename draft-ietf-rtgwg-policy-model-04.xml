@@ -1551,26 +1551,5 @@ module ietf-routing-policy {
       </t>
 
     </section>
-    <section title="Change summary">
-      <section title="Changes between revisions -01 and -02">
-        <t>
-          Updated the model to use IETF modules and be NMDA compliant.
-        </t>
-      </section>
-      <section title="Changes between revisions -00 and -01">
-        <t>
-          Updated policy model with additional condition for matching interfaces.
-        </t>
-      </section>
-      <section title="Changes between revisions draft-shaikh-rtgwg-policy-model and -00">
-      <t>
-        This revision updates the draft name to reflect adoption as a working
-        document in the RTGWG.  Minor changes include updates to references
-        and updated author contact information.
-      </t>
-      </section>
-    </section>
-
-
   </back>
 </rfc>
