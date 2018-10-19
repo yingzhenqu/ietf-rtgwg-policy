@@ -655,8 +655,7 @@
 
     <section title="Security Considerations">
 
-      <t>Routing policy configuration has a significant impact on network operations,
-      and, as such, any related model carries potential security risks.
+      <t>Routing policy configuration has a significant impact on network operations, and, as such, any related model carries potential security risks.
       </t>
 
       <t>YANG data models are generally designed to be used with the
@@ -803,7 +802,7 @@ module ietf-routing-policy {
      subroutine performed any changes to the route).";
 
 
-  revision "2018-10-15" {
+  revision "2018-10-19" {
     description
       "Initial revision.";
     reference
