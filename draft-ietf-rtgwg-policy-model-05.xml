@@ -1319,18 +1319,12 @@ module ietf-routing-policy {
            accept or reject.";
       }
       leaf set-metric {
-        type union {
-          type uint16;
-          type uint32;
-        }
+        type uint32;
         description
           "Set a new metric for the route.";
       }
       leaf set-preference {
-        type union {
-          type uint16;
-          type uint32;
-        }
+        type uint16;
         description
           "Set a new preference for the route.";
       }
