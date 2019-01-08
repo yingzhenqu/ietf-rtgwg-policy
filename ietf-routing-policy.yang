@@ -107,7 +107,11 @@ module ietf-routing-policy {
      route).";
 
 
+<<<<<<< HEAD
   revision "2019-01-07" {
+=======
+  revision "2018-10-19" {
+>>>>>>> c27aedb064a631f3ee93bc212359e3a35e38828b
     description
       "Initial revision.";
     reference
@@ -611,18 +615,12 @@ module ietf-routing-policy {
            accept or reject.";
       }
       leaf set-metric {
-        type union {
-          type uint16;
-          type uint32;
-        }
+        type uint32;
         description
           "Set a new metric for the route.";
       }
       leaf set-preference {
-        type union {
-          type uint16;
-          type uint32;
-        }
+        type uint16;
         description
           "Set a new preference for the route.";
       }

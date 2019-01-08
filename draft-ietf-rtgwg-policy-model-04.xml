@@ -415,8 +415,8 @@
                +--rw statement* [name]
                   +--rw actions
                     +--rw policy-result?    policy-result-type
-                    +--rw set-metric?       union
-                    +--rw set-preference?   union
+                    +--rw set-metric?       uint32
+                    +--rw set-preference?   uint16
           </artwork>
         </figure>
 
@@ -622,8 +622,8 @@
                |              match-set-options-type
                +--rw actions
                   +--rw policy-result?         policy-result-type
-                  +--rw set-metric?            union
-                  +--rw set-preference?        union
+                  +--rw set-metric?            uint32
+                  +--rw set-preference?        uint16
                   +--rw bgp-pol:bgp-actions
                      +--rw bgp-pol:set-route-origin?      
                            bgp-types:bgp-origin-attr-type
@@ -655,8 +655,7 @@
 
     <section title="Security Considerations">
 
-      <t>Routing policy configuration has a significant impact on network operations,
-      and, as such, any related model carries potential security risks.
+      <t>Routing policy configuration has a significant impact on network operations, and, as such, any related model carries potential security risks.
       </t>
 
       <t>YANG data models are generally designed to be used with the
@@ -695,7 +694,7 @@
       <section title="Routing policy model">
 	<figure>
 	<artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing-policy@2018-10-15.yang"
+<CODE BEGINS> file "ietf-routing-policy@2018-10-19.yang"
 module ietf-routing-policy {
 
   yang-version "1.1";
@@ -803,7 +802,7 @@ module ietf-routing-policy {
      subroutine performed any changes to the route).";
 
 
-  revision "2018-10-15" {
+  revision "2018-10-19" {
     description
       "Initial revision.";
     reference
@@ -1307,18 +1306,12 @@ module ietf-routing-policy {
            accept or reject.";
       }
       leaf set-metric {
-        type union {
-          type uint16;
-          type uint32;
-        }
+        type uint32;
         description
           "Set a new metric for the route.";
       }
       leaf set-preference {
-        type union {
-          type uint16;
-          type uint32;
-        }
+        type uint16;
         description
           "Set a new preference for the route.";
       }
