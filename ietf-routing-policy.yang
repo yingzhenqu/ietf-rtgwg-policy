@@ -107,7 +107,7 @@ module ietf-routing-policy {
      route).";
 
 
-  revision "2019-01-07" {
+  revision "2019-03-06" {
     description
       "Initial revision.";
     reference

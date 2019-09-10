@@ -33,10 +33,12 @@
     <!ENTITY RFC8349 PUBLIC '' 
       'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8349.xml'>
     <!ENTITY I-D.draft-ietf-netmod-intf-ext-yang SYSTEM
-      "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-netmod-intf-ext-yang-06.xml">
+      "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-netmod-intf-ext-yang-07.xml">
+    <!ENTITY I-D.draft-ietf-netmod-sub-intf-valn-model SYSTEM
+      "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-netmod-sub-intf-valn-model-05.xml">
     ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
-<rfc docName="draft-ietf-rtgwg-policy-model-05" ipr="trust200902" category="info">
+<rfc docName="draft-ietf-rtgwg-policy-model-06" ipr="trust200902" category="std">
 <?rfc toc="yes"?>
   <front>
     <title abbrev="Routing Policy Model">A YANG Data Model for Routing Policy Management</title>
@@ -415,8 +417,8 @@
                +--rw statement* [name]
                   +--rw actions
                     +--rw policy-result?    policy-result-type
-                    +--rw set-metric?       union
-                    +--rw set-preference?   union
+                    +--rw set-metric?       uint32
+                    +--rw set-preference?   uint16
           </artwork>
         </figure>
 
@@ -632,8 +634,8 @@
                |              match-set-options-type
                +--rw actions
                   +--rw policy-result?         policy-result-type
-                  +--rw set-metric?            union
-                  +--rw set-preference?        union
+                  +--rw set-metric?            uint32
+                  +--rw set-preference?        uint16
                   +--rw bgp-pol:bgp-actions
                      +--rw bgp-pol:set-route-origin?      
                            bgp-types:bgp-origin-attr-type
@@ -705,7 +707,7 @@
       <section title="Routing policy model">
 	<figure>
 	<artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing-policy@2019-01-07.yang"
+<CODE BEGINS> file "ietf-routing-policy@2019-03-06.yang"
 module ietf-routing-policy {
 
   yang-version "1.1";
@@ -815,7 +817,7 @@ module ietf-routing-policy {
      route).";
 
 
-  revision "2019-01-07" {
+  revision "2019-03-06" {
     description
       "Initial revision.";
     reference
@@ -1538,6 +1540,7 @@ module ietf-routing-policy {
       &RFC8343;
       &RFC8349;
       <?rfc include="reference.I-D.ietf-netmod-intf-ext-yang"?>
+      <?rfc include="reference.I-D.ietf-netmod-sub-intf-vlan-model"?>
     </references>
 
     <references title="Informative references">
