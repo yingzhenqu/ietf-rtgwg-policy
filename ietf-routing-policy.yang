@@ -43,9 +43,7 @@ module ietf-routing-policy {
                Acee Lindem
                <mailto:acee@cisco.com>
                Xufeng Liu
-               <mailto:xufeng_liu@jabil.com>
-               Anees Shaikh
-               <mailto:aashaikh@google.com>";
+               <mailto:xufeng.liu.ietf@gmail.com>";
 
   description
     "This module describes a YANG model for routing policy
@@ -121,7 +119,7 @@ module ietf-routing-policy {
      route).";
 
 
-  revision "2020-01-02" {
+  revision "2020-02-26" {
     description
       "Initial revision.";
     reference
@@ -130,11 +128,92 @@ module ietf-routing-policy {
   }
 
 
-  // typedef statements
+  /* Identities */
+
+  identity metric-type {
+    description "Base identity for route metric types.";
+  }
+
+  identity ospf-type-1-metric {
+    base metric-type;
+    description
+      "Identity for the OSPF type 1 external metric types. It
+       is only applicable to OSPF routes.";
+  }
+
+  identity ospf-type-2-metric {
+    base metric-type;
+    description
+      "Identity for the OSPF type 2 external metric types. It
+       is only applicable to OSPF routes.";
+  }
+
+  identity isis-internal-metric {
+    base metric-type;
+    description
+      "Identity for the IS-IS internal metric types. It is only
+       applicable to IS-IS routes.";
+  }
+
+  identity isis-external-metric {
+    base metric-type;
+    description
+      "Identity for the IS-IS external metric types. It is only
+       applicable to IS-IS routes.";
+  }
+
+  identity import-level {
+    description "Base identity for route import level.";
+  }
+
+  identity ospf-backbone {
+    base import-level;
+    description
+      "Identity for OSPF backbone importation. It is only
+       applicable to routes imported into the OSPF protocol.";
+  }
+
+  identity ospf-nssa-only {
+    base import-level;
+    description
+      "Identity for the OSPF NSSA area importation. It is only
+       applicable to routes imported into the OSPF protocol.";
+  }
+  
+  identity ospf-stub-only {
+    base import-level;
+    description
+      "Identity for OSPF Stub area importation. It is only
+       applicable to routes imported into the OSPF protocol.";
+  }
+  
+  identity isis-level-1 {
+    base import-level;
+    description
+      "Identity for IS-IS Level 1 area importation. It is only
+       applicable to routes imported into the IS-IS protocol.";
+  }
+  
+  identity isis-level-2 {
+    base import-level;
+    description
+      "Identity for IS-IS Level 2 area importation. It is only
+       applicable to routes imported into the IS-IS protocol.";
+  }
+  
+  identity isis-level-1-2 {
+    base import-level;
+    description
+      "Identity for IS-IS Level 1 and Level 2 ara importation. It
+       is only applicable to routes imported into the IS-IS
+       protocol.";
+  }
+  
+  /* Type Definitions */
 
   typedef default-policy-type {
-    // this typedef retained for name compatibiity with default
-    // import and export policy
+    /* This typedef retained for name compatibiity with default
+       import and export policy. */
     type enumeration {
       enum accept-route {
         description
@@ -200,8 +279,29 @@ module ietf-routing-policy {
        of the members of the defined set";
   }
 
+  typedef metric-modification-type {
+    type enumeration {
+      enum set-metric {
+        description "Set the metric to the specified value";
+      }
+      enum  add-metric {
+        description
+          "Add the specified value to the existing metric.
+           If the result would exceed the the maximum metric
+           (0xffffffff), set the metric to the maximum.";
+      }
+      enum  subtrace-metric {
+        description
+          "Subtract the specified value to the existing metric.
+           If the result would be less than 0, set the metric to 0.";
+      }
+    }
+    description
+      "Type used to specify how to set the metric given the
+       specified value";
+  }
 
-  // grouping statements
+  /* Groupings */
 
   grouping prefix-set {
     description
@@ -624,15 +724,56 @@ module ietf-routing-policy {
           "Select the final disposition for the route, either
            accept or reject.";
       }
-      leaf set-metric {
-        type uint32;
+      container set-metric {
+        leaf metric-modificatiion {
+          type metric-modification-type;
+          description
+            "Indicates how to modify the metric.";
+        }
+        leaf metric {
+          type uint32;
+          description
+            "Metric value to set, add, or subtract.";
+        }
         description
-          "Set a new metric for the route.";
+          "Set the metric for the route.";
+      }
+      container set-metric-type {
+        leaf metric-type {
+          type identityref {
+            base metric-type;
+          }
+          description
+            "Route metric type.";
+        }
+        description
+          "Set the metric type for the route.";
+      }
+      container set-import-level {
+        leaf import-level {
+          type identityref {
+            base import-level;
+          }
+          description
+            "Route importation level.";
+        }
+        description
+          "Set the import level for importation of routes.";
       }
       leaf set-preference {
         type uint16;
         description
-          "Set a new preference for the route.";
+          "Set the preference for the route.";
+      }
+      leaf set-tag {
+        type tag-type;
+        description
+          "Set the tag for the route.";
+      }
+      leaf set-application-tag {
+        type tag-type;
+        description
+          "Set the application tag for the route.";
       }
     }
   }
@@ -737,15 +878,6 @@ module ietf-routing-policy {
 
     uses apply-policy-import;
     uses apply-policy-export;
-
-    container apply-policy-state {
-      description
-        "Operational state associated with routing policy";
-
-      //TODO: identify additional state data beyond the intended
-      //policy configuration.
-    }
-
   }
 
 
