@@ -119,7 +119,7 @@ module ietf-routing-policy {
      route).";
 
 
-  revision "2020-02-26" {
+  revision "2020-03-03" {
     description
       "Initial revision.";
     reference
@@ -166,11 +166,12 @@ module ietf-routing-policy {
     description "Base identity for route import level.";
   }
 
-  identity ospf-backbone {
+  identity ospf-normal {
     base import-level;
     description
-      "Identity for OSPF backbone importation. It is only
-       applicable to routes imported into the OSPF protocol.";
+      "Identity for OSPF importation into normal areas
+       It is only applicable to routes imported
+       into the OSPF protocol.";
   }
 
   identity ospf-nssa-only {
@@ -179,28 +180,29 @@ module ietf-routing-policy {
       "Identity for the OSPF NSSA area importation. It is only
        applicable to routes imported into the OSPF protocol.";
   }
-  
-  identity ospf-stub-only {
+
+  identity ospf-normal-nssa {
     base import-level;
     description
-      "Identity for OSPF Stub area importation. It is only
-       applicable to routes imported into the OSPF protocol.";
+      "Identity for OSPF importation into both normal and NSSA
+       areas, It is only applicable to routes imported into
+       the OSPF protocol.";
   }
-  
+
   identity isis-level-1 {
     base import-level;
     description
       "Identity for IS-IS Level 1 area importation. It is only
        applicable to routes imported into the IS-IS protocol.";
   }
-  
+
   identity isis-level-2 {
     base import-level;
     description
       "Identity for IS-IS Level 2 area importation. It is only
        applicable to routes imported into the IS-IS protocol.";
   }
-  
+
   identity isis-level-1-2 {
     base import-level;
     description
@@ -208,7 +210,89 @@ module ietf-routing-policy {
        is only applicable to routes imported into the IS-IS
        protocol.";
   }
-  
+
+  identity proto-route-type {
+    description
+      "Base identity for route type within a protocol.";
+  }
+
+  identity isis-level-1-type {
+    base proto-route-type;
+    description
+      "Identity for IS-IS Level 1 route type. It is only
+       applicable to IS-IS routes.";
+  }
+
+  identity isis-level-2-type {
+    base proto-route-type;
+    description
+      "Identity for IS-IS Level 2 route type. It is only
+       applicable to IS-IS routes.";
+  }
+
+  identity ospf-internal-type {
+    base proto-route-type;
+    description
+      "Identity for OSPF intra-area or inter-area route type.
+       It is only applicable to OSPF routes.";
+  }
+
+  identity ospf-external-type {
+    base proto-route-type;
+    description
+      "Identity for OSPF external type 1/2 route type.
+       It is only applicable to OSPF routes.";
+  }
+
+  identity ospf-external-t1 {
+    base ospf-external-type;
+    description
+      "Identity for OSPF external type 1 route type.
+       It is only applicable to OSPF routes.";
+  }
+
+  identity ospf-external-t2-type {
+    base ospf-external-type;
+    description
+      "Identity for OSPF external type 2 route type.
+       It is only applicable to OSPF routes.";
+  }
+
+  identity ospf-nssa-type {
+    base proto-route-type;
+    description
+      "Identity for OSPF NSSA type 1/2 route type.
+       It is only applicable to OSPF routes.";
+  }
+
+  identity ospf-nssa-t1 {
+    base ospf-nssa-type;
+    description
+      "Identity for OSPF NSSA type 1 route type.
+       It is only applicable to OSPF routes.";
+  }
+
+  identity ospf-nssa-t2 {
+    base ospf-nssa-type;
+    description
+      "Identity for OSPF NSSA type 2 route type.
+       It is only applicable to OSPF routes.";
+  }
+
+  identity bgp-local {
+    base proto-route-type;
+    description
+      "Identity for BGP local route type.
+       It is only applicable to BGP routes.";
+  }
+
+  identity bgp-external {
+    base proto-route-type;
+    description
+      "Identity for BGP external route type.
+       It is only applicable to BGP routes.";
+  }
+
   /* Type Definitions */
 
   typedef default-policy-type {
@@ -290,7 +374,7 @@ module ietf-routing-policy {
            If the result would exceed the the maximum metric
            (0xffffffff), set the metric to the maximum.";
       }
-      enum  subtrace-metric {
+      enum  subtract-metric {
         description
           "Subtract the specified value to the existing metric.
            If the result would be less than 0, set the metric to 0.";
@@ -576,6 +660,20 @@ module ietf-routing-policy {
     }
   }
 
+  grouping match-proto-route-type-condition {
+    description
+      "This grouping provides route-type match condition";
+
+    leaf-list match-proto-route-type {
+        type identityref {
+          base proto-route-type;
+        }
+        description
+          "Condition to check the protocol specific type
+           of route.";
+    }
+  }
+
   grouping prefix-set-condition {
     description
       "This grouping provides prefix-set conditions";
@@ -645,6 +743,7 @@ module ietf-routing-policy {
     uses prefix-set-condition;
     uses neighbor-set-condition;
     uses tag-set-condition;
+    uses match-proto-route-type-condition;
 
   }
 
