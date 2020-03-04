@@ -426,27 +426,6 @@ module ietf-routing-policy {
 
   }
 
-  grouping prefix-set-top {
-    description
-      "Top-level data definitions for a list of IPv4 or IPv6
-       prefixes which are matched as part of a policy";
-
-    container prefix-sets {
-      description
-        "Enclosing container ";
-
-      list prefix-set {
-        key "name";
-        description
-          "List of the defined prefix sets";
-
-        uses prefix-set;
-
-        uses prefix-top;
-      }
-    }
-  }
-
   grouping prefix {
     description
       "Configuration data for a prefix definition";
@@ -494,25 +473,6 @@ module ietf-routing-policy {
     }
   }
 
-  grouping prefix-top {
-    description
-      "Top-level grouping for prefixes in a prefix list";
-
-    container prefixes {
-      description
-        "Enclosing container for the list of prefixes in a policy
-         prefix list";
-
-      list prefix-list {
-        key "ip-prefix masklength-lower masklength-upper";
-        description
-          "List of prefixes in the prefix set";
-
-        uses prefix;
-      }
-    }
-  }
-
   grouping neighbor-set {
     description
       "This grouping provides neighbor set definitions";
@@ -528,26 +488,6 @@ module ietf-routing-policy {
       type inet:ip-address;
       description
         "List of IP addresses in the neighbor set";
-    }
-  }
-
-  grouping neighbor-set-top {
-    description
-      "Top-level data definition for a list of IPv4 or IPv6
-       neighbors which can be matched in a routing policy";
-
-    container neighbor-sets {
-      description
-        "Enclosing container for the list of neighbor set
-         definitions";
-
-      list neighbor-set {
-        key "name";
-        description
-          "List of defined neighbor sets for use in policies.";
-
-        uses neighbor-set;
-      }
     }
   }
 
@@ -568,27 +508,6 @@ module ietf-routing-policy {
         "Value of the tag set member";
     }
   }
-
-  grouping tag-set-top {
-    description
-      "Top-level data definitions for a list of tags which can
-       be matched in policies";
-
-    container tag-sets {
-      description
-        "Enclosing container for the list of tag sets.";
-
-      list tag-set {
-        key "name";
-        description
-          "List of tag set definitions.";
-
-        uses tag-set;
-
-      }
-    }
-  }
-
 
   grouping match-set-options-group {
     description
@@ -670,7 +589,9 @@ module ietf-routing-policy {
         }
         description
           "Condition to check the protocol specific type
-           of route.";
+           of route. This is normally used during route
+           importation to select routes or to set protocol
+           specific attributes based on the route type.";
     }
   }
 
@@ -783,32 +704,6 @@ module ietf-routing-policy {
       }
   }
 
-  grouping policy-conditions-top {
-    description
-      "Top-level grouping for policy conditions";
-
-    container conditions {
-      description
-        "Condition statements for the current policy statement";
-
-      uses policy-conditions;
-
-      uses generic-conditions;
-    }
-  }
-
-  grouping policy-statements {
-    description
-      "Data for policy statements";
-
-    leaf name {
-      type string;
-      description
-        "Name of the policy statement";
-    }
-  }
-
-
   grouping policy-actions {
     description
       "Top-level grouping for policy actions";
@@ -877,11 +772,11 @@ module ietf-routing-policy {
     }
   }
 
-  grouping policy-statements-top {
+  grouping policy-statements {
     description
-      "Top-level grouping for the policy statements list";
+      "Grouping for the policy statements list";
 
-    container statements {
+    container policy-statements {
       description
         "Enclosing container for policy statements";
 
@@ -894,9 +789,21 @@ module ietf-routing-policy {
            the order specified (see the description of policy
            evaluation at the top of this module.";
 
-        uses policy-statements;
+        leaf name {
+          type string;
+          description
+            "Name of the policy statement";
+        }
 
-        uses policy-conditions-top;
+        container conditions {
+          description
+            "Condition statements for the current policy statement";
+
+          uses policy-conditions;
+
+          uses generic-conditions;
+        }
+
         uses policy-actions;
       }
     }
@@ -1007,9 +914,59 @@ module ietf-routing-policy {
         "Predefined sets of attributes used in policy match
          statements";
 
-      uses prefix-set-top;
-      uses neighbor-set-top;
-      uses tag-set-top;
+      container prefix-sets {
+        description
+          "Data definitions for a list of IPv4 or IPv6
+          prefixes which are matched as part of a policy";
+        list prefix-set {
+          key "name";
+          description
+            "List of the defined prefix sets";
+
+          uses prefix-set;
+
+          container prefixes {
+            description
+              "Container for the list of prefixes in a policy
+               prefix list";
+
+            list prefix-list {
+              key "ip-prefix masklength-lower masklength-upper";
+              description
+                "List of prefixes in the prefix set";
+
+              uses prefix;
+            }
+          }
+        }
+      }
+
+      container neighbor-sets {
+        description
+          "Data definition for a list of IPv4 or IPv6
+           neighbors which can be matched in a routing policy";
+
+        list neighbor-set {
+          key "name";
+          description
+            "List of defined neighbor sets for use in policies.";
+
+          uses neighbor-set;
+        }
+      }
+
+      container tag-sets {
+        description
+          "Data definitions for a list of tags which can
+           be matched in policies";
+
+        list tag-set {
+          key "name";
+          description
+            "List of tag set definitions.";
+          uses tag-set;
+        }
+      }
     }
 
     container policy-definitions {
@@ -1027,7 +984,7 @@ module ietf-routing-policy {
 
         uses policy-definitions;
 
-        uses policy-statements-top;
+        uses policy-statements;
       }
     }
   }
