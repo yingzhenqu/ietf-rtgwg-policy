@@ -32,13 +32,15 @@
       'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8343.xml'> 
     <!ENTITY RFC8349 PUBLIC '' 
       'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8349.xml'>
+    <!ENTITY RFC8446 PUBLIC '' 
+      'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8446.xml'>
     <!ENTITY I-D.draft-ietf-netmod-intf-ext-yang SYSTEM
       "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-netmod-intf-ext-yang-08.xml">
     <!ENTITY I-D.draft-ietf-netmod-sub-intf-vlan-model SYSTEM
-      "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-netmod-sub-intf-valn-model-09.xml">
+      "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-netmod-sub-intf-valn-model-06.xml">
     ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
-<rfc docName="draft-ietf-rtgwg-policy-model-09" ipr="trust200902" category="std">
+<rfc docName="draft-ietf-rtgwg-policy-model-10" ipr="trust200902" category="std">
 <?rfc toc="yes"?>
   <front>
     <title abbrev="Routing Policy Model">A YANG Data Model for Routing Policy Management</title>
@@ -97,7 +99,7 @@
 
   <middle>
     <section title="Introduction" anchor="intro">
-      <t>This document describes a <xref target="RFC6020">YANG</xref> <xref target="RFC7950"/> data model for routing policy configuration based on operational usage and best practices in a variety of service provider networks.  The model is intended to be vendor-neutral, in order to allow operators to manage policy configuration in a consistent, intuitive way in heterogeneous environments with routers supplied by multiple vendors.
+      <t>This document describes a YANG <xref target="RFC7950"/> data model for routing policy configuration based on operational usage and best practices in a variety of service provider networks.  The model is intended to be vendor-neutral, in order to allow operators to manage policy configuration in a consistent, intuitive way in heterogeneous environments with routers supplied by multiple vendors.
       </t>
       <t> The YANG modules in this document conform to the Network Management
       Datastore Architecture (NMDA) [RFC8342].</t>
@@ -267,9 +269,8 @@
         The models provides a set of generic sets that can be used for
         matching in policy conditions.  These sets are applicable for
         route selection across  multiple routing protocols. They may be
-        further augmented by
-        protocol-specific models which have their own defined sets. The
-        supported defined sets include:
+        further augmented by protocol-specific models which have their 
+        own defined sets. The supported defined sets include:
         </t>
         <t>
           <list style="symbols">
@@ -301,11 +302,11 @@
        |  |     +--rw name        string
        |  |     +--rw mode?       enumeration
        |  |     +--rw prefixes
-       |  |        +--rw prefix-list* [ip-prefix masklength-lower 
-       |  |                            masklength-upper]
+       |  |        +--rw prefix-list* [ip-prefix mask-length-lower 
+       |  |                            mask-length-upper]
        |  |           +--rw ip-prefix           inet:ip-prefix
-       |  |           +--rw masklength-lower    uint8
-       |  |           +--rw masklength-upper    uint8
+       |  |           +--rw mask-length-lower    uint8
+       |  |           +--rw mask-length-upper    uint8
        |  +--rw neighbor-sets
        |  |  +--rw neighbor-set* [name]
        |  |     +--rw name       string
@@ -377,20 +378,21 @@
          +--rw statements
             +--rw statement* [name]
                +--rw conditions
-               |  +--rw call-policy?
-               |  +--rw install-protocol-eq?
+               |  +--rw call-policy?              
+               |  +--rw source-protocol?         
                |  +--rw match-interface
-               |  |  +--rw interface?
-               |  |  +--rw subinterface?
+               |  |  +--rw interface?      
+               |  |  +--rw subinterface?   
                |  +--rw match-prefix-set
-               |  |  +--rw prefix-set?
-               |  |  +--rw match-set-options?
+               |  |  +--rw prefix-set?         
+               |  |  +--rw match-set-options?   
                |  +--rw match-neighbor-set
-               |  |  +--rw neighbor-set?   
+               |  |  +--rw neighbor-set?  
                |  +--rw match-tag-set
                |  |  +--rw tag-set?             
-               |  |  +--rw match-set-options?
+               |  |  +--rw match-set-options?   
                |  +--rw match-proto-route-type*   identityref
+
         </artwork>
         </figure>
       </section>
@@ -567,156 +569,178 @@
 
       <figure>
         <artwork>
-+--rw routing-policy
-   +--rw defined-sets
-   |  +--rw prefix-sets
-   |  |  +--rw prefix-set* [name]
-   |  |     +--rw name        string
-   |  |     +--rw mode?       enumeration
-   |  |     +--rw prefixes
-   |  |        +--rw prefix-list* [ip-prefix masklength-lower 
-   |  |                            masklength-upper]
-   |  |           +--rw ip-prefix           inet:ip-prefix
-   |  |           +--rw masklength-lower    uint8
-   |  |           +--rw masklength-upper    uint8
-   |  +--rw neighbor-sets
-   |  |  +--rw neighbor-set* [name]
-   |  |     +--rw name       string
-   |  |     +--rw address*   inet:ip-address
-   |  +--rw tag-sets
-   |  |  +--rw tag-set* [name]
-   |  |     +--rw name         string
-   |  |     +--rw tag-value*   tag-type
-   |  +--rw bgp-pol:bgp-defined-sets
-   |     +--rw bgp-pol:community-sets
-   |     |  +--rw bgp-pol:community-set* [community-set-name]
-   |     |     +--rw bgp-pol:community-set-name    string
-   |     |     +--rw bgp-pol:community-member*     union
-   |     +--rw bgp-pol:ext-community-sets
-   |     |  +--rw bgp-pol:ext-community-set* [ext-community-set-name]
-   |     |     +--rw bgp-pol:ext-community-set-name    string
-   |     |     +--rw bgp-pol:ext-community-member*     union
-   |     +--rw bgp-pol:as-path-sets
-   |        +--rw bgp-pol:as-path-set* [as-path-set-name]
-   |           +--rw bgp-pol:as-path-set-name      string
-   |           +--rw bgp-pol:as-path-set-member*   string
-   +--rw policy-definitions
-      +--rw policy-definition* [name]
-         +--rw name          string
-         +--rw statements
-            +--rw statement* [name]
-               +--rw name          string
-               +--rw conditions
-               |  +--rw call-policy?              
-               |  +--rw source-protocol?          identityref
-               |  +--rw match-interface
-               |  |  +--rw interface?      
-               |  |  +--rw subinterface?   
-               |  +--rw match-prefix-set
-               |  |  +--rw prefix-set?          
-               |  |  +--rw match-set-options? match-set-options-type
-               |  +--rw match-neighbor-set
-               |  |  +--rw neighbor-set?   
-               |  +--rw match-tag-set
-               |  |  +--rw tag-set?             
-               |  |  +--rw match-set-options? match-set-options-type
-               |  +--rw match-proto-route-type*   identityref
-               |  +--rw bgp-pol:bgp-conditions
-               |     +--rw bgp-pol:med-eq?      uint32
-               |     +--rw bgp-pol:origin-eq?   
-               |           bgp-types:bgp-origin-attr-type
-               |     +--rw bgp-pol:next-hop-in* 
-               |           inet:ip-address-no-zone
-               |     +--rw bgp-pol:afi-safi-in*   identityref
-               |     +--rw bgp-pol:local-pref-eq? uint32
-               |     +--rw bgp-pol:route-type?    enumeration
-               |     +--rw bgp-pol:community-count
-               |     +--rw bgp-pol:as-path-length
-               |     +--rw bgp-pol:match-community-set
-               |     |  +--rw bgp-pol:community-set?       
-               |     |  +--rw bgp-pol:match-set-options?   
-               |              match-set-options-type
-               |     +--rw bgp-pol:match-ext-community-set
-               |     |  +--rw bgp-pol:ext-community-set?   
-               |     |  +--rw bgp-pol:match-set-options?   
-               |     |        match-set-options-type
-               |     +--rw bgp-pol:match-as-path-set
-               |        +--rw bgp-pol:as-path-set?         
-               |        +--rw bgp-pol:match-set-options?   
-               |              match-set-options-type
-               +--rw actions
-                  +--rw policy-result?     policy-result-type
-                  +--rw set-metric
-                  |  +--rw metric-modificatiion?
-                  |  |        metric-modification-type
-                  |  +--rw metric?                 uint32
-                  +--rw set-metric-type
-                  |  +--rw metric-type?   identityref
-                  +--rw set-import-level
-                  |  +--rw import-level?   identityref
-                  +--rw set-preference?        uint16
-                  +--rw set-tag?               tag-type
-                  +--rw set-application-tag?   tag-type
-                  +--rw bgp-pol:bgp-actions
-                     +--rw bgp-pol:set-route-origin?      
-                           bgp-types:bgp-origin-attr-type
-                     +--rw bgp-pol:set-local-pref?        uint32
-                     +--rw bgp-pol:set-next-hop?   bgp-next-hop-type
-                     +--rw bgp-pol:set-med?        bgp-set-med-type
-                     +--rw bgp-pol:set-as-path-prepend
-                     |  +--rw bgp-pol:repeat-n?   uint8
-                     +--rw bgp-pol:set-community
-                     |  +--rw bgp-pol:method?      enumeration
-                     |  +--rw bgp-pol:options?     
-                              bgp-set-community-option-type
-                     |  +--rw bgp-pol:inline
-                     |  |  +--rw bgp-pol:communities*   union
-                     |  +--rw bgp-pol:reference
-                     |     +--rw bgp-pol:community-set-ref?   
-                     +--rw bgp-pol:set-ext-community
-                        +--rw bgp-pol:method?       enumeration
-                        +--rw bgp-pol:options?      
-                              bgp-set-community-option-type
-                        +--rw bgp-pol:inline
-                        |  +--rw bgp-pol:communities*   union
-                        +--rw bgp-pol:reference
-                           +--rw bgp-pol:ext-community-set-ref?   
+module: ietf-routing-policy
+  +--rw routing-policy
+     +--rw defined-sets
+     |  +--rw prefix-sets
+     |  |  +--rw prefix-set* [name]
+     |  |     +--rw name        string
+     |  |     +--rw mode?       enumeration
+     |  |     +--rw prefixes
+     |  |        +--rw prefix-list* [ip-prefix mask-length-lower 
+     |  |                            mask-length-upper]
+     |  |           +--rw ip-prefix            inet:ip-prefix
+     |  |           +--rw mask-length-lower    uint8
+     |  |           +--rw mask-length-upper    uint8
+     |  +--rw neighbor-sets
+     |  |  +--rw neighbor-set* [name]
+     |  |     +--rw name       string
+     |  |     +--rw address*   inet:ip-address
+     |  +--rw tag-sets
+     |  |  +--rw tag-set* [name]
+     |  |     +--rw name         string
+     |  |     +--rw tag-value*   tag-type
+     |  +--rw bp:bgp-defined-sets
+     |     +--rw bp:community-sets
+     |     |  +--rw bp:community-set* [name]
+     |     |     +--rw bp:name      string
+     |     |     +--rw bp:member*   union
+     |     +--rw bp:ext-community-sets
+     |     |  +--rw bp:ext-community-set* [name]
+     |     |     +--rw bp:name      string
+     |     |     +--rw bp:member*   union
+     |     +--rw bp:as-path-sets
+     |        +--rw bp:as-path-set* [name]
+     |           +--rw bp:name      string
+     |           +--rw bp:member*   string
+     +--rw policy-definitions
+        +--rw policy-definition* [name]
+           +--rw name          string
+           +--rw statements
+              +--rw statement* [name]
+                 +--rw name          string
+                 +--rw conditions
+                 |  +--rw call-policy?         
+                 |  +--rw source-protocol?          identityref
+                 |  +--rw match-interface
+                 |  |  +--rw interface?     
+                 |  |  +--rw subinterface?  
+                 |  +--rw match-prefix-set
+                 |  |  +--rw prefix-set?       prefix-set/name
+                 |  |  +--rw match-set-options?   match-set-options-type
+                 |  +--rw match-neighbor-set
+                 |  |  +--rw neighbor-set?  
+                 |  +--rw match-tag-set
+                 |  |  +--rw tag-set?            
+                 |  |  +--rw match-set-options?   match-set-options-type
+                 |  +--rw match-proto-route-type*   identityref
+                 |  +--rw bp:bgp-conditions
+                 |     +--rw bp:med-eq?                    uint32
+                 |     +--rw bp:origin-eq?                 bt:bgp-origin-attr-type
+                 |     +--rw bp:next-hop-in*               inet:ip-address-no-zone
+                 |     +--rw bp:afi-safi-in*               identityref
+                 |     +--rw bp:local-pref-eq?             uint32
+                 |     +--rw bp:route-type?                enumeration
+                 |     +--rw bp:community-count
+                 |     +--rw bp:as-path-length
+                 |     +--rw bp:match-community-set
+                 |     |  +--rw bp:community-set?      
+                 |     |  +--rw bp:match-set-options?   match-set-options-type
+                 |     +--rw bp:match-ext-community-set
+                 |     |  +--rw bp:ext-community-set?   
+                 |     |  +--rw bp:match-set-options?   match-set-options-type
+                 |     +--rw bp:match-as-path-set
+                 |        +--rw bp:as-path-set?       
+                 |        +--rw bp:match-set-options?   match-set-options-type
+                 +--rw actions
+                    +--rw policy-result?         policy-result-type
+                    +--rw set-metric
+                    |  +--rw metric-modification?   metric-modification-type
+                    |  +--rw metric?                uint32
+                    +--rw set-metric-type
+                    |  +--rw metric-type?   identityref
+                    +--rw set-import-level
+                    |  +--rw import-level?   identityref
+                    +--rw set-preference?        uint16
+                    +--rw set-tag?               tag-type
+                    +--rw set-application-tag?   tag-type
+                    +--rw bp:bgp-actions
+                       +--rw bp:set-route-origin?      bt:bgp-origin-attr-type
+                       +--rw bp:set-local-pref?        uint32
+                       +--rw bp:set-next-hop?          bgp-next-hop-type
+                       +--rw bp:set-med?               bgp-set-med-type
+                       +--rw bp:set-as-path-prepend
+                       |  +--rw bp:repeat-n?   uint8
+                       +--rw bp:set-community
+                       |  +--rw bp:method?      enumeration
+                       |  +--rw bp:options?     bgp-set-community-option-type
+                       |  +--rw bp:inline
+                       |  |  +--rw bp:communities*   union
+                       |  +--rw bp:reference
+                       |     +--rw bp:community-set-ref? 
+                       +--rw bp:set-ext-community
+                          +--rw bp:method?      enumeration
+                          +--rw bp:options?     bgp-set-community-option-type
+                          +--rw bp:inline
+                          |  +--rw bp:communities*   union
+                          +--rw bp:reference
+                             +--rw bp:ext-community-set-ref?   
         </artwork>
       </figure>
 
     </section>
 
     <section title="Security Considerations">
+      <t>The YANG modules specified in this document define a schema for data
+        that is designed to be accessed via network management protocols such
+        as NETCONF <xref target="RFC6241"/> or RESTCONF <xref target="RFC8040"/>.
+        The lowest NETCONF layer is the secure transport layer, and the 
+        mandatory-to-implement secure transport is Secure Shell (SSH) <xref target="RFC6242"/>.
+        The lowest RESTCONF layer is HTTPS, and the mandatory-to-implement 
+        secure transport is TLS <xref target="RFC8446"/>.</t>
+
+      <t>The NETCONF Access Control Model (NACM) <xref target="RFC8341"/> provides 
+        the means to restrict access for particular NETCONF or RESTCONF users 
+        to a pre-configured subset of all available NETCONF or RESTCONF protocol
+        operations and content.</t>
+
+      <t>There are a number of data nodes defined in this YANG module that are
+        writable/creatable/deletable (i.e., config true, which is the
+        default). These data nodes may be considered sensitive or vulnerable
+        in some network environments. Write operations (e.g., edit-config)
+        to these data nodes without proper protection can have a negative
+        effect on network operations. These are the subtrees and data nodes
+        and their sensitivity/vulnerability:
+        <list style="empty">
+          <t>/routing-policy</t>
+          <t>/routing-policy/defined-sets/prefix-sets</t>
+          <t>/routing-policy/defined-sets/neighbor-sets</t>
+          <t>/routing-policy/defined-sets/tag-sets</t>
+          <t>/routing-policy/policy-definitions</t>
+        </list></t>
+
+      <t>Unauthorized access to any data node of these subtrees can disclose
+        the operational state information of routing policies on this device.</t>
 
       <t>Routing policy configuration has a significant impact on network operations,
-      and, as such, any related model carries potential security risks.
-      </t>
-
-      <t>YANG data models are generally designed to be used with the
-      NETCONF protocol over an SSH transport.  This provides an
-      authenticated and secure channel over which to transfer
-      configuration and operational data.  Note that use of
-      alternate transport or data encoding (e.g., JSON over HTTPS)
-      would require similar mechanisms for authenticating and
-      securing access to configuration data.
-      </t>
-
-      <t>Most of the data elements in the policy model could be
-      considered sensitive from a security standpoint.  Unauthorized
-      access or invalid data could cause major disruption.
-      </t>
+        and, as such, any related model carries potential security risks. Unauthorized
+        access or invalid data could cause major disruption.</t>
 
     </section>
 
     <section title="IANA Considerations">
 
-      <t>This YANG data model and the component modules currently use
-      a temporary ad-hoc namespace.  If and when it is placed on redirected for
-      the standards track, an appropriate namespace URI will be
-      registered in the <xref target="RFC3688">IETF XML Registry"</xref>.
-      The routing policy YANG modules will be registered in the
-      "YANG Module Names" registry [RFC6020].
-      </t>
+      <t>This document registers a URI in the IETF XML registry
+       <xref target="RFC3688"/>.  Following the format in <xref target="RFC3688"/>,
+       the following registration is requested to be made:
+      <figure>
+      <artwork>
+        URI: urn:ietf:params:xml:ns:yang:ietf-routing-policy
+        Registrant Contact: The IESG.
+        XML: N/A, the requested URI is an XML namespace.
+      </artwork>
+      </figure></t>
+      <t>This document registers a YANG module in the YANG Module Names
+       registry <xref target="RFC6020"/>.
+      <figure>
+      <artwork>
+        name: ietf-routing-policy
+        namespace: urn:ietf:params:xml:ns:yang:ietf-routing-policy
+        prefix: rt-pol
+        reference: RFC XXXX
+      </artwork>
+      </figure></t>
+      
     </section>
 
     <section title="YANG modules" anchor="models">
@@ -728,39 +752,53 @@
       <section title="Routing policy model">
         <figure>
         <artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing-policy@2020-03-03.yang"
+<CODE BEGINS> file "ietf-routing-policy@2020-05-20.yang"
 module ietf-routing-policy {
 
   yang-version "1.1";
+
   namespace "urn:ietf:params:xml:ns:yang:ietf-routing-policy";
   prefix rt-pol;
 
   import ietf-inet-types {
     prefix "inet";
+    reference "RFC 6991: Common YANG Data Types";
   }
 
   import ietf-yang-types {
     prefix "yang";
+    reference "RFC 6991: Common YANG Data Types";
   }
 
   import ietf-interfaces {
     prefix "if";
+    reference "RFC 8343: A YANG Data Model for Interface
+               Management (NMDA Version)";
   }
 
   import ietf-routing {
     prefix "rt";
+    reference "RFC 8343: A YANG Data Model for Interface
+               Management (NMDA Version)";
   }
 
   import ietf-if-extensions {
     prefix if-ext;
+    reference "RFC YYYY: Common Interface Extension YANG 
+               Data Models. Please replace YYYY with 
+               published RFC number for 
+               draft-ietf-netmod-intf-ext-yang.";
   }
 
   import ietf-if-l3-vlan {
     prefix "if-l3-vlan";
+    reference "RFC XXXX: Sub-interface VLAN YANG Data Models.
+               Please replace XXXX with published RFC number
+               for draft-ietf-netmod-sub-intf-vlan-model.";
   }
 
 
- organization
+  organization
     "IETF RTGWG - Routing Area Working Group";
   contact
     "WG Web:   <http://tools.ietf.org/wg/rtgwg/>
@@ -786,26 +824,12 @@ module ietf-routing-policy {
      used in conjunction with routing protocol configuration modules
      (e.g., BGP) defined in other models.
 
-     Copyright (c) 2020 IETF Trust and the persons identified as
-     authors of the code.  All rights reserved.
-
-     Redistribution and use in source and binary forms, with or
-     without modification, is permitted pursuant to, and subject to
-     the license terms contained in, the Simplified BSD License set
-     forth in Section 4.c of the IETF Trust's Legal Provisions
-     Relating to IETF Documents
-     (https://trustee.ietf.org/license-info).
-
-     This version of this YANG module is part of RFC XXXX
-     (https://www.rfc-editor.org/info/rfcXXXX); see the RFC itself
-     for full legal notices.
-
      Route policy expression:
 
      Policies are expressed as a set of top-level policy
      definitions, each of which consists of a sequence of policy
      statements. Policy statements consist of simple
-     condition-action tuples. Conditions may include mutiple match
+     condition-action tuples. Conditions may include multiple match
      or comparison operations, and similarly actions may be
      multitude of changes to route attributes or a final disposition
      of accepting or rejecting the route.
@@ -847,10 +871,33 @@ module ietf-routing-policy {
      false.  If the subroutine returns true, the calling policy
      continues to evaluate the remaining conditions (using a
      modified route if the subroutine performed any changes to the
-     route).";
+     route).
+
+     Copyright (c) 2020 IETF Trust and the persons identified as
+     authors of the code.  All rights reserved.
+
+     Redistribution and use in source and binary forms, with or
+     without modification, is permitted pursuant to, and subject to
+     the license terms contained in, the Simplified BSD License set
+     forth in Section 4.c of the IETF Trust's Legal Provisions
+     Relating to IETF Documents
+     (https://trustee.ietf.org/license-info).
+
+     This version of this YANG module is part of RFC XXXX
+     (https://www.rfc-editor.org/info/rfcXXXX); see the RFC itself
+     for full legal notices.
+
+     The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
+     NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'NOT RECOMMENDED',
+     'MAY', and 'OPTIONAL' in this document are to be interpreted as
+     described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
+     they appear in all capitals, as shown here.
+
+     This version of this YANG module is part of RFC XXXX;
+     see the RFC itself for full legal notices.";
 
 
-  revision "2020-03-03" {
+  revision "2020-05-20" {
     description
       "Initial revision.";
     reference
@@ -858,11 +905,11 @@ module ietf-routing-policy {
       Provider Networks";
   }
 
-
   /* Identities */
 
   identity metric-type {
-    description "Base identity for route metric types.";
+    description
+      "Base identity for route metric types.";
   }
 
   identity ospf-type-1-metric {
@@ -894,7 +941,8 @@ module ietf-routing-policy {
   }
 
   identity import-level {
-    description "Base identity for route import level.";
+    description
+      "Base identity for route import level.";
   }
 
   identity ospf-normal {
@@ -937,7 +985,7 @@ module ietf-routing-policy {
   identity isis-level-1-2 {
     base import-level;
     description
-      "Identity for IS-IS Level 1 and Level 2 ara importation. It
+      "Identity for IS-IS Level 1 and Level 2 area importation. It
        is only applicable to routes imported into the IS-IS
        protocol.";
   }
@@ -1027,35 +1075,37 @@ module ietf-routing-policy {
   /* Type Definitions */
 
   typedef default-policy-type {
-    /* This typedef retained for name compatibiity with default
-       import and export policy. */
     type enumeration {
       enum accept-route {
         description
-          "Default policy to accept the route";
+          "Default policy to accept the route.";
       }
       enum reject-route {
         description
-          "Default policy to reject the route";
+          "Default policy to reject the route.";
       }
     }
     description
       "Type used to specify route disposition in
-       a policy chain";
+       a policy chain. This typedef retained for 
+       name compatibility with default import and 
+       export policy.";
   }
 
   typedef policy-result-type {
     type enumeration {
       enum accept-route {
-        description "Policy accepts the route";
+        description
+          "Policy accepts the route.";
       }
       enum reject-route {
-        description "Policy rejects the route";
+        description
+          "Policy rejects the route.";
       }
     }
     description
       "Type used to specify route disposition in
-       a policy chain";
+       a policy chain.";
   }
 
   typedef tag-type {
@@ -1063,9 +1113,10 @@ module ietf-routing-policy {
       type uint32;
       type yang:hex-string;
     }
-    description "Type for expressing route tags on a local system,
+    description
+      "Type for expressing route tags on a local system,
        including IS-IS and OSPF; may be expressed as either decimal
-       or hexadecimal integer";
+       or hexadecimal integer.";
     reference
       "RFC 2178 - OSPF Version 2
        RFC 5130 - A Policy Control Mechanism in IS-IS Using
@@ -1075,29 +1126,33 @@ module ietf-routing-policy {
   typedef match-set-options-type {
     type enumeration {
       enum any {
-        description "Match is true if given value matches any member
-           of the defined set";
+        description
+          "Match is true if given value matches any member
+           of the defined set.";
       }
       enum all {
-        description "Match is true if given value matches all
-           members of the defined set";
+        description
+          "Match is true if given value matches all
+           members of the defined set.";
       }
       enum invert {
-        description "Match is true if given value does not match any
-           member of the defined set";
+        description
+          "Match is true if given value does not match any
+           member of the defined set.";
       }
     }
     default any;
     description
       "Options that govern the behavior of a match statement.  The
        default behavior is any, i.e., the given value matches any
-       of the members of the defined set";
+       of the members of the defined set.";
   }
 
   typedef metric-modification-type {
     type enumeration {
       enum set-metric {
-        description "Set the metric to the specified value";
+        description
+          "Set the metric to the specified value.";
       }
       enum  add-metric {
         description
@@ -1113,7 +1168,7 @@ module ietf-routing-policy {
     }
     description
       "Type used to specify how to set the metric given the
-       specified value";
+       specified value.";
   }
 
   /* Groupings */
@@ -1127,22 +1182,22 @@ module ietf-routing-policy {
       type string;
       description
         "Name of the prefix set -- this is used as a label to
-         reference the set in match conditions";
+         reference the set in match conditions.";
     }
 
     leaf mode {
       type enumeration {
         enum ipv4 {
           description
-            "Prefix set contains IPv4 prefixes only";
+            "Prefix set contains IPv4 prefixes only.";
         }
         enum ipv6 {
           description
-            "Prefix set contains IPv6 prefixes only";
+            "Prefix set contains IPv6 prefixes only.";
         }
         enum mixed {
           description
-            "Prefix set contains mixed IPv4 and IPv6 prefixes";
+            "Prefix set contains mixed IPv4 and IPv6 prefixes.";
         }
       }
       description
@@ -1157,30 +1212,9 @@ module ietf-routing-policy {
 
   }
 
-  grouping prefix-set-top {
-    description
-      "Top-level data definitions for a list of IPv4 or IPv6
-       prefixes which are matched as part of a policy";
-
-    container prefix-sets {
-      description
-        "Enclosing container ";
-
-      list prefix-set {
-        key "name";
-        description
-          "List of the defined prefix sets";
-
-        uses prefix-set;
-
-        uses prefix-top;
-      }
-    }
-  }
-
   grouping prefix {
     description
-      "Configuration data for a prefix definition";
+      "Configuration data for a prefix definition.";
 
     leaf ip-prefix {
       type inet:ip-prefix;
@@ -1193,92 +1227,53 @@ module ietf-routing-policy {
          the same prefix set is likely to cause an error.";
     }
 
-    leaf masklength-lower {
+    leaf mask-length-lower {
       type uint8;
       description
-        "Masklength range lower bound.";
+        "Mask length range lower bound.";
     }
-    leaf masklength-upper {
+    leaf mask-length-upper {
       type uint8 {
         range "1..128";
       }
-      must "../masklength-upper >= ../masklength-lower" {
+      must "../mask-length-upper >= ../mask-length-lower" {
         error-message "The upper bound should not be less"
                     + "than lower bound.";
       }
       description
-        "Masklength range upper bound.
+        "Mask length range upper bound.
 
-         The combination of masklength-lower and masklength-upper
+         The combination of mask-length-lower and mask-length-upper
          define a range for the mask length, or single 'exact'
-         length if masklength-lower and masklenght-upper are equal.
+         length if mask-length-lower and mask-length-upper are equal.
 
-         Example: 10.3.192.0/21 through 10.3.192.0/24 would be
-         expressed as prefix: 10.3.192.0/21,
-                      masklength-lower=21,
-                      masklength-upper=24
+         Example: 192.0.2.0/24 through 192.0.2.0/26 would be
+         expressed as prefix: 192.0.2.0/24,
+                      mask-length-lower=24,
+                      mask-length-upper=26
 
-         Example: 10.3.192.0/21 (an exact match) would be
-         expressed as prefix: 10.3.192.0/21,
-                      masklength-lower=21,
-                      masklength-upper=21";
-    }
-  }
-
-  grouping prefix-top {
-    description
-      "Top-level grouping for prefixes in a prefix list";
-
-    container prefixes {
-      description
-        "Enclosing container for the list of prefixes in a policy
-         prefix list";
-
-      list prefix-list {
-        key "ip-prefix masklength-lower masklength-upper";
-        description
-          "List of prefixes in the prefix set";
-
-        uses prefix;
-      }
+         Example: 192.0.2.0/24 (an exact match) would be
+         expressed as prefix: 192.0.2.0/24,
+                      mask-length-lower=24,
+                      mask-length-upper=24";
     }
   }
 
   grouping neighbor-set {
     description
-      "This grouping provides neighbor set definitions";
+      "This grouping provides neighbor set definitions.";
 
     leaf name {
       type string;
       description
-          "Name of the neighbor set -- this is used as a label
-           to reference the set in match conditions";
+        "Name of the neighbor set -- this is used as a label
+         to reference the set in match conditions.";
     }
 
     leaf-list address {
       type inet:ip-address;
       description
-        "List of IP addresses in the neighbor set";
-    }
-  }
-
-  grouping neighbor-set-top {
-    description
-      "Top-level data definition for a list of IPv4 or IPv6
-       neighbors which can be matched in a routing policy";
-
-    container neighbor-sets {
-      description
-        "Enclosing container for the list of neighbor set
-         definitions";
-
-      list neighbor-set {
-        key "name";
-        description
-          "List of defined neighbor sets for use in policies.";
-
-        uses neighbor-set;
-      }
+        "List of IP addresses in the neighbor set.";
     }
   }
 
@@ -1290,78 +1285,57 @@ module ietf-routing-policy {
       type string;
       description
         "Name of the tag set -- this is used as a label to reference
-         the set in match conditions";
+         the set in match conditions.";
     }
 
     leaf-list tag-value {
       type tag-type;
       description
-        "Value of the tag set member";
+        "Value of the tag set member.";
     }
   }
-
-  grouping tag-set-top {
-    description
-      "Top-level data definitions for a list of tags which can
-       be matched in policies";
-
-    container tag-sets {
-      description
-        "Enclosing container for the list of tag sets.";
-
-      list tag-set {
-        key "name";
-        description
-          "List of tag set definitions.";
-
-        uses tag-set;
-
-      }
-    }
-  }
-
 
   grouping match-set-options-group {
     description
       "Grouping containing options relating to how a particular set
-       should be matched";
+       should be matched.";
 
     leaf match-set-options {
       type match-set-options-type;
       description
         "Optional parameter that governs the behavior of the
-         match operation";
+         match operation.";
     }
   }
 
   grouping match-set-options-restricted-group {
     description
-      "Grouping for a restricted set of match operation modifiers";
+      "Grouping for a restricted set of match operation modifiers.";
 
     leaf match-set-options {
       type match-set-options-type {
         enum any {
-          description "Match is true if given value matches any
-             member of the defined set";
+          description
+            "Match is true if given value matches any
+             member of the defined set.";
         }
         enum invert {
-          description "Match is true if given value does not match
-             any member of the defined set";
+          description
+            "Match is true if given value does not match
+             any member of the defined set.";
         }
       }
       description
         "Optional parameter that governs the behavior of the
-         match operation.  This leaf only supports matching on ANY
-         member of the set or inverting the match.  Matching on ALL
-         is not supported";
+         match operation. This leaf only supports matching on
+         'any' member of the set or 'invert' the match. 
+         Matching on 'all' is not supported.";
     }
   }
 
-
-
   grouping match-interface-condition {
     description
-      "This grouping provides interface match condition";
+      "This grouping provides interface match condition.";
 
     container match-interface {
       leaf interface {
@@ -1383,7 +1357,7 @@ module ietf-routing-policy {
           "Reference to a subinterface -- this requires the base
            interface to be specified using the interface leaf in
            this container.  If only a reference to a base interface
-           is requuired, this leaf should not be set.";
+           is required, this leaf should not be set.";
       }
 
       description
@@ -1401,13 +1375,15 @@ module ietf-routing-policy {
         }
         description
           "Condition to check the protocol specific type
-           of route.";
+           of route. This is normally used during route
+           importation to select routes or to set protocol
+           specific attributes based on the route type.";
     }
   }
 
   grouping prefix-set-condition {
     description
-      "This grouping provides prefix-set conditions";
+      "This grouping provides prefix-set conditions.";
 
     container match-prefix-set {
       leaf prefix-set {
@@ -1415,19 +1391,20 @@ module ietf-routing-policy {
           path "../../../../../../../defined-sets/" +
             "prefix-sets/prefix-set/name";
         }
-        description "References a defined prefix set";
+        description
+          "References a defined prefix set.";
       }
       uses match-set-options-restricted-group;
 
       description
         "Match a referenced prefix-set according to the logic
-         defined in the match-set-options leaf";
+         defined in the match-set-options leaf.";
     }
   }
 
   grouping neighbor-set-condition {
     description
-      "This grouping provides neighbor-set conditions";
+      "This grouping provides neighbor-set conditions.";
 
     container match-neighbor-set {
       leaf neighbor-set {
@@ -1436,18 +1413,19 @@ module ietf-routing-policy {
           "neighbor-set/name";
           require-instance true;
         }
-        description "References a defined neighbor set";
+        description
+          "References a defined neighbor set.";
       }
 
       description
         "Match a referenced neighbor set according to the logic
-         defined in the match-set-options-leaf";
+         defined in the match-set-options-leaf.";
     }
   }
 
   grouping tag-set-condition {
     description
-      "This grouping provides tag-set conditions";
+      "This grouping provides tag-set conditions.";
 
     container match-tag-set {
       leaf tag-set {
@@ -1456,19 +1434,21 @@ module ietf-routing-policy {
           "/tag-set/name";
           require-instance true;
         }
-        description "References a defined tag set";
+        description
+          "References a defined tag set.";
       }
       uses match-set-options-restricted-group;
 
       description
         "Match a referenced tag set according to the logic defined
-         in the match-options-set leaf";
+         in the match-options-set leaf.";
     }
   }
 
   grouping generic-conditions {
-    description "Condition statement definitions for checking
-       membership in a generic defined set";
+    description
+      "Condition statement definitions for checking
+       membership in a generic defined set.";
 
     uses match-interface-condition;
     uses prefix-set-condition;
@@ -1481,7 +1461,7 @@ module ietf-routing-policy {
   grouping policy-conditions {
     description
       "Data for general policy conditions, i.e., those
-       not related to match-sets";
+       not related to match-sets.";
 
       leaf call-policy {
         type leafref {
@@ -1501,7 +1481,7 @@ module ietf-routing-policy {
            default route disposition that returns an
            effective true (accept-route) or false
            (reject-route), otherwise the behavior may be
-           ambiguous and implementation dependent";
+           ambiguous and implementation dependent.";
       }
 
       leaf source-protocol {
@@ -1510,43 +1490,17 @@ module ietf-routing-policy {
         }
         description
           "Condition to check the protocol / method used to install
-           the route into the local routing table";
+           the route into the local routing table.";
       }
   }
 
-  grouping policy-conditions-top {
-    description
-      "Top-level grouping for policy conditions";
-
-    container conditions {
-      description
-        "Condition statements for the current policy statement";
-
-      uses policy-conditions;
-
-      uses generic-conditions;
-    }
-  }
-
-  grouping policy-statements {
-    description
-      "Data for policy statements";
-
-    leaf name {
-      type string;
-      description
-        "Name of the policy statement";
-    }
-  }
-
-
   grouping policy-actions {
     description
-      "Top-level grouping for policy actions";
+      "Top-level grouping for policy actions.";
 
     container actions {
       description
-        "Top-level container for policy action statements";
+        "Top-level container for policy action statements.";
 
       leaf policy-result {
         type policy-result-type;
@@ -1555,7 +1509,7 @@ module ietf-routing-policy {
            accept or reject.";
       }
       container set-metric {
-        leaf metric-modificatiion {
+        leaf metric-modification {
           type metric-modification-type;
           description
             "Indicates how to modify the metric.";
@@ -1608,47 +1562,9 @@ module ietf-routing-policy {
     }
   }
 
-  grouping policy-statements-top {
-    description
-      "Top-level grouping for the policy statements list";
-
-    container statements {
-      description
-        "Enclosing container for policy statements";
-
-      list statement {
-        key "name";
-        ordered-by user;
-        description
-          "Policy statements group conditions and actions
-           within a policy definition.  They are evaluated in
-           the order specified (see the description of policy
-           evaluation at the top of this module.";
-
-        uses policy-statements;
-
-        uses policy-conditions-top;
-        uses policy-actions;
-      }
-    }
-  }
-
-
-  grouping policy-definitions {
-    description
-      "This grouping provides policy definitions";
-
-    leaf name {
-      type string;
-      description
-        "Name of the top-level policy definition -- this name
-        is used in references to the current policy";
-    }
-  }
-
   grouping apply-policy-import {
     description
-      "Grouping for applying import policies";
+      "Grouping for applying import policies.";
 
     leaf-list import-policy {
       type leafref {
@@ -1676,7 +1592,7 @@ module ietf-routing-policy {
 
   grouping apply-policy-export {
     description
-      "Grouping for applying export policies";
+      "Grouping for applying export policies.";
 
     leaf-list export-policy {
       type leafref {
@@ -1701,15 +1617,13 @@ module ietf-routing-policy {
     }
   }
 
-
   grouping apply-policy {
     description
-      "Configuration data for routing policies";
+      "Configuration data for routing policies.";
 
     uses apply-policy-import;
     uses apply-policy-export;
   }
-
 
   grouping apply-policy-group {
     description
@@ -1731,22 +1645,72 @@ module ietf-routing-policy {
 
   container routing-policy {
     description
-      "Top-level container for all routing policy";
+      "Top-level container for all routing policy.";
 
     container defined-sets {
       description
         "Predefined sets of attributes used in policy match
-         statements";
+         statements.";
 
-      uses prefix-set-top;
-      uses neighbor-set-top;
-      uses tag-set-top;
+      container prefix-sets {
+        description
+          "Data definitions for a list of IPv4 or IPv6
+          prefixes which are matched as part of a policy.";
+        list prefix-set {
+          key "name";
+          description
+            "List of the defined prefix sets";
+
+          uses prefix-set;
+
+          container prefixes {
+            description
+              "Container for the list of prefixes in a policy
+               prefix list.";
+
+            list prefix-list {
+              key "ip-prefix mask-length-lower mask-length-upper";
+              description
+                "List of prefixes in the prefix set.";
+
+              uses prefix;
+            }
+          }
+        }
+      }
+
+      container neighbor-sets {
+        description
+          "Data definition for a list of IPv4 or IPv6
+           neighbors which can be matched in a routing policy.";
+
+        list neighbor-set {
+          key "name";
+          description
+            "List of defined neighbor sets for use in policies.";
+
+          uses neighbor-set;
+        }
+      }
+
+      container tag-sets {
+        description
+          "Data definitions for a list of tags which can
+           be matched in policies.";
+
+        list tag-set {
+          key "name";
+          description
+            "List of tag set definitions.";
+          uses tag-set;
+        }
+      }
     }
 
     container policy-definitions {
       description
         "Enclosing container for the list of top-level policy
-         definitions";
+         definitions.";
 
       list policy-definition {
         key "name";
@@ -1756,9 +1720,43 @@ module ietf-routing-policy {
            referenced (by name) in policy chains specified in import
            or export configuration statements.";
 
-        uses policy-definitions;
+        leaf name {
+          type string;
+          description
+            "Name of the top-level policy definition -- this name
+             is used in references to the current policy.";
+        }
 
-        uses policy-statements-top;
+        container statements {
+          description
+            "Enclosing container for policy statements.";
+
+          list statement {
+            key "name";
+            ordered-by user;
+            description
+              "Policy statements group conditions and actions
+               within a policy definition.  They are evaluated in
+               the order specified (see the description of policy
+               evaluation at the top of this module.";
+
+            leaf name {
+              type string;
+              description
+                "Name of the policy statement.";
+            }
+
+            container conditions {
+              description
+                "Condition statements for the current policy statement.";
+
+              uses policy-conditions;
+              uses generic-conditions;
+            }
+
+            uses policy-actions;
+          }
+        }
       }
     }
   }
@@ -1772,24 +1770,6 @@ module ietf-routing-policy {
 
     </section>
 
-    <section title="Policy examples" anchor="examples">
-
-      <t>
-      Below we show an example of XML-encoded configuration data using
-      the routing policy and BGP models to illustrate both how policies
-      are defined, and also how they can be applied.  Note that the XML
-      has been simplified for readability.
-      </t>
-
-      <figure>
-        <artwork><![CDATA[
-<?yfile include="file:///tmp/routing-policy-example-draft.xml"?>
- ]]>
-        </artwork>
-      </figure>
-
-    </section>
-
   </middle>
 
   <back>
@@ -1798,13 +1778,18 @@ module ietf-routing-policy {
       &RFC3688;
       &RFC4271;
       &RFC6020;
+      &RFC6241;
+      &RFC6242;
       &RFC6991;
       &RFC7950;
+      &RFC8040;
       &RFC8174;
       &RFC8340;
+      &RFC8341;
       &RFC8342;
       &RFC8343;
       &RFC8349;
+      &RFC8446;
       <?rfc include="reference.I-D.ietf-netmod-intf-ext-yang"?>
       <?rfc include="reference.I-D.ietf-netmod-sub-intf-vlan-model"?>
     </references>
