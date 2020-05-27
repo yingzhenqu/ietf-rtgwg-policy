@@ -23,12 +23,12 @@ module ietf-routing-policy {
 
   import ietf-routing {
     prefix "rt";
-    reference "RFC 8343: A YANG Data Model for Interface
+    reference "RFC 8349: A YANG Data Model for Routing
                Management (NMDA Version)";
   }
 
   import ietf-if-extensions {
-    prefix if-ext;
+    prefix "if-ext";
     reference "RFC YYYY: Common Interface Extension YANG 
                Data Models. Please replace YYYY with 
                published RFC number for 
@@ -42,22 +42,20 @@ module ietf-routing-policy {
                for draft-ietf-netmod-sub-intf-vlan-model.";
   }
 
-
   organization
     "IETF RTGWG - Routing Area Working Group";
   contact
     "WG Web:   <http://tools.ietf.org/wg/rtgwg/>
-     WG List:  <mailto:rtgwg@ietf.org>
-
+     WG List:  <Email: rtgwg@ietf.org>
 
      Editor:   Yingzhen Qu
-               <mailto:yingzhen.qu@futurewei.com>
+               <Email: yingzhen.qu@futurewei.com>
                Jeff Tantsura
-               <mailto:jefftant.ietf@gmail.com>
+               <Email: jefftant.ietf@gmail.com>
                Acee Lindem
-               <mailto:acee@cisco.com>
+               <Email: acee@cisco.com>
                Xufeng Liu
-               <mailto:xufeng.liu.ietf@gmail.com>";
+               <Email: xufeng.liu.ietf@gmail.com>";
 
   description
     "This module describes a YANG model for routing policy
@@ -142,7 +140,7 @@ module ietf-routing-policy {
      see the RFC itself for full legal notices.";
 
 
-  revision "2020-05-20" {
+  revision "2020-05-26" {
     description
       "Initial revision.";
     reference
@@ -418,45 +416,6 @@ module ietf-routing-policy {
 
   /* Groupings */
 
-  grouping prefix-set {
-    description
-      "Configuration data for prefix sets used in policy
-       definitions.";
-
-    leaf name {
-      type string;
-      description
-        "Name of the prefix set -- this is used as a label to
-         reference the set in match conditions.";
-    }
-
-    leaf mode {
-      type enumeration {
-        enum ipv4 {
-          description
-            "Prefix set contains IPv4 prefixes only.";
-        }
-        enum ipv6 {
-          description
-            "Prefix set contains IPv6 prefixes only.";
-        }
-        enum mixed {
-          description
-            "Prefix set contains mixed IPv4 and IPv6 prefixes.";
-        }
-      }
-      description
-        "Indicates the mode of the prefix set, in terms of which
-         address families (IPv4, IPv6, or both) are present.  The
-         mode provides a hint, but the device must validate that all
-         prefixes are of the indicated type, and is expected to
-         reject the configuration if there is a discrepancy.  The
-         MIXED mode may not be supported on devices that require
-         prefix sets to be of only one address family.";
-    }
-
-  }
-
   grouping prefix {
     description
       "Configuration data for a prefix definition.";
@@ -501,42 +460,6 @@ module ietf-routing-policy {
          expressed as prefix: 192.0.2.0/24,
                       mask-length-lower=24,
                       mask-length-upper=24";
-    }
-  }
-
-  grouping neighbor-set {
-    description
-      "This grouping provides neighbor set definitions.";
-
-    leaf name {
-      type string;
-      description
-        "Name of the neighbor set -- this is used as a label
-         to reference the set in match conditions.";
-    }
-
-    leaf-list address {
-      type inet:ip-address;
-      description
-        "List of IP addresses in the neighbor set.";
-    }
-  }
-
-  grouping tag-set {
-    description
-      "This grouping provides tag set definitions.";
-
-    leaf name {
-      type string;
-      description
-        "Name of the tag set -- this is used as a label to reference
-         the set in match conditions.";
-    }
-
-    leaf-list tag-value {
-      type tag-type;
-      description
-        "Value of the tag set member.";
     }
   }
 
@@ -690,123 +613,6 @@ module ietf-routing-policy {
     }
   }
 
-  grouping generic-conditions {
-    description
-      "Condition statement definitions for checking
-       membership in a generic defined set.";
-
-    uses match-interface-condition;
-    uses prefix-set-condition;
-    uses neighbor-set-condition;
-    uses tag-set-condition;
-    uses match-proto-route-type-condition;
-
-  }
-
-  grouping policy-conditions {
-    description
-      "Data for general policy conditions, i.e., those
-       not related to match-sets.";
-
-      leaf call-policy {
-        type leafref {
-          path "../../../../../../" +
-            "rt-pol:policy-definitions/" +
-            "rt-pol:policy-definition/rt-pol:name";
-          require-instance true;
-        }
-        description
-          "Applies the statements from the specified policy
-           definition and then returns control the current
-           policy statement. Note that the called policy may
-           itself call other policies (subject to
-           implementation limitations). This is intended to
-           provide a policy 'subroutine' capability.  The
-           called policy should contain an explicit or a
-           default route disposition that returns an
-           effective true (accept-route) or false
-           (reject-route), otherwise the behavior may be
-           ambiguous and implementation dependent.";
-      }
-
-      leaf source-protocol {
-        type identityref {
-          base rt:control-plane-protocol;
-        }
-        description
-          "Condition to check the protocol / method used to install
-           the route into the local routing table.";
-      }
-  }
-
-  grouping policy-actions {
-    description
-      "Top-level grouping for policy actions.";
-
-    container actions {
-      description
-        "Top-level container for policy action statements.";
-
-      leaf policy-result {
-        type policy-result-type;
-        description
-          "Select the final disposition for the route, either
-           accept or reject.";
-      }
-      container set-metric {
-        leaf metric-modification {
-          type metric-modification-type;
-          description
-            "Indicates how to modify the metric.";
-        }
-        leaf metric {
-          type uint32;
-          description
-            "Metric value to set, add, or subtract.";
-        }
-        description
-          "Set the metric for the route.";
-      }
-      container set-metric-type {
-        leaf metric-type {
-          type identityref {
-            base metric-type;
-          }
-          description
-            "Route metric type.";
-        }
-        description
-          "Set the metric type for the route.";
-      }
-      container set-import-level {
-        leaf import-level {
-          type identityref {
-            base import-level;
-          }
-          description
-            "Route importation level.";
-        }
-        description
-          "Set the import level for importation of routes.";
-      }
-      leaf set-preference {
-        type uint16;
-        description
-          "Set the preference for the route.";
-      }
-      leaf set-tag {
-        type tag-type;
-        description
-          "Set the tag for the route.";
-      }
-      leaf set-application-tag {
-        type tag-type;
-        description
-          "Set the application tag for the route.";
-      }
-    }
-  }
-
   grouping apply-policy-import {
     description
       "Grouping for applying import policies.";
@@ -862,14 +668,6 @@ module ietf-routing-policy {
     }
   }
 
-  grouping apply-policy {
-    description
-      "Configuration data for routing policies.";
-
-    uses apply-policy-import;
-    uses apply-policy-export;
-  }
-
   grouping apply-policy-group {
     description
       "Top level container for routing policy applications. This
@@ -883,7 +681,8 @@ module ietf-routing-policy {
          routing table, i.e., export (send) and import (receive),
          depending on the context.";
 
-      uses apply-policy;
+      uses apply-policy-import;
+      uses apply-policy-export;
 
     }
   }
@@ -906,7 +705,37 @@ module ietf-routing-policy {
           description
             "List of the defined prefix sets";
 
-          uses prefix-set;
+          leaf name {
+            type string;
+            description
+              "Name of the prefix set -- this is used as a label to
+               reference the set in match conditions.";
+          }
+
+          leaf mode {
+            type enumeration {
+              enum ipv4 {
+                description
+                  "Prefix set contains IPv4 prefixes only.";
+              }
+              enum ipv6 {
+                description
+                  "Prefix set contains IPv6 prefixes only.";
+              }
+              enum mixed {
+                description
+                  "Prefix set contains mixed IPv4 and IPv6 prefixes.";
+              }
+            }
+            description
+              "Indicates the mode of the prefix set, in terms of which
+               address families (IPv4, IPv6, or both) are present. The
+               mode provides a hint, but the device must validate that 
+               all prefixes are of the indicated type, and is expected 
+               to reject the configuration if there is a discrepancy. 
+               The MIXED mode may not be supported on devices that 
+               require prefix sets to be of only one address family.";
+          }
 
           container prefixes {
             description
@@ -934,7 +763,18 @@ module ietf-routing-policy {
           description
             "List of defined neighbor sets for use in policies.";
 
-          uses neighbor-set;
+          leaf name {
+            type string;
+            description
+              "Name of the neighbor set -- this is used as a label
+               to reference the set in match conditions.";
+          }
+
+          leaf-list address {
+            type inet:ip-address;
+            description
+              "List of IP addresses in the neighbor set.";
+          }
         }
       }
 
@@ -947,7 +787,19 @@ module ietf-routing-policy {
           key "name";
           description
             "List of tag set definitions.";
-          uses tag-set;
+
+          leaf name {
+            type string;
+            description
+              "Name of the tag set -- this is used as a label to 
+              reference the set in match conditions.";
+          }
+
+          leaf-list tag-value {
+            type tag-type;
+            description
+              "Value of the tag set member.";
+          }
         }
       }
     }
@@ -993,13 +845,107 @@ module ietf-routing-policy {
 
             container conditions {
               description
-                "Condition statements for the current policy statement.";
+                "Condition statements for the current policy
+                 statement.";
 
-              uses policy-conditions;
-              uses generic-conditions;
+              leaf call-policy {
+                type leafref {
+                  path "../../../../../../" +
+                       "rt-pol:policy-definitions/" +
+                       "rt-pol:policy-definition/rt-pol:name";
+                  require-instance true;
+                }
+                description
+                  "Applies the statements from the specified policy
+                   definition and then returns control the current
+                   policy statement. Note that the called policy may
+                   itself call other policies (subject to
+                   implementation limitations). This is intended to
+                   provide a policy 'subroutine' capability.  The
+                   called policy should contain an explicit or a
+                   default route disposition that returns an
+                   effective true (accept-route) or false
+                   (reject-route), otherwise the behavior may be
+                   ambiguous and implementation dependent.";
+              }
+
+              leaf source-protocol {
+                type identityref {
+                  base rt:control-plane-protocol;
+                }
+                description
+                  "Condition to check the protocol / method used to 
+                  install the route into the local routing table.";
+              }
+              
+              uses match-interface-condition;
+              uses prefix-set-condition;
+              uses neighbor-set-condition;
+              uses tag-set-condition;
+              uses match-proto-route-type-condition;
             }
 
-            uses policy-actions;
+            container actions {
+              description
+                "Top-level container for policy action statements.";
+              leaf policy-result {
+                type policy-result-type;
+                description
+                  "Select the final disposition for the route, either
+                   accept or reject.";
+              }
+              container set-metric {
+                leaf metric-modification {
+                  type metric-modification-type;
+                  description
+                    "Indicates how to modify the metric.";
+                }
+                leaf metric {
+                  type uint32;
+                  description
+                    "Metric value to set, add, or subtract.";
+                }
+                description
+                  "Set the metric for the route.";
+              }
+              container set-metric-type {
+                leaf metric-type {
+                  type identityref {
+                    base metric-type;
+                  }
+                  description
+                    "Route metric type.";
+                }
+                description
+                  "Set the metric type for the route.";
+              }
+              container set-import-level {
+                leaf import-level {
+                  type identityref {
+                    base import-level;
+                  }
+                  description
+                    "Route importation level.";
+                }
+                description
+                  "Set the import level for importation of routes.";
+              }
+              leaf set-preference {
+                type uint16;
+                description
+                  "Set the preference for the route.";
+              }
+              leaf set-tag {
+                type tag-type;
+                description
+                  "Set the tag for the route.";
+              }
+              leaf set-application-tag {
+                type tag-type;
+                description
+                  "Set the application tag for the route.";
+              }
+            }
           }
         }
       }

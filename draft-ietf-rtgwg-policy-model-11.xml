@@ -34,13 +34,13 @@
       'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8349.xml'>
     <!ENTITY RFC8446 PUBLIC '' 
       'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8446.xml'>
-    <!ENTITY I-D.draft-ietf-netmod-intf-ext-yang SYSTEM
-      "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-netmod-intf-ext-yang-08.xml">
-    <!ENTITY I-D.draft-ietf-netmod-sub-intf-vlan-model SYSTEM
-      "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-netmod-sub-intf-valn-model-06.xml">
+    <!ENTITY I-D.ietf-netmod-intf-ext-yang PUBLIC ''
+      'http://xml.resource.org/public/rfc/bibxml-ids/reference.I-D.draft-ietf-netmod-intf-ext-yang-08.xml'>
+    <!ENTITY I-D.ietf-netmod-sub-intf-vlan-model PUBLIC ''
+      'http://xml.resource.org/public/rfc/bibxml-ids/reference.I-D.draft-ietf-netmod-sub-intf-vlan-model-06.xml'>
     ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
-<rfc docName="draft-ietf-rtgwg-policy-model-10" ipr="trust200902" category="std">
+<rfc docName="draft-ietf-rtgwg-policy-model-11" ipr="trust200902" category="std">
 <?rfc toc="yes"?>
   <front>
     <title abbrev="Routing Policy Model">A YANG Data Model for Routing Policy Management</title>
@@ -179,7 +179,8 @@
       </t>
 
       <section title="Tree Diagrams">
-        <t>Tree diagrams used in this document follow the notation defined in  <xref target="RFC8340"/>.</t>
+        <t>Tree diagrams used in this document follow the notation 
+          defined in <xref target="RFC8340"/>.</t>
       </section>
       <section anchor="sec.prefixes" title="Prefixes in Data Node Names">
         <t>
@@ -187,7 +188,8 @@
         data model objects are often used without a prefix, as long as
         it is clear from the context in which YANG module each name is
         defined. Otherwise, names are prefixed using the standard prefix
-        associated with the corresponding YANG module, as shown in <xref target="tab.prefixes"/>.
+        associated with the corresponding YANG module, as shown in 
+        <xref target="tab.prefixes"/>.
         </t>
 
         <texttable anchor="tab.prefixes" title="Prefixes and Corresponding YANG Modules">
@@ -198,8 +200,8 @@
           <c>rt</c><c>ietf-routing</c><c><xref target="RFC8349"/></c>
           <c>yang</c><c>ietf-yang-types</c><c><xref target="RFC6991"/></c>
           <c>inet</c><c>ietf-inet-types</c><c><xref target="RFC6991"/></c>
-          <c>if-ext</c><c>ietf-if-extensions</c><c><xref target="I-D.ietf-netmod-intf-ext-yang"/></c>
-          <c>if-l3-vlan</c><c>ietf-if-l3-vlan</c><c><xref target="I-D.ietf-netmod-sub-intf-vlan-model"/></c>
+          <c>if-ext</c><c>ietf-if-extensions</c><c><xref target="INTF-EXT-YANG"/></c>
+          <c>if-l3-vlan</c><c>ietf-if-l3-vlan</c><c><xref target="SUB-INTF-VLAN-YANG"/></c>
         </texttable>
       </section>
     </section>
@@ -403,13 +405,12 @@
         When policy conditions are satisfied, policy actions are used
         to set various attributes of the route being processed, or to
         indicate the final disposition of the route, i.e., accept or
-        reject.
-        </t>
+        reject.</t>
 
         <t>
         Similar to policy conditions, the routing policy model includes
-        generic actions in addition to the basic route
-        disposition actions.  These are shown below.
+        generic actions in addition to the basic route disposition 
+        actions. These are shown below.
         </t>
 
         <figure>
@@ -566,7 +567,6 @@
       in the corresponding sections of the routing policy model.
       </t>
 
-
       <figure>
         <artwork>
 module: ietf-routing-policy
@@ -625,27 +625,27 @@ module: ietf-routing-policy
                  |  |  +--rw match-set-options?   match-set-options-type
                  |  +--rw match-proto-route-type*   identityref
                  |  +--rw bp:bgp-conditions
-                 |     +--rw bp:med-eq?                    uint32
-                 |     +--rw bp:origin-eq?                 bt:bgp-origin-attr-type
-                 |     +--rw bp:next-hop-in*               inet:ip-address-no-zone
-                 |     +--rw bp:afi-safi-in*               identityref
-                 |     +--rw bp:local-pref-eq?             uint32
-                 |     +--rw bp:route-type?                enumeration
+                 |     +--rw bp:med-eq?         uint32
+                 |     +--rw bp:origin-eq?      bt:bgp-origin-attr-type
+                 |     +--rw bp:next-hop-in*    inet:ip-address-no-zone
+                 |     +--rw bp:afi-safi-in*    identityref
+                 |     +--rw bp:local-pref-eq?  uint32
+                 |     +--rw bp:route-type?     enumeration
                  |     +--rw bp:community-count
                  |     +--rw bp:as-path-length
                  |     +--rw bp:match-community-set
                  |     |  +--rw bp:community-set?      
-                 |     |  +--rw bp:match-set-options?   match-set-options-type
+                 |     |  +--rw bp:match-set-options?   
                  |     +--rw bp:match-ext-community-set
                  |     |  +--rw bp:ext-community-set?   
-                 |     |  +--rw bp:match-set-options?   match-set-options-type
+                 |     |  +--rw bp:match-set-options?   
                  |     +--rw bp:match-as-path-set
                  |        +--rw bp:as-path-set?       
-                 |        +--rw bp:match-set-options?   match-set-options-type
+                 |        +--rw bp:match-set-options?  
                  +--rw actions
                     +--rw policy-result?         policy-result-type
                     +--rw set-metric
-                    |  +--rw metric-modification?   metric-modification-type
+                    |  +--rw metric-modification?
                     |  +--rw metric?                uint32
                     +--rw set-metric-type
                     |  +--rw metric-type?   identityref
@@ -655,22 +655,22 @@ module: ietf-routing-policy
                     +--rw set-tag?               tag-type
                     +--rw set-application-tag?   tag-type
                     +--rw bp:bgp-actions
-                       +--rw bp:set-route-origin?      bt:bgp-origin-attr-type
-                       +--rw bp:set-local-pref?        uint32
-                       +--rw bp:set-next-hop?          bgp-next-hop-type
-                       +--rw bp:set-med?               bgp-set-med-type
+                       +--rw bp:set-route-origin?bt:bgp-origin-attr-type
+                       +--rw bp:set-local-pref?   uint32
+                       +--rw bp:set-next-hop?     bgp-next-hop-type
+                       +--rw bp:set-med?          bgp-set-med-type
                        +--rw bp:set-as-path-prepend
                        |  +--rw bp:repeat-n?   uint8
                        +--rw bp:set-community
                        |  +--rw bp:method?      enumeration
-                       |  +--rw bp:options?     bgp-set-community-option-type
+                       |  +--rw bp:options?
                        |  +--rw bp:inline
                        |  |  +--rw bp:communities*   union
                        |  +--rw bp:reference
                        |     +--rw bp:community-set-ref? 
                        +--rw bp:set-ext-community
                           +--rw bp:method?      enumeration
-                          +--rw bp:options?     bgp-set-community-option-type
+                          +--rw bp:options?
                           +--rw bp:inline
                           |  +--rw bp:communities*   union
                           +--rw bp:reference
@@ -752,7 +752,7 @@ module: ietf-routing-policy
       <section title="Routing policy model">
         <figure>
         <artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing-policy@2020-05-20.yang"
+<CODE BEGINS> file "ietf-routing-policy@2020-05-26.yang"
 module ietf-routing-policy {
 
   yang-version "1.1";
@@ -778,12 +778,12 @@ module ietf-routing-policy {
 
   import ietf-routing {
     prefix "rt";
-    reference "RFC 8343: A YANG Data Model for Interface
+    reference "RFC 8349: A YANG Data Model for Routing
                Management (NMDA Version)";
   }
 
   import ietf-if-extensions {
-    prefix if-ext;
+    prefix "if-ext";
     reference "RFC YYYY: Common Interface Extension YANG 
                Data Models. Please replace YYYY with 
                published RFC number for 
@@ -797,22 +797,20 @@ module ietf-routing-policy {
                for draft-ietf-netmod-sub-intf-vlan-model.";
   }
 
-
   organization
     "IETF RTGWG - Routing Area Working Group";
   contact
     "WG Web:   <http://tools.ietf.org/wg/rtgwg/>
-     WG List:  <mailto:rtgwg@ietf.org>
-
+     WG List:  <Email: rtgwg@ietf.org>
 
      Editor:   Yingzhen Qu
-               <mailto:yingzhen.qu@futurewei.com>
+               <Email: yingzhen.qu@futurewei.com>
                Jeff Tantsura
-               <mailto:jefftant.ietf@gmail.com>
+               <Email: jefftant.ietf@gmail.com>
                Acee Lindem
-               <mailto:acee@cisco.com>
+               <Email: acee@cisco.com>
                Xufeng Liu
-               <mailto:xufeng.liu.ietf@gmail.com>";
+               <Email: xufeng.liu.ietf@gmail.com>";
 
   description
     "This module describes a YANG model for routing policy
@@ -897,7 +895,7 @@ module ietf-routing-policy {
      see the RFC itself for full legal notices.";
 
 
-  revision "2020-05-20" {
+  revision "2020-05-26" {
     description
       "Initial revision.";
     reference
@@ -1173,45 +1171,6 @@ module ietf-routing-policy {
 
   /* Groupings */
 
-  grouping prefix-set {
-    description
-      "Configuration data for prefix sets used in policy
-       definitions.";
-
-    leaf name {
-      type string;
-      description
-        "Name of the prefix set -- this is used as a label to
-         reference the set in match conditions.";
-    }
-
-    leaf mode {
-      type enumeration {
-        enum ipv4 {
-          description
-            "Prefix set contains IPv4 prefixes only.";
-        }
-        enum ipv6 {
-          description
-            "Prefix set contains IPv6 prefixes only.";
-        }
-        enum mixed {
-          description
-            "Prefix set contains mixed IPv4 and IPv6 prefixes.";
-        }
-      }
-      description
-        "Indicates the mode of the prefix set, in terms of which
-         address families (IPv4, IPv6, or both) are present.  The
-         mode provides a hint, but the device must validate that all
-         prefixes are of the indicated type, and is expected to
-         reject the configuration if there is a discrepancy.  The
-         MIXED mode may not be supported on devices that require
-         prefix sets to be of only one address family.";
-    }
-
-  }
-
   grouping prefix {
     description
       "Configuration data for a prefix definition.";
@@ -1256,42 +1215,6 @@ module ietf-routing-policy {
          expressed as prefix: 192.0.2.0/24,
                       mask-length-lower=24,
                       mask-length-upper=24";
-    }
-  }
-
-  grouping neighbor-set {
-    description
-      "This grouping provides neighbor set definitions.";
-
-    leaf name {
-      type string;
-      description
-        "Name of the neighbor set -- this is used as a label
-         to reference the set in match conditions.";
-    }
-
-    leaf-list address {
-      type inet:ip-address;
-      description
-        "List of IP addresses in the neighbor set.";
-    }
-  }
-
-  grouping tag-set {
-    description
-      "This grouping provides tag set definitions.";
-
-    leaf name {
-      type string;
-      description
-        "Name of the tag set -- this is used as a label to reference
-         the set in match conditions.";
-    }
-
-    leaf-list tag-value {
-      type tag-type;
-      description
-        "Value of the tag set member.";
     }
   }
 
@@ -1445,123 +1368,6 @@ module ietf-routing-policy {
     }
   }
 
-  grouping generic-conditions {
-    description
-      "Condition statement definitions for checking
-       membership in a generic defined set.";
-
-    uses match-interface-condition;
-    uses prefix-set-condition;
-    uses neighbor-set-condition;
-    uses tag-set-condition;
-    uses match-proto-route-type-condition;
-
-  }
-
-  grouping policy-conditions {
-    description
-      "Data for general policy conditions, i.e., those
-       not related to match-sets.";
-
-      leaf call-policy {
-        type leafref {
-          path "../../../../../../" +
-            "rt-pol:policy-definitions/" +
-            "rt-pol:policy-definition/rt-pol:name";
-          require-instance true;
-        }
-        description
-          "Applies the statements from the specified policy
-           definition and then returns control the current
-           policy statement. Note that the called policy may
-           itself call other policies (subject to
-           implementation limitations). This is intended to
-           provide a policy 'subroutine' capability.  The
-           called policy should contain an explicit or a
-           default route disposition that returns an
-           effective true (accept-route) or false
-           (reject-route), otherwise the behavior may be
-           ambiguous and implementation dependent.";
-      }
-
-      leaf source-protocol {
-        type identityref {
-          base rt:control-plane-protocol;
-        }
-        description
-          "Condition to check the protocol / method used to install
-           the route into the local routing table.";
-      }
-  }
-
-  grouping policy-actions {
-    description
-      "Top-level grouping for policy actions.";
-
-    container actions {
-      description
-        "Top-level container for policy action statements.";
-
-      leaf policy-result {
-        type policy-result-type;
-        description
-          "Select the final disposition for the route, either
-           accept or reject.";
-      }
-      container set-metric {
-        leaf metric-modification {
-          type metric-modification-type;
-          description
-            "Indicates how to modify the metric.";
-        }
-        leaf metric {
-          type uint32;
-          description
-            "Metric value to set, add, or subtract.";
-        }
-        description
-          "Set the metric for the route.";
-      }
-      container set-metric-type {
-        leaf metric-type {
-          type identityref {
-            base metric-type;
-          }
-          description
-            "Route metric type.";
-        }
-        description
-          "Set the metric type for the route.";
-      }
-      container set-import-level {
-        leaf import-level {
-          type identityref {
-            base import-level;
-          }
-          description
-            "Route importation level.";
-        }
-        description
-          "Set the import level for importation of routes.";
-      }
-      leaf set-preference {
-        type uint16;
-        description
-          "Set the preference for the route.";
-      }
-      leaf set-tag {
-        type tag-type;
-        description
-          "Set the tag for the route.";
-      }
-      leaf set-application-tag {
-        type tag-type;
-        description
-          "Set the application tag for the route.";
-      }
-    }
-  }
-
   grouping apply-policy-import {
     description
       "Grouping for applying import policies.";
@@ -1617,14 +1423,6 @@ module ietf-routing-policy {
     }
   }
 
-  grouping apply-policy {
-    description
-      "Configuration data for routing policies.";
-
-    uses apply-policy-import;
-    uses apply-policy-export;
-  }
-
   grouping apply-policy-group {
     description
       "Top level container for routing policy applications. This
@@ -1638,7 +1436,8 @@ module ietf-routing-policy {
          routing table, i.e., export (send) and import (receive),
          depending on the context.";
 
-      uses apply-policy;
+      uses apply-policy-import;
+      uses apply-policy-export;
 
     }
   }
@@ -1661,7 +1460,37 @@ module ietf-routing-policy {
           description
             "List of the defined prefix sets";
 
-          uses prefix-set;
+          leaf name {
+            type string;
+            description
+              "Name of the prefix set -- this is used as a label to
+               reference the set in match conditions.";
+          }
+
+          leaf mode {
+            type enumeration {
+              enum ipv4 {
+                description
+                  "Prefix set contains IPv4 prefixes only.";
+              }
+              enum ipv6 {
+                description
+                  "Prefix set contains IPv6 prefixes only.";
+              }
+              enum mixed {
+                description
+                  "Prefix set contains mixed IPv4 and IPv6 prefixes.";
+              }
+            }
+            description
+              "Indicates the mode of the prefix set, in terms of which
+               address families (IPv4, IPv6, or both) are present. The
+               mode provides a hint, but the device must validate that 
+               all prefixes are of the indicated type, and is expected 
+               to reject the configuration if there is a discrepancy. 
+               The MIXED mode may not be supported on devices that 
+               require prefix sets to be of only one address family.";
+          }
 
           container prefixes {
             description
@@ -1689,7 +1518,18 @@ module ietf-routing-policy {
           description
             "List of defined neighbor sets for use in policies.";
 
-          uses neighbor-set;
+          leaf name {
+            type string;
+            description
+              "Name of the neighbor set -- this is used as a label
+               to reference the set in match conditions.";
+          }
+
+          leaf-list address {
+            type inet:ip-address;
+            description
+              "List of IP addresses in the neighbor set.";
+          }
         }
       }
 
@@ -1702,7 +1542,19 @@ module ietf-routing-policy {
           key "name";
           description
             "List of tag set definitions.";
-          uses tag-set;
+
+          leaf name {
+            type string;
+            description
+              "Name of the tag set -- this is used as a label to 
+              reference the set in match conditions.";
+          }
+
+          leaf-list tag-value {
+            type tag-type;
+            description
+              "Value of the tag set member.";
+          }
         }
       }
     }
@@ -1748,13 +1600,107 @@ module ietf-routing-policy {
 
             container conditions {
               description
-                "Condition statements for the current policy statement.";
+                "Condition statements for the current policy
+                 statement.";
 
-              uses policy-conditions;
-              uses generic-conditions;
+              leaf call-policy {
+                type leafref {
+                  path "../../../../../../" +
+                       "rt-pol:policy-definitions/" +
+                       "rt-pol:policy-definition/rt-pol:name";
+                  require-instance true;
+                }
+                description
+                  "Applies the statements from the specified policy
+                   definition and then returns control the current
+                   policy statement. Note that the called policy may
+                   itself call other policies (subject to
+                   implementation limitations). This is intended to
+                   provide a policy 'subroutine' capability.  The
+                   called policy should contain an explicit or a
+                   default route disposition that returns an
+                   effective true (accept-route) or false
+                   (reject-route), otherwise the behavior may be
+                   ambiguous and implementation dependent.";
+              }
+
+              leaf source-protocol {
+                type identityref {
+                  base rt:control-plane-protocol;
+                }
+                description
+                  "Condition to check the protocol / method used to 
+                  install the route into the local routing table.";
+              }
+              
+              uses match-interface-condition;
+              uses prefix-set-condition;
+              uses neighbor-set-condition;
+              uses tag-set-condition;
+              uses match-proto-route-type-condition;
             }
 
-            uses policy-actions;
+            container actions {
+              description
+                "Top-level container for policy action statements.";
+              leaf policy-result {
+                type policy-result-type;
+                description
+                  "Select the final disposition for the route, either
+                   accept or reject.";
+              }
+              container set-metric {
+                leaf metric-modification {
+                  type metric-modification-type;
+                  description
+                    "Indicates how to modify the metric.";
+                }
+                leaf metric {
+                  type uint32;
+                  description
+                    "Metric value to set, add, or subtract.";
+                }
+                description
+                  "Set the metric for the route.";
+              }
+              container set-metric-type {
+                leaf metric-type {
+                  type identityref {
+                    base metric-type;
+                  }
+                  description
+                    "Route metric type.";
+                }
+                description
+                  "Set the metric type for the route.";
+              }
+              container set-import-level {
+                leaf import-level {
+                  type identityref {
+                    base import-level;
+                  }
+                  description
+                    "Route importation level.";
+                }
+                description
+                  "Set the import level for importation of routes.";
+              }
+              leaf set-preference {
+                type uint16;
+                description
+                  "Set the preference for the route.";
+              }
+              leaf set-tag {
+                type tag-type;
+                description
+                  "Set the tag for the route.";
+              }
+              leaf set-application-tag {
+                type tag-type;
+                description
+                  "Set the application tag for the route.";
+              }
+            }
           }
         }
       }
@@ -1770,9 +1716,79 @@ module ietf-routing-policy {
 
     </section>
 
+      <section title="Policy examples" anchor="examples">
+
+      <t>
+      Below we show an example of XML-encoded configuration data using
+      the routing policy and BGP models to illustrate both how policies
+      are defined, and also how they can be applied.  Note that the XML
+      has been simplified for readability.
+      </t>
+
+      <figure>
+        <artwork><![CDATA[
+  <config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+    <routing-policy 
+     xmlns="urn:ietf:params:xml:ns:yang:ietf-routing-policy">
+
+        <defined-sets>
+          <prefix-sets>
+            <prefix-set>
+              <name>prefix-set-A</name>
+              <prefixes>
+                <prefix-list>
+                  <ip-prefix>192.0.2.0/24</ip-prefix>
+                  <mask-length-lower>24</mask-length-lower>
+                  <mask-length-upper>32</mask-length-upper>
+                </prefix-list>
+                <prefix-list>
+                  <ip-prefix>10.0.0.0/16</ip-prefix>
+                  <mask-length-lower>16</mask-length-lower>
+                  <mask-length-upper>32</mask-length-upper>
+                </prefix-list>
+              </prefixes>
+            </prefix-set>
+           </prefix-sets>
+           <tag-sets>
+            <tag-set>
+             <name>cust-tag1</name>
+             <tag-value>10</tag-value>
+           </tag-set>
+         </tag-sets>
+       </defined-sets>
+
+       <policy-definitions>
+        <policy-definition>
+          <name>export-tagged-BGP</name>
+          <statements>
+            <statement>
+              <name>term-0</name>
+              <conditions>
+                <source-protocol>bgp</source-protocol>
+                <match-tag-set>
+                  <tag-set>cust-tag1</tag-set>
+                </match-tag-set>
+              </conditions>
+              <actions>
+                <policy-result>accept-route</policy-result>
+              </actions>
+            </statement>
+          </statements>
+        </policy-definition>
+      </policy-definitions>
+
+      </routing-policy>
+</config>
+ ]]>
+        </artwork>
+      </figure>
+
+    </section>
+
   </middle>
 
   <back>
+
     <references title="Normative references">
       &RFC2119;
       &RFC3688;
@@ -1790,8 +1806,44 @@ module ietf-routing-policy {
       &RFC8343;
       &RFC8349;
       &RFC8446;
-      <?rfc include="reference.I-D.ietf-netmod-intf-ext-yang"?>
-      <?rfc include="reference.I-D.ietf-netmod-sub-intf-vlan-model"?>
+      <reference anchor="INTF-EXT-YANG"
+
+    target="https://datatracker.ietf.org/doc/draft-ietf-netmod-intf-ext-yang/">
+
+  <front>
+
+   <title>Common Interface Extension YANG Data Models</title>
+
+   <author>
+
+     <organization>Wilton, R., Ball, D., tapsingh@cisco.com, t., and S. Sivaraj,</organization>
+
+   </author>
+
+   <date year="2019" />
+
+       </front>
+
+     </reference>
+      <reference anchor="SUB-INTF-VLAN-YANG"
+
+    target="https://datatracker.ietf.org/doc/draft-ietf-netmod-sub-intf-vlan-model/">
+
+  <front>
+
+   <title>Sub-interface VLAN YANG Data Model</title>
+
+   <author>
+
+     <organization>Wilton, R., Ball, D., tapsingh@cisco.com, t., and S. Sivaraj</organization>
+
+   </author>
+
+   <date year="2019" />
+
+       </front>
+
+     </reference>
     </references>
 
     <references title="Informative references">
