@@ -40,7 +40,7 @@
       'http://xml.resource.org/public/rfc/bibxml-ids/reference.I-D.draft-ietf-netmod-sub-intf-vlan-model-06.xml'>
     ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
-<rfc docName="draft-ietf-rtgwg-policy-model-11" ipr="trust200902" category="std">
+<rfc docName="draft-ietf-rtgwg-policy-model-12" ipr="trust200902" category="std">
 <?rfc toc="yes"?>
   <front>
     <title abbrev="Routing Policy Model">A YANG Data Model for Routing Policy Management</title>
@@ -149,6 +149,9 @@
       "MAY", and "OPTIONAL" in this document are to be interpreted as
       described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> 
       when, and only when, they appear in all capitals, as shown here.</t>
+      <t>Routing Policy: A routing policy defines how routes are 
+        imported, exported, and modified across different routing
+        protocols.</t>
       <t>The following terms are defined in <xref target="RFC8342"/>:
         <list style="symbols">
           <t>client</t>
@@ -1764,7 +1767,6 @@ module ietf-routing-policy {
             <statement>
               <name>term-0</name>
               <conditions>
-                <source-protocol>bgp</source-protocol>
                 <match-tag-set>
                   <tag-set>cust-tag1</tag-set>
                 </match-tag-set>
