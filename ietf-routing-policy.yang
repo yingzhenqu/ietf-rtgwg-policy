@@ -37,8 +37,8 @@ module ietf-routing-policy {
 
   import ietf-if-l3-vlan {
     prefix "if-l3-vlan";
-    reference "RFC XXXX: Sub-interface VLAN YANG Data Models.
-               Please replace XXXX with published RFC number
+    reference "RFC ZZZZ: Sub-interface VLAN YANG Data Models.
+               Please replace ZZZZ with published RFC number
                for draft-ietf-netmod-sub-intf-vlan-model.";
   }
 
@@ -141,7 +141,7 @@ module ietf-routing-policy {
      see the RFC itself for full legal notices.";
 
 
-  revision "2020-05-26" {
+  revision "2020-06-01" {
     description
       "Initial revision.";
     reference
@@ -161,6 +161,8 @@ module ietf-routing-policy {
     description
       "Identity for the OSPF type 1 external metric types. It
        is only applicable to OSPF routes.";
+    reference
+      "RFC 2328 - OSPF Version 2";
   }
 
   identity ospf-type-2-metric {
@@ -168,6 +170,8 @@ module ietf-routing-policy {
     description
       "Identity for the OSPF type 2 external metric types. It
        is only applicable to OSPF routes.";
+    reference
+      "RFC 2328 - OSPF Version 2";
   }
 
   identity isis-internal-metric {
@@ -175,6 +179,9 @@ module ietf-routing-policy {
     description
       "Identity for the IS-IS internal metric types. It is only
        applicable to IS-IS routes.";
+    reference
+      "RFC 5302 - Domain-Wide Prefix Distributino with
+       Two-Level IS-IS";
   }
 
   identity isis-external-metric {
@@ -182,6 +189,9 @@ module ietf-routing-policy {
     description
       "Identity for the IS-IS external metric types. It is only
        applicable to IS-IS routes.";
+    reference
+      "RFC 5302 - Domain-Wide Prefix Distributino with
+       Two-Level IS-IS";
   }
 
   identity import-level {
@@ -195,13 +205,18 @@ module ietf-routing-policy {
       "Identity for OSPF importation into normal areas
        It is only applicable to routes imported
        into the OSPF protocol.";
+    reference
+      "RFC 2328 - OSPF Version 2";
   }
 
   identity ospf-nssa-only {
     base import-level;
     description
-      "Identity for the OSPF NSSA area importation. It is only
-       applicable to routes imported into the OSPF protocol.";
+      "Identity for the OSPF Not-So-Stubby Area (NSSA) area
+       importation. It is only applicable to routes imported
+       into the OSPF protocol.";
+    reference
+      "RFC 3101: The OSPF Not-So-Stubby Area (NSSA) Option";
   }
 
   identity ospf-normal-nssa {
@@ -210,6 +225,8 @@ module ietf-routing-policy {
       "Identity for OSPF importation into both normal and NSSA
        areas, it is only applicable to routes imported into
        the OSPF protocol.";
+    reference
+      "RFC 3101: The OSPF Not-So-Stubby Area (NSSA) Option";
   }
 
   identity isis-level-1 {
@@ -217,6 +234,9 @@ module ietf-routing-policy {
     description
       "Identity for IS-IS Level 1 area importation. It is only
        applicable to routes imported into the IS-IS protocol.";
+    reference
+      "RFC 5302 - Domain-Wide Prefix Distributino with
+       Two-Level IS-IS";
   }
 
   identity isis-level-2 {
@@ -224,6 +244,9 @@ module ietf-routing-policy {
     description
       "Identity for IS-IS Level 2 area importation. It is only
        applicable to routes imported into the IS-IS protocol.";
+    reference
+      "RFC 5302 - Domain-Wide Prefix Distributino with
+       Two-Level IS-IS";
   }
 
   identity isis-level-1-2 {
@@ -232,6 +255,9 @@ module ietf-routing-policy {
       "Identity for IS-IS Level 1 and Level 2 area importation. It
        is only applicable to routes imported into the IS-IS
        protocol.";
+    reference
+      "RFC 5302 - Domain-Wide Prefix Distributino with
+       Two-Level IS-IS";
   }
 
   identity proto-route-type {
@@ -244,6 +270,9 @@ module ietf-routing-policy {
     description
       "Identity for IS-IS Level 1 route type. It is only
        applicable to IS-IS routes.";
+    reference
+      "RFC 5302 - Domain-Wide Prefix Distributino with
+       Two-Level IS-IS";
   }
 
   identity isis-level-2-type {
@@ -251,6 +280,9 @@ module ietf-routing-policy {
     description
       "Identity for IS-IS Level 2 route type. It is only
        applicable to IS-IS routes.";
+    reference
+      "RFC 5302 - Domain-Wide Prefix Distributino with
+       Two-Level IS-IS";
   }
 
   identity ospf-internal-type {
@@ -258,6 +290,8 @@ module ietf-routing-policy {
     description
       "Identity for OSPF intra-area or inter-area route type.
        It is only applicable to OSPF routes.";
+    reference
+      "RFC 2328 - OSPF Version 2";
   }
 
   identity ospf-external-type {
@@ -265,6 +299,8 @@ module ietf-routing-policy {
     description
       "Identity for OSPF external type 1/2 route type.
        It is only applicable to OSPF routes.";
+    reference
+      "RFC 2328 - OSPF Version 2";
   }
 
   identity ospf-external-t1 {
@@ -272,6 +308,8 @@ module ietf-routing-policy {
     description
       "Identity for OSPF external type 1 route type.
        It is only applicable to OSPF routes.";
+    reference
+      "RFC 2328 - OSPF Version 2";
   }
 
   identity ospf-external-t2-type {
@@ -279,6 +317,8 @@ module ietf-routing-policy {
     description
       "Identity for OSPF external type 2 route type.
        It is only applicable to OSPF routes.";
+    reference
+      "RFC 2328 - OSPF Version 2";
   }
 
   identity ospf-nssa-type {
@@ -286,6 +326,8 @@ module ietf-routing-policy {
     description
       "Identity for OSPF NSSA type 1/2 route type.
        It is only applicable to OSPF routes.";
+    reference
+      "RFC 3101: The OSPF Not-So-Stubby Area (NSSA) Option";
   }
 
   identity ospf-nssa-t1 {
@@ -293,6 +335,8 @@ module ietf-routing-policy {
     description
       "Identity for OSPF NSSA type 1 route type.
        It is only applicable to OSPF routes.";
+    reference
+      "RFC 3101: The OSPF Not-So-Stubby Area (NSSA) Option";
   }
 
   identity ospf-nssa-t2 {
@@ -300,6 +344,8 @@ module ietf-routing-policy {
     description
       "Identity for OSPF NSSA type 2 route type.
        It is only applicable to OSPF routes.";
+    reference
+      "RFC 3101: The OSPF Not-So-Stubby Area (NSSA) Option";
   }
 
   identity bgp-local {
@@ -307,6 +353,8 @@ module ietf-routing-policy {
     description
       "Identity for BGP local route type.
        It is only applicable to BGP routes.";
+    reference
+      "RFC 4271: A Border Gateway Protocol 4 (BGP-4)";
   }
 
   identity bgp-external {
@@ -314,6 +362,8 @@ module ietf-routing-policy {
     description
       "Identity for BGP external route type.
        It is only applicable to BGP routes.";
+    reference
+      "RFC 4271: A Border Gateway Protocol 4 (BGP-4)";
   }
 
   /* Type Definitions */
@@ -362,7 +412,7 @@ module ietf-routing-policy {
        including IS-IS and OSPF; may be expressed as either decimal
        or hexadecimal integer.";
     reference
-      "RFC 2178 - OSPF Version 2
+      "RFC 2328 - OSPF Version 2
        RFC 5130 - A Policy Control Mechanism in IS-IS Using
                   Administrative Tags";
   }
@@ -401,7 +451,7 @@ module ietf-routing-policy {
       enum  add-metric {
         description
           "Add the specified value to the existing metric.
-           If the result would exceed the maximum metric
+           If the result would overflow the maximum metric
            (0xffffffff), set the metric to the maximum.";
       }
       enum  subtract-metric {
@@ -425,11 +475,13 @@ module ietf-routing-policy {
       type inet:ip-prefix;
       mandatory true;
       description
-        "The prefix member in CIDR notation -- while the
-         prefix may be either IPv4 or IPv6, most
-         implementations require all members of the prefix set
-         to be the same address family.  Mixing address types in
-         the same prefix set is likely to cause an error.";
+        "The IP prefix represented as an IPv6 or IPv4 network
+         number followed prefix length with an intervening slash
+         character a delimiter --  while the prefix may be either
+         IPv4 or IPv6, most implementations require all members
+         of the prefix set to be the same address family.  Mixing
+         address types in the same prefix set is likely to cause
+         an error.";
     }
 
     leaf mask-length-lower {
@@ -536,11 +588,11 @@ module ietf-routing-policy {
     }
   }
 
-  grouping match-proto-route-type-condition {
+  grouping match-route-type-condition {
     description
       "This grouping provides route-type match condition";
 
-    leaf-list match-proto-route-type {
+    leaf-list match-route-type {
         type identityref {
           base proto-route-type;
         }
@@ -887,7 +939,7 @@ module ietf-routing-policy {
               uses prefix-set-condition;
               uses neighbor-set-condition;
               uses tag-set-condition;
-              uses match-proto-route-type-condition;
+              uses match-route-type-condition;
             }
 
             container actions {
