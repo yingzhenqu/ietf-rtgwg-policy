@@ -141,7 +141,7 @@ module ietf-routing-policy {
      see the RFC itself for full legal notices.";
 
 
-  revision "2020-06-01" {
+  revision "2020-06-02" {
     description
       "Initial revision.";
     reference
@@ -477,11 +477,9 @@ module ietf-routing-policy {
       description
         "The IP prefix represented as an IPv6 or IPv4 network
          number followed prefix length with an intervening slash
-         character a delimiter --  while the prefix may be either
-         IPv4 or IPv6, most implementations require all members
-         of the prefix set to be the same address family.  Mixing
-         address types in the same prefix set is likely to cause
-         an error.";
+         character a delimiter. All members of the prefix set
+         should be of the same address family as the prefix-set
+         mode.";
     }
 
     leaf mask-length-lower {
@@ -756,7 +754,7 @@ module ietf-routing-policy {
           "Data definitions for a list of IPv4 or IPv6
           prefixes which are matched as part of a policy.";
         list prefix-set {
-          key "name";
+          key "name mode";
           description
             "List of the defined prefix sets";
 
@@ -777,11 +775,6 @@ module ietf-routing-policy {
                 description
                   "Prefix set contains IPv6 prefixes only.";
               }
-              enum mixed {
-                description
-                  "Prefix set contains mixed IPv4 and IPv6
-                   prefixes.";
-              }
             }
             description
               "Indicates the mode of the prefix set, in terms of
@@ -789,9 +782,7 @@ module ietf-routing-policy {
                present. The mode provides a hint, but the device
                must validate that all prefixes are of the indicated
                type, and is expected to reject the configuration if
-               there is a discrepancy.  The MIXED mode may not be
-               supported on devices that require prefix sets to be
-               of only one address family.";
+               there is a discrepancy.";
           }
 
           container prefixes {
