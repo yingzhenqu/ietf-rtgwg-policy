@@ -48,7 +48,7 @@
       'http://xml.resource.org/public/rfc/bibxml-ids/reference.I-D.draft-ietf-netmod-sub-intf-vlan-model-06.xml'>
     ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
-<rfc docName="draft-ietf-rtgwg-policy-model-15" ipr="trust200902" category="std">
+<rfc docName="draft-ietf-rtgwg-policy-model-16" ipr="trust200902" category="std">
 <?rfc toc="yes"?>
   <front>
     <title abbrev="Routing Policy Model">A YANG Data Model for Routing Policy Management</title>
@@ -1781,7 +1781,7 @@ module ietf-routing-policy {
 
     </section>
 
-      <section title="Policy examples" anchor="examples">
+    <section title="Policy examples" anchor="examples">
 
       <t>
       Below we show an example of XML-encoded configuration data using
@@ -1800,6 +1800,7 @@ module ietf-routing-policy {
           <prefix-sets>
             <prefix-set>
               <name>prefix-set-A</name>
+              <mode>ipv4</mode>
               <prefixes>
                 <prefix-list>
                   <ip-prefix>192.0.2.0/24</ip-prefix>
@@ -1847,6 +1848,39 @@ module ietf-routing-policy {
         </artwork>
       </figure>
 
+      <t>In the following example, all routes in the RIB that have been 
+        learned from OSPF advertisements corresponding to OSPF 
+        intra-area and inter-area route types should get advertised 
+        into ISIS level-2 advertisements.</t>
+        <figure>
+        <artwork><![CDATA[
+<config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
+  <routing-policy
+   xmlns="urn:ietf:params:xml:ns:yang:ietf-routing-policy">
+   <policy-definitions>
+    <policy-definition>
+     <name>export-all-OSPF-prefixes-into-ISIS-level-2</name>
+      <statements>
+       <statement>
+         <name>term-0</name>
+         <conditions>
+           <match-route-type>ospf-internal-type</match-route-type>
+         </conditions>
+         <actions>
+           <set-import-level>     
+             <import-level>isis-level-2</import-level>
+           </set-import-level>
+           <policy-result>accept-route</policy-result>
+         </actions>
+       </statement>
+      </statements>
+    </policy-definition>
+   </policy-definitions>
+  </routing-policy>
+</config>
+ ]]>
+        </artwork>
+      </figure>
     </section>
 
   </middle>
