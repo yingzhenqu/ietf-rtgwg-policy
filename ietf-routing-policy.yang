@@ -74,7 +74,7 @@ module ietf-routing-policy {
      definitions, each of which consists of a sequence of policy
      statements. Policy statements consist of simple
      condition-action tuples. Conditions may include multiple match
-     or comparison operations, and similarly actions may be
+     or comparison operations, and similarly actions may be a
      multitude of changes to route attributes or a final
      disposition of accepting or rejecting the route.
 
@@ -108,14 +108,14 @@ module ietf-routing-policy {
      allowing policy statement conditions to reference another
      policy definition which applies conditions and actions from
      the referenced policy before returning to the calling policy
-     statement and resuming evaluation.  If the called policy
+     statement and resuming evaluation. If the called policy
      results in an accept-route (either explicit or by default),
      then the subroutine returns an effective true value to the
      calling policy.  Similarly, a reject-route action returns
-     false.  If the subroutine returns true, the calling policy
-     continues to evaluate the remaining conditions (using a
-     modified route if the subroutine performed any changes to the
-     route).
+     false. If the subroutine returns true, the calling policy
+     continues to evaluate the remaining conditions with the initial
+     data if route attribute values are modified.
+
 
      Copyright (c) 2020 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
@@ -141,7 +141,7 @@ module ietf-routing-policy {
      see the RFC itself for full legal notices.";
 
 
-  revision "2020-06-02" {
+  revision "2020-07-05" {
     description
       "Initial revision.";
     reference
@@ -180,7 +180,7 @@ module ietf-routing-policy {
       "Identity for the IS-IS internal metric types. It is only
        applicable to IS-IS routes.";
     reference
-      "RFC 5302 - Domain-Wide Prefix Distributino with
+      "RFC 5302 - Domain-Wide Prefix Distribution with
        Two-Level IS-IS";
   }
 
@@ -190,17 +190,17 @@ module ietf-routing-policy {
       "Identity for the IS-IS external metric types. It is only
        applicable to IS-IS routes.";
     reference
-      "RFC 5302 - Domain-Wide Prefix Distributino with
+      "RFC 5302 - Domain-Wide Prefix Distribution with
        Two-Level IS-IS";
   }
 
-  identity import-level {
+  identity route-level {
     description
-      "Base identity for route import level.";
+      "Base identity for route import or export level.";
   }
 
   identity ospf-normal {
-    base import-level;
+    base route-level;
     description
       "Identity for OSPF importation into normal areas
        It is only applicable to routes imported
@@ -210,7 +210,7 @@ module ietf-routing-policy {
   }
 
   identity ospf-nssa-only {
-    base import-level;
+    base route-level;
     description
       "Identity for the OSPF Not-So-Stubby Area (NSSA) area
        importation. It is only applicable to routes imported
@@ -220,7 +220,7 @@ module ietf-routing-policy {
   }
 
   identity ospf-normal-nssa {
-    base import-level;
+    base route-level;
     description
       "Identity for OSPF importation into both normal and NSSA
        areas, it is only applicable to routes imported into
@@ -230,33 +230,33 @@ module ietf-routing-policy {
   }
 
   identity isis-level-1 {
-    base import-level;
+    base route-level;
     description
       "Identity for IS-IS Level 1 area importation. It is only
        applicable to routes imported into the IS-IS protocol.";
     reference
-      "RFC 5302 - Domain-Wide Prefix Distributino with
+      "RFC 5302 - Domain-Wide Prefix Distribution with
        Two-Level IS-IS";
   }
 
   identity isis-level-2 {
-    base import-level;
+    base route-level;
     description
       "Identity for IS-IS Level 2 area importation. It is only
        applicable to routes imported into the IS-IS protocol.";
     reference
-      "RFC 5302 - Domain-Wide Prefix Distributino with
+      "RFC 5302 - Domain-Wide Prefix Distribution with
        Two-Level IS-IS";
   }
 
   identity isis-level-1-2 {
-    base import-level;
+    base route-level;
     description
       "Identity for IS-IS Level 1 and Level 2 area importation. It
        is only applicable to routes imported into the IS-IS
        protocol.";
     reference
-      "RFC 5302 - Domain-Wide Prefix Distributino with
+      "RFC 5302 - Domain-Wide Prefix Distribution with
        Two-Level IS-IS";
   }
 
@@ -271,7 +271,7 @@ module ietf-routing-policy {
       "Identity for IS-IS Level 1 route type. It is only
        applicable to IS-IS routes.";
     reference
-      "RFC 5302 - Domain-Wide Prefix Distributino with
+      "RFC 5302 - Domain-Wide Prefix Distribution with
        Two-Level IS-IS";
   }
 
@@ -281,7 +281,7 @@ module ietf-routing-policy {
       "Identity for IS-IS Level 2 route type. It is only
        applicable to IS-IS routes.";
     reference
-      "RFC 5302 - Domain-Wide Prefix Distributino with
+      "RFC 5302 - Domain-Wide Prefix Distribution with
        Two-Level IS-IS";
   }
 
@@ -303,7 +303,7 @@ module ietf-routing-policy {
       "RFC 2328 - OSPF Version 2";
   }
 
-  identity ospf-external-t1 {
+  identity ospf-external-t1-type {
     base ospf-external-type;
     description
       "Identity for OSPF external type 1 route type.
@@ -330,7 +330,7 @@ module ietf-routing-policy {
       "RFC 3101: The OSPF Not-So-Stubby Area (NSSA) Option";
   }
 
-  identity ospf-nssa-t1 {
+  identity ospf-nssa-t1-type {
     base ospf-nssa-type;
     description
       "Identity for OSPF NSSA type 1 route type.
@@ -339,7 +339,7 @@ module ietf-routing-policy {
       "RFC 3101: The OSPF Not-So-Stubby Area (NSSA) Option";
   }
 
-  identity ospf-nssa-t2 {
+  identity ospf-nssa-t2-type {
     base ospf-nssa-type;
     description
       "Identity for OSPF NSSA type 2 route type.
@@ -348,10 +348,10 @@ module ietf-routing-policy {
       "RFC 3101: The OSPF Not-So-Stubby Area (NSSA) Option";
   }
 
-  identity bgp-local {
+  identity bgp-internal {
     base proto-route-type;
     description
-      "Identity for BGP local route type.
+      "Identity for routes learned from internal BGP (iBGP).
        It is only applicable to BGP routes.";
     reference
       "RFC 4271: A Border Gateway Protocol 4 (BGP-4)";
@@ -360,7 +360,7 @@ module ietf-routing-policy {
   identity bgp-external {
     base proto-route-type;
     description
-      "Identity for BGP external route type.
+      "Identity for routes learned from external BGP (eBGP).
        It is only applicable to BGP routes.";
     reference
       "RFC 4271: A Border Gateway Protocol 4 (BGP-4)";
@@ -476,16 +476,17 @@ module ietf-routing-policy {
       mandatory true;
       description
         "The IP prefix represented as an IPv6 or IPv4 network
-         number followed prefix length with an intervening slash
-         character a delimiter. All members of the prefix set
-         should be of the same address family as the prefix-set
+         number followed by a prefix length with an intervening 
+         slash character as a delimiter. All members of the prefix 
+         set should be of the same address family as the prefix-set
          mode.";
     }
 
     leaf mask-length-lower {
       type uint8;
       description
-        "Mask length range lower bound.";
+        "Mask length range lower bound. It should not be less than
+         the prefix length defined in ip-prefix.";
     }
     leaf mask-length-upper {
       type uint8 {
@@ -595,7 +596,7 @@ module ietf-routing-policy {
           base proto-route-type;
         }
         description
-          "Condition to check the protocol specific type
+          "Condition to check the protocol-specific type
            of route. This is normally used during route
            importation to select routes or to set protocol
            specific attributes based on the route type.";
@@ -679,7 +680,8 @@ module ietf-routing-policy {
       ordered-by user;
       description
         "List of policy names in sequence to be applied on
-         receiving a routing update in the current context, e.g.,
+         receiving redistributed routes from another routing protocol
+         or receiving a routing update in the current context, e.g.,
          for the current peer group, neighbor, address family,
          etc.";
     }
@@ -707,7 +709,8 @@ module ietf-routing-policy {
       ordered-by user;
       description
         "List of policy names in sequence to be applied on
-         sending a routing update in the current context, e.g.,
+         redistributing routes from one routing protocol to another
+         or sending a routing update in the current context, e.g.,
          for the current peer group, neighbor, address family,
          etc.";
     }
@@ -914,7 +917,7 @@ module ietf-routing-policy {
                    default route disposition that returns an
                    effective true (accept-route) or false
                    (reject-route), otherwise the behavior may be
-                   ambiguous and implementation dependent.";
+                   ambiguous.";
               }
 
               leaf source-protocol {
@@ -968,17 +971,17 @@ module ietf-routing-policy {
                 description
                   "Set the metric type for the route.";
               }
-              container set-import-level {
-                leaf import-level {
+              container set-route-level {
+                leaf route-level {
                   type identityref {
-                    base import-level;
+                    base route-level;
                   }
                   description
-                    "Route importation level.";
+                    "Route import or export level.";
                 }
                 description
-                  "Set the import level for importation of
-                   routes.";
+                  "Set the level for importation or
+                   exportation of routes.";
               }
               leaf set-preference {
                 type uint16;
