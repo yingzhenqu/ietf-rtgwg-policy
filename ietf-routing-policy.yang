@@ -141,7 +141,7 @@ module ietf-routing-policy {
      see the RFC itself for full legal notices.";
 
 
-  revision "2020-07-05" {
+  revision "2020-07-13" {
     description
       "Initial revision.";
     reference
@@ -791,7 +791,13 @@ module ietf-routing-policy {
           container prefixes {
             description
               "Container for the list of prefixes in a policy
-               prefix list.";
+               prefix list. Since individual prefixes do not have
+               unique actions, the order in which the prefix in
+               prefix-list are matched has no impact on the outcome
+               outcome and is is left to the implementation. A
+               given prefix-set condition is statisfied if the
+               input prefix matches any of the prefixes in the
+               prefix-set.";
 
             list prefix-list {
               key "ip-prefix mask-length-lower mask-length-upper";
