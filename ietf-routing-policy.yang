@@ -141,7 +141,7 @@ module ietf-routing-policy {
      see the RFC itself for full legal notices.";
 
 
-  revision "2020-09-16" {
+  revision "2020-09-18" {
     description
       "Initial revision.";
     reference
@@ -351,7 +351,7 @@ module ietf-routing-policy {
   identity bgp-internal {
     base proto-route-type;
     description
-      "Identity for routes learned from internal BGP (iBGP).
+      "Identity for routes learned from internal BGP (IBGP).
        It is only applicable to BGP routes.";
     reference
       "RFC 4271: A Border Gateway Protocol 4 (BGP-4)";
@@ -360,7 +360,7 @@ module ietf-routing-policy {
   identity bgp-external {
     base proto-route-type;
     description
-      "Identity for routes learned from external BGP (eBGP).
+      "Identity for routes learned from external BGP (EBGP).
        It is only applicable to BGP routes.";
     reference
       "RFC 4271: A Border Gateway Protocol 4 (BGP-4)";
@@ -795,10 +795,9 @@ module ietf-routing-policy {
                prefix list. Since individual prefixes do not have
                unique actions, the order in which the prefix in
                prefix-list are matched has no impact on the outcome
-               outcome and is left to the implementation. A
-               given prefix-set condition is statisfied if the
-               input prefix matches any of the prefixes in the
-               prefix-set.";
+               and is left to the implementation. A given prefix-set
+               condition is satisfied if the input prefix matches
+               any of the prefixes in the prefix-set.";
 
             list prefix-list {
               key "ip-prefix mask-length-lower mask-length-upper";
