@@ -74,9 +74,9 @@ module ietf-routing-policy {
      definitions, each of which consists of a sequence of policy
      statements. Policy statements consist of simple
      condition-action tuples. Conditions may include multiple match
-     or comparison operations, and similarly actions may be a
-     multitude of changes to route attributes or a final
-     disposition of accepting or rejecting the route.
+     or comparison operations. Actions may include changes to route
+     attributes as well as a final disposition of accepting or 
+     rejecting the route.
 
      Route policy evaluation:
 
@@ -117,7 +117,7 @@ module ietf-routing-policy {
      data if route attribute values are modified.
 
 
-     Copyright (c) 2020 IETF Trust and the persons identified as
+     Copyright (c) 2021 IETF Trust and the persons identified as
      authors of the code.  All rights reserved.
 
      Redistribution and use in source and binary forms, with or
@@ -141,7 +141,7 @@ module ietf-routing-policy {
      see the RFC itself for full legal notices.";
 
 
-  revision "2020-10-05" {
+  revision "2021-01-10" {
     description
       "Initial revision.";
     reference
