@@ -48,7 +48,7 @@
       'http://xml.resource.org/public/rfc/bibxml-ids/reference.I-D.draft-ietf-netmod-sub-intf-vlan-model-07.xml'>
     ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
-<rfc docName="draft-ietf-rtgwg-policy-model-27" ipr="trust200902" category="std">
+<rfc docName="draft-ietf-rtgwg-policy-model-28" ipr="trust200902" category="std">
 <?rfc toc="yes"?>
   <front>
     <title abbrev="Routing Policy Model">A YANG Data Model for Routing Policy</title>
@@ -239,8 +239,9 @@
           A structure that allows routing protocol models to add
           protocol-specific policy conditions and actions though
           YANG augmentations.  There is a complete example of this
-          for <xref target="RFC4271">BGP</xref> policies in the proposed vendor-neutral
-          <xref target="I-D.ietf-idr-bgp-model">BGP data model</xref>.
+          for <xref target="RFC4271">BGP</xref> policies in the proposed 
+          vendor-neutral <xref target="I-D.ietf-idr-bgp-model">BGP data model</xref>.
+          Appendix A provides an example of how an augmentation might be done.
           </t>
           <t>
           A reusable grouping for attaching import and export rules in
@@ -301,7 +302,7 @@
             each with an associated IP prefix and netmask range (or exact length).
           </t>
           <t>
-            neighbor sets - Each neighbor set define a set of neighboring nodes by 
+            neighbor sets - Each neighbor set defines a set of neighboring nodes by 
             their IP addresses. A neighbor set is used for selecting routes based on the
             neighbors advertising the routes.
           </t>
@@ -518,7 +519,7 @@
       policy statement is evaluated. If there are multiple policies
       in the policy chain, subsequent policies are not
       evaluated.  Policy chains are sequences of
-      policy definitions (described in <xref target="expression">.
+      policy definitions (as described in <xref target="expression">.
       </xref>).
       </t>
 
@@ -579,79 +580,92 @@
 
     </section>
 
-    <section title="Security Considerations">
-      <t>The YANG module specified in this document defines a schema for data
-        that is designed to be accessed via network management protocols such
-        as NETCONF <xref target="RFC6241"/> or RESTCONF <xref target="RFC8040"/>.
-        The lowest NETCONF layer is the secure transport layer, and the
-        mandatory-to-implement secure transport is Secure Shell (SSH) <xref target="RFC6242"/>.
-        The lowest RESTCONF layer is HTTPS, and the mandatory-to-implement
-        secure transport is TLS <xref target="RFC8446"/>.</t>
+    <section title="YANG Module and Tree" anchor="models">
+      <section anchor="policy.tree" title="Routing Policy Model Tree">
+        <t>The tree of the routing policy model is shown below.</t>
+    <figure align="left">
+      <artwork align="left">  
+module: ietf-routing-policy
++--rw routing-policy
+   +--rw defined-sets
+   |  +--rw prefix-sets
+   |  |  +--rw prefix-set* [name mode]
+   |  |     +--rw name        string
+   |  |     +--rw mode        enumeration
+   |  |     +--rw prefixes
+   |  |        +--rw prefix-list* [ip-prefix mask-length-lower 
+   |  |                            mask-length-upper]
+   |  |           +--rw ip-prefix            inet:ip-prefix
+   |  |           +--rw mask-length-lower    uint8
+   |  |           +--rw mask-length-upper    uint8
+   |  +--rw neighbor-sets
+   |  |  +--rw neighbor-set* [name]
+   |  |     +--rw name       string
+   |  |     +--rw address*   inet:ip-address
+   |  +--rw tag-sets
+   |     +--rw tag-set* [name]
+   |        +--rw name         string
+   |        +--rw tag-value*   tag-type
+   +--rw policy-definitions
+      +--rw policy-definition* [name]
+         +--rw name          string
+         +--rw statements
+            +--rw statement* [name]
+               +--rw name          string
+               +--rw conditions
+               |  +--rw call-policy?       -> ../../../../../..
+               |                           /policy-definitions
+               |                           /policy-definition/name
+               |  +--rw source-protocol?      identityref
+               |  +--rw match-interface
+               |  |  +--rw interface?      -> /if:interfaces/interface
+               |  |                        /name
+               |  |  +--rw subinterface?   -> /if:interfaces/interface
+               |  |                        /if-ext:encapsulation
+               |  |                        /if-flex:flexible/match
+               |  |                        /dot1q-vlan-tagged
+               |  |                        /outer-tag/vlan-id
+               |  +--rw match-prefix-set
+               |  |  +--rw prefix-set?     -> ../../../../../../..
+               |  |                        /defined-sets/prefix-sets
+               |  |                        /prefix-set/name
+               |  |  +--rw match-set-options?   match-set-options-type
+               |  +--rw match-neighbor-set
+               |  |  +--rw neighbor-set?   -> ../../../../../../..
+               |  |                        /defined-sets/neighbor-sets
+               |  |                        /neighbor-set/name
+               |  +--rw match-tag-set
+               |  |  +--rw tag-set?        -> ../../../../../../..
+               |  |                        /defined-sets/tag-sets
+               |  |                        /tag-set/name
+               |  |  +--rw match-set-options? match-set-options-type
+               |  +--rw match-route-type*     identityref
+               +--rw actions
+                  +--rw policy-result?         policy-result-type
+                  +--rw set-metric
+                  |  +--rw metric-modification? metric-modification-type
+                  |  +--rw metric?                uint32
+                  +--rw set-metric-type
+                  |  +--rw metric-type?   identityref
+                  +--rw set-route-level
+                  |  +--rw route-level?   identityref
+                  +--rw set-preference?        uint16
+                  +--rw set-tag?               tag-type
+                  +--rw set-application-tag?   tag-type
+     </artwork>
+     </figure> 
 
-      <t>The NETCONF Access Control Model (NACM) <xref target="RFC8341"/> provides
-        the means to restrict access for particular NETCONF or RESTCONF users
-        to a pre-configured subset of all available NETCONF or RESTCONF protocol
-        operations and content.</t>
+     </section>
 
-      <t>There are a number of data nodes defined in this YANG module that are
-        writable/creatable/deletable (i.e., config true, which is the
-        default). These data nodes may be considered sensitive or vulnerable
-        in some network environments. Write operations (e.g., edit-config)
-        to these data nodes without proper protection can have a negative
-        effect on network operations. These are the subtrees and data nodes
-        and their sensitivity/vulnerability:
-        <list style="empty">
-          <t>/routing-policy</t>
-          <t>/routing-policy/defined-sets/prefix-sets</t>
-          <t>/routing-policy/defined-sets/neighbor-sets</t>
-          <t>/routing-policy/defined-sets/tag-sets</t>
-          <t>/routing-policy/policy-definitions</t>
-        </list></t>
 
-      <t>Unauthorized access to any data node of these subtrees can disclose
-        the operational state information of routing policies on this device.</t>
-
-      <t>Routing policy configuration has a significant impact on network operations,
-        and, as such, any related model carries potential security risks. Unauthorized
-        access or invalid data could cause major disruption.</t>
-
-    </section>
-
-    <section title="IANA Considerations">
-
-      <t>This document registers a URI in the IETF XML registry
-       <xref target="RFC3688"/>.  Following the format in <xref target="RFC3688"/>,
-       the following registration is requested to be made:
-      <figure>
-      <artwork>
-        URI: urn:ietf:params:xml:ns:yang:ietf-routing-policy
-        Registrant Contact: The IESG.
-        XML: N/A, the requested URI is an XML namespace.
-      </artwork>
-      </figure></t>
-      <t>This document registers a YANG module in the YANG Module Names
-       registry <xref target="RFC6020"/>.
-      <figure>
-      <artwork>
-        name: ietf-routing-policy
-        namespace: urn:ietf:params:xml:ns:yang:ietf-routing-policy
-        prefix: rt-pol
-        reference: RFC XXXX
-      </artwork>
-      </figure></t>
-
-    </section>
-
-    <section title="YANG module" anchor="models">
-
-      <t>The routing policy model is described by the YANG modules in the
-      sections below. <xref target="RFC2328"/>, <xref target="RFC3101"/>,
-      <xref target="RFC5130"/>, and <xref target="RFC5302"/>
-      are referenced here since they are referenced
-      in the YANG model but not elsewhere in this document.
-      </t>
 
       <section title="Routing policy model">
+      <t>The following RFCs are not referenced in the document text but
+        are referenced in the ietf-routing-policy.yang module:
+        <xref target="RFC2328"/>, <xref target="RFC3101"/>,
+        <xref target="RFC5130"/>, <xref target="RFC5302"/>,
+        <xref target="RFC6991"/>, and <xref target="RFC8343"/>.
+      </t>
         <figure>
         <artwork><![CDATA[
 <CODE BEGINS> file "ietf-routing-policy@2021-01-10.yang"
@@ -1676,6 +1690,98 @@ CODE ENDS>
 
     </section>
 
+    <section title="Security Considerations">
+      <t>The YANG module specified in this document defines a schema for data
+        that is designed to be accessed via network management protocols such
+        as NETCONF <xref target="RFC6241"/> or RESTCONF <xref target="RFC8040"/>.
+        The lowest NETCONF layer is the secure transport layer, and the
+        mandatory-to-implement secure transport is Secure Shell (SSH) <xref target="RFC6242"/>.
+        The lowest RESTCONF layer is HTTPS, and the mandatory-to-implement
+        secure transport is TLS <xref target="RFC8446"/>.</t>
+
+      <t>The NETCONF Access Control Model (NACM) <xref target="RFC8341"/> provides
+        the means to restrict access for particular NETCONF or RESTCONF users
+        to a pre-configured subset of all available NETCONF or RESTCONF protocol
+        operations and content.</t>
+
+      <t>There are a number of data nodes defined in this YANG module that are
+        writable/creatable/deletable (i.e., config true, which is the
+        default). These data nodes may be considered sensitive or vulnerable
+        in some network environments. Write operations (e.g., edit-config)
+        to these data nodes without proper protection can have a negative
+        effect on network operations. These are the subtrees and data nodes
+        and their sensitivity/vulnerability:
+        <list style="empty">
+          <t>/routing-policy</t>
+          <t>/routing-policy/defined-sets/prefix-sets -- Modification to 
+            the prefix-sets could result in a Denial-of-Service (DoS) 
+            attack. An attacker may try to create prefix-sets and redirect 
+            or drop traffic.</t>
+          <t>/routing-policy/defined-sets/neighbor-sets -- Modification to
+            the neighbor-sets could be used to mount a DoS attack. For 
+            example, routes from a neighbor-set could be rejected.</t>
+          <t>/routing-policy/defined-sets/tag-sets -- Modification to the
+            tag-sets could be used to mount a DoS attack. Routes with certain
+            tags might be redirected or dropped.</t>
+          <t>/routing-policy/policy-definitions</t>
+          <t>/routing-policy/policy-definitions/policy-definition
+             /statements/statement/conditions -- Modification to the conditions
+             could be used to mount a DoS attack. An attacker may change a
+             policy condition and redirect or drop traffic.</t>
+          <t>/routing-policy/policy-definitions/policy-definition
+             /statements/statement/actions -- Modification to actions could be
+             used to mount a DoS attack. Traffic might be redirected or
+             dropped.</t>
+        </list></t>
+
+      <t>Some of the readable data nodes in the YANG module may be
+        considered sensitive or vulnerable in some network environments.
+        It is thus important to control read access (e.g., via get,
+        get-config, or notification) to these data nodes. These are the
+        subtrees and data nodes and their sensitivity/vulnerability:
+        <list style="empty">
+          <t>/routing-policy/defined-sets/prefix-sets -- Knowledge of
+            these data nodes can be used to attack the local router with
+            a Denial-of-Service (DoS) attack.</t>
+          <t>/routing-policy/policy-definitions/policy-definition
+             /statements/statement/conditions -- Knowledge of these data
+             nodes can be used to attack the local router with a
+             Denial-of-Service (DoS) attack.</t>
+          <t>/routing-policy/policy-definitions/policy-definition
+             /statements/statement/actions -- Knowledge of these data
+             nodes can be used to attack the local router with a
+             Denial-of-Service (DoS) attack.</t>
+        </list></t>
+      <t>Routing policy configuration has a significant impact on network operations,
+        and, as such, any related model carries potential security risks. Unauthorized
+        access or invalid data could cause major disruption.</t>
+
+    </section>
+
+    <section title="IANA Considerations">
+
+      <t>This document registers a URI in the IETF XML registry
+       <xref target="RFC3688"/>.  Following the format in <xref target="RFC3688"/>,
+       the following registration is requested to be made:
+      <figure>
+      <artwork>
+        URI: urn:ietf:params:xml:ns:yang:ietf-routing-policy
+        Registrant Contact: The IESG.
+        XML: N/A, the requested URI is an XML namespace.
+      </artwork>
+      </figure></t>
+      <t>This document registers a YANG module in the YANG Module Names
+       registry <xref target="RFC6020"/>.
+      <figure>
+      <artwork>
+        name: ietf-routing-policy
+        namespace: urn:ietf:params:xml:ns:yang:ietf-routing-policy
+        prefix: rt-pol
+        reference: RFC XXXX
+      </artwork>
+      </figure></t>
+
+    </section>
 
     <section title="Acknowledgements">
       <t>The routing policy module defined in this document is based on the OpenConfig
