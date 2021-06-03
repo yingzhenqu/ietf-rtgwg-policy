@@ -145,7 +145,7 @@ module ietf-routing-policy {
 
   identity route-level {
     description
-      "Base identity for route import or export level.";
+      "Base identity for route import level.";
   }
 
   identity ospf-normal {
@@ -904,6 +904,7 @@ module ietf-routing-policy {
                  statements.";
               leaf policy-result {
                 type policy-result-type;
+                default reject-route;
                 description
                   "Select the final disposition for the route,
                    either accept or reject.";
@@ -939,7 +940,7 @@ module ietf-routing-policy {
                     base route-level;
                   }
                   description
-                    "Route import or export level.";
+                    "Route import level.";
                 }
                 description
                   "Set the level for importation or

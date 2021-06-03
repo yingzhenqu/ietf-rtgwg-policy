@@ -349,7 +349,8 @@
         Policy statements consist of a set of conditions and actions
         (either of which may be empty).  Conditions are used to
         match route attributes against a defined set (e.g., a prefix
-        set), or to compare attributes against a specific value.
+        set), or to compare attributes against a specific value. The 
+        default action is to reject-route.
         </t>
 
         <t>
@@ -499,7 +500,7 @@
         return value results in the intended behavior.  Nested policies
         are a convenience in many routing policy constructions but
         creating policies nested beyond a small number of levels (e.g., 2-3)
-        is discouraged. Also, implementations should have validation
+        is discouraged. Also, implementations MUST validate
         to ensure that there is no recursion amongst nested routing policies.
         </t>
 
@@ -2006,12 +2007,15 @@ module: ietf-routing-policy
     <section title="Policy examples" anchor="examples">
 
       <t>
-      Below we show an example of XML-encoded configuration data using
+      Below we show examples of XML-encoded configuration data using
       the routing policy and BGP models to illustrate both how policies
       are defined, and also how they can be applied.  Note that the XML
       has been simplified for readability.
       </t>
-
+      <t>The following example shows how prefix-set and tag-set can be
+      defined. The policy condition is to match a prefix-set and a
+      tag-set, and the action is to accept routes that match the condition.</t>
+      
       <figure>
         <artwork><![CDATA[
   <config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
@@ -2036,6 +2040,17 @@ module: ietf-routing-policy
                 </prefix-list>
               </prefixes>
             </prefix-set>
+            <prefix-set>
+              <name>prefix-set-B</name>
+              <mode>ipv6</mode>
+                <prefixes>
+                <prefix-list>
+                  <ip-prefix>2001:DB8::/32</ip-prefix>
+                  <mask-length-lower>32</mask-length-lower>
+                  <mask-length-upper>64</mask-length-upper>
+                </prefix-list>
+              </prefixes>
+            </prefix-set>
            </prefix-sets>
            <tag-sets>
             <tag-set>
@@ -2052,6 +2067,9 @@ module: ietf-routing-policy
             <statement>
               <name>term-0</name>
               <conditions>
+                <match-prefix-set>
+                  <prefix-set>prefix-set-A</prefix-set>
+                </match-prefix-set>
                 <match-tag-set>
                   <tag-set>cust-tag1</tag-set>
                 </match-tag-set>
