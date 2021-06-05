@@ -109,8 +109,8 @@
     <section title="Introduction" anchor="intro">
       <t>This document describes a YANG <xref target="RFC7950"/> data model for routing
       policy configuration based on operational usage and best practices in a variety
-      of service provider networks.  The model is intended to be vendor-neutral, in
-      order to allow operators to manage policy configuration in a consistent way in 
+      of service provider networks.  The model is intended to be vendor-neutral,
+      to allow operators to manage policy configuration in a consistent way in 
       environments with routers supplied by multiple vendors.
       </t>
       <t> The YANG modules in this document conform to the Network Management
@@ -124,8 +124,8 @@
       used constructs for managing how routes are imported,
       exported, and modified across different routing protocols.
       The model development approach has been to examine actual
-      policy configurations in use across a number of operator
-      networks.  Hence the focus is on enabling policy configuration
+      policy configurations in use across several operator
+      networks.  Hence, the focus is on enabling policy configuration
       capabilities and structure that are in wide use.
       </t>
 
@@ -231,21 +231,23 @@
       <t>
         <list style="symbols">
           <t>
-          A generic framework to express policies as sets of related
-          conditions and actions. This includes match sets and actions
+          A generic framework is provided to express policies as sets of
+          related conditions and actions. This includes match sets and actions
           that are useful across many routing protocols.
           </t>
           <t>
           A structure that allows routing protocol models to add
           protocol-specific policy conditions and actions though
-          YANG augmentations.  There is a complete example of this
+          YANG augmentations is also provided.  There is a complete example of this
           for <xref target="RFC4271">BGP</xref> policies in the proposed 
           vendor-neutral <xref target="I-D.ietf-idr-bgp-model">BGP data model</xref>.
-          Appendix A provides an example of how an augmentation might be done.
+          Appendix A provides an example of how an augmentation for BGP policies
+          might be accomplished. Note that this section is not normative as the BGP
+          model is still evolving.
           </t>
           <t>
-          A reusable grouping for attaching import and export rules in
-          the context of routing configuration for different
+          Finally, a reusable grouping is defined for attaching import and
+          export rules in the context of routing configuration for different
           protocols, VRFs, etc.  This also enables creation of policy
           chains and expressing default policy behavior. In this document,
           policy chains are sequences of policy definitions that are
@@ -289,11 +291,11 @@
 
       <section title="Defined sets for policy matching" anchor="sets">
         <t>
-        The models provide a set of generic sets that can be used for
+        The model provides a collection of generic sets that can be used for
         matching in policy conditions.  These sets are applicable for
         route selection across  multiple routing protocols. They may be
         further augmented by protocol-specific models which have their
-        own defined sets. The supported defined sets include:
+        own defined sets. The defined sets include:
         </t>
         <t>
           <list style="symbols">
@@ -387,7 +389,7 @@
         <t>
         While most policy conditions will be added by individual
         routing protocol models via augmentation, this routing policy
-        model includes several generic match conditions and also the
+        model includes several generic match conditions and the
         ability to test which protocol or mechanism installed a route
         (e.g., BGP, IGP, static, etc.).  The conditions included in
         the model are shown below.
@@ -471,7 +473,7 @@
         resuming evaluation.  The outcome of the called policy affects
         the evaluation of the calling policy.  If the called policy
         results in an accept-route,
-        then the subroutine returns an effective boolean true value to
+        then the subroutine returns an effective Boolean true value to
         the calling policy.  For the calling policy, this is equivalent
         to a condition statement evaluating to a true value and
         evaluation of the policy continues
@@ -481,11 +483,11 @@
         returns false and the calling policy evaluation will be
         affected accordingly. When the end of the subroutine policy
         statements is reached, the default route disposition
-        action is returned (i.e., boolean false for reject-route).
+        action is returned (i.e., Boolean false for reject-route).
         Consequently, a subroutine cannot
-        explicitly accept or reject a route. Rather it merely provides
-        an indication that 'call-policy' condition returns boolean true
-        or false indicating whether or not the condition matches. Route
+        explicitly accept or reject a route. Rather, the called policy
+        returns Boolean true if its outcome is accept-route or Boolean
+        false if its outcome is reject-route. Route
         acceptance or rejection is solely determined by the top-level
         policy.
         </t>
@@ -512,7 +514,7 @@
 
       <t>
       Evaluation of each policy definition proceeds by evaluating its
-      corresponding individual policy statements in order.  When all
+      individual policy statements in order that they are defined.  When all
       the condition statements in a policy statement are satisfied, the
       corresponding action statements are executed.  If the actions
       include either accept-route or reject-route actions,
@@ -538,7 +540,7 @@
       <t>
       Note that the route's pre-policy attributes are always used for
       testing policy statement conditions. In other words, if actions modify
-      the policy application specific attributes, those modifications are
+      the policy application-specific attributes, those modifications are
       not used for policy statement conditions.
       </t>
 
@@ -553,7 +555,7 @@
       </xref>). They can be referenced from different contexts. For 
       example, a policy chain could be associated with a routing 
       protocol and used to control its interaction with its protocol 
-      peers. Or, it could be used to control the interaction between 
+      peers. Or it could be used to control the interaction between 
       a routing protocol and the local routing information base. 
       A policy chain has an associated direction (import or export), 
       with respect to the context in which it is referenced.</t>
@@ -587,72 +589,72 @@
     <figure align="left">
       <artwork align="left">  
 module: ietf-routing-policy
-+--rw routing-policy
-   +--rw defined-sets
-   |  +--rw prefix-sets
-   |  |  +--rw prefix-set* [name mode]
-   |  |     +--rw name        string
-   |  |     +--rw mode        enumeration
-   |  |     +--rw prefixes
-   |  |        +--rw prefix-list* [ip-prefix mask-length-lower 
-   |  |                            mask-length-upper]
-   |  |           +--rw ip-prefix            inet:ip-prefix
-   |  |           +--rw mask-length-lower    uint8
-   |  |           +--rw mask-length-upper    uint8
-   |  +--rw neighbor-sets
-   |  |  +--rw neighbor-set* [name]
-   |  |     +--rw name       string
-   |  |     +--rw address*   inet:ip-address
-   |  +--rw tag-sets
-   |     +--rw tag-set* [name]
-   |        +--rw name         string
-   |        +--rw tag-value*   tag-type
-   +--rw policy-definitions
-      +--rw policy-definition* [name]
-         +--rw name          string
-         +--rw statements
-            +--rw statement* [name]
-               +--rw name          string
-               +--rw conditions
-               |  +--rw call-policy?       -> ../../../../../..
-               |                           /policy-definitions
-               |                           /policy-definition/name
-               |  +--rw source-protocol?      identityref
-               |  +--rw match-interface
-               |  |  +--rw interface?      -> /if:interfaces/interface
-               |  |                        /name
-               |  |  +--rw subinterface?   -> /if:interfaces/interface
-               |  |                        /if-ext:encapsulation
-               |  |                        /if-flex:flexible/match
-               |  |                        /dot1q-vlan-tagged
-               |  |                        /outer-tag/vlan-id
-               |  +--rw match-prefix-set
-               |  |  +--rw prefix-set?     -> ../../../../../../..
-               |  |                        /defined-sets/prefix-sets
-               |  |                        /prefix-set/name
-               |  |  +--rw match-set-options?   match-set-options-type
-               |  +--rw match-neighbor-set
-               |  |  +--rw neighbor-set?   -> ../../../../../../..
-               |  |                        /defined-sets/neighbor-sets
-               |  |                        /neighbor-set/name
-               |  +--rw match-tag-set
-               |  |  +--rw tag-set?        -> ../../../../../../..
-               |  |                        /defined-sets/tag-sets
-               |  |                        /tag-set/name
-               |  |  +--rw match-set-options? match-set-options-type
-               |  +--rw match-route-type*     identityref
-               +--rw actions
-                  +--rw policy-result?         policy-result-type
-                  +--rw set-metric
-                  |  +--rw metric-modification? metric-modification-type
-                  |  +--rw metric?                uint32
-                  +--rw set-metric-type
-                  |  +--rw metric-type?   identityref
-                  +--rw set-route-level
-                  |  +--rw route-level?   identityref
-                  +--rw set-preference?        uint16
-                  +--rw set-tag?               tag-type
-                  +--rw set-application-tag?   tag-type
+rw routing-policy
+  +--rw defined-sets
+  |  +--rw prefix-sets
+  |  |  +--rw prefix-set* [name mode]
+  |  |     +--rw name        string
+  |  |     +--rw mode        enumeration
+  |  |     +--rw prefixes
+  |  |        +--rw prefix-list* [ip-prefix mask-length-lower 
+  |  |                            mask-length-upper]
+  |  |           +--rw ip-prefix            inet:ip-prefix
+  |  |           +--rw mask-length-lower    uint8
+  |  |           +--rw mask-length-upper    uint8
+  |  +--rw neighbor-sets
+  |  |  +--rw neighbor-set* [name]
+  |  |     +--rw name       string
+  |  |     +--rw address*   inet:ip-address
+  |  +--rw tag-sets
+  |     +--rw tag-set* [name]
+  |        +--rw name         string
+  |        +--rw tag-value*   tag-type
+  +--rw policy-definitions
+   +--rw policy-definition* [name]
+     +--rw name          string
+     +--rw statements
+        +--rw statement* [name]
+           +--rw name          string
+           +--rw conditions
+           |  +--rw call-policy?       -> ../../../../../..
+           |                           /policy-definitions
+           |                           /policy-definition/name
+           |  +--rw source-protocol?      identityref
+           |  +--rw match-interface
+           |  |  +--rw interface?      -> /if:interfaces/interface
+           |  |                        /name
+           |  |  +--rw subinterface?   -> /if:interfaces/interface
+           |  |                        /if-ext:encapsulation
+           |  |                        /if-flex:flexible/match
+           |  |                        /dot1q-vlan-tagged
+           |  |                        /outer-tag/vlan-id
+           |  +--rw match-prefix-set
+           |  |  +--rw prefix-set?     -> ../../../../../../..
+           |  |                        /defined-sets/prefix-sets
+           |  |                        /prefix-set/name
+           |  |  +--rw match-set-options?   match-set-options-type
+           |  +--rw match-neighbor-set
+           |  |  +--rw neighbor-set?   -> ../../../../../../..
+           |  |                        /defined-sets/neighbor-sets
+           |  |                        /neighbor-set/name
+           |  +--rw match-tag-set
+           |  |  +--rw tag-set?        -> ../../../../../../..
+           |  |                        /defined-sets/tag-sets
+           |  |                        /tag-set/name
+           |  |  +--rw match-set-options? match-set-options-type
+           |  +--rw match-route-type*     identityref
+           +--rw actions
+              +--rw policy-result?         policy-result-type
+              +--rw set-metric
+              |  +--rw metric-modification? metric-modification-type
+              |  +--rw metric?                uint32
+              +--rw set-metric-type
+              |  +--rw metric-type?   identityref
+              +--rw set-route-level
+              |  +--rw route-level?   identityref
+              +--rw set-preference?        uint16
+              +--rw set-tag?               tag-type
+              +--rw set-application-tag?   tag-type
      </artwork>
      </figure> 
 
@@ -1715,24 +1717,41 @@ CODE ENDS>
         <list style="empty">
           <t>/routing-policy</t>
           <t>/routing-policy/defined-sets/prefix-sets -- Modification to 
-            the prefix-sets could result in a Denial-of-Service (DoS) 
-            attack. An attacker may try to create prefix-sets and redirect 
-            or drop traffic.</t>
+            prefix-sets could result in a Denial-of-Service (DoS) 
+            attack. An attacker may try to modify prefix-sets and redirect 
+            or drop traffic. Redirection of traffic could be used as part of
+            a more elaborate attack to either collect sensitive
+            information or masquerade a service. Additionally, a control-plane
+            DoS attack could be accomplished by allowing a large number of
+            routes to be leaked into a routing protocol domian (e.g., BGP).</t>
           <t>/routing-policy/defined-sets/neighbor-sets -- Modification to
-            the neighbor-sets could be used to mount a DoS attack. For 
-            example, routes from a neighbor-set could be rejected.</t>
+             the neighbor-sets could be used to mount a DoS attack or more
+             elaborate attack as with prefix-sets. For 
+             example, a DoS attack could be mounted by changing the
+             neighbor-set from which routes are accepted.</t>
           <t>/routing-policy/defined-sets/tag-sets -- Modification to the
             tag-sets could be used to mount a DoS attack. Routes with certain
-            tags might be redirected or dropped.</t>
+            tags might be redirected or dropped. The implications are similar to
+            prefix-sets and neighbor-sets. However, the attack may be more
+            difficult to detect as the routing policy usage of route tags and
+            intent must be understood to recognize the breach. Conversely, 
+            the implications of prefix-set or neighbor set modification are
+            easier to recognize.</t>
           <t>/routing-policy/policy-definitions</t>
           <t>/routing-policy/policy-definitions/policy-definition
              /statements/statement/conditions -- Modification to the conditions
-             could be used to mount a DoS attack. An attacker may change a
-             policy condition and redirect or drop traffic.</t>
+             could be used to mount a DoS attack or other attack.
+             An attacker may change a policy condition and redirect or drop traffic.
+             As with prefix-sets, neighbor-sets, or tag-sets, traffic redirection
+             could be used as part of a more elaborate attack.</t>
           <t>/routing-policy/policy-definitions/policy-definition
              /statements/statement/actions -- Modification to actions could be
-             used to mount a DoS attack. Traffic might be redirected or
-             dropped.</t>
+             used to mount a DoS attack or other attack. Traffic may
+             be redirected or dropped.
+              As with prefix-sets, neighbor-sets, or tag-sets, traffic redirection
+             could be used as part of a more elaborate attack.
+             Additionally, route attributes may be changed to mount a second-level
+             attack that is more difficult to detect.</t>
         </list></t>
 
       <t>Some of the readable data nodes in the YANG module may be
@@ -1742,16 +1761,21 @@ CODE ENDS>
         subtrees and data nodes and their sensitivity/vulnerability:
         <list style="empty">
           <t>/routing-policy/defined-sets/prefix-sets -- Knowledge of
-            these data nodes can be used to attack the local router with
-            a Denial-of-Service (DoS) attack.</t>
+            these data nodes can be used to ascertain which local prefixes
+            are suspectable to a Denial-of-Service (DoS) attack.</t>
+          <t>/routing-policy/defined-sets/prefix-sets -- Knowledge of
+            these data nodes can be used to ascertain local neighbors
+            against whom to mount a Denial-of-Service (DoS) attack.</t>
           <t>/routing-policy/policy-definitions/policy-definition
-             /statements/statement/conditions -- Knowledge of these data
+             /statements/ -- Knowledge of these data
              nodes can be used to attack the local router with a
-             Denial-of-Service (DoS) attack.</t>
-          <t>/routing-policy/policy-definitions/policy-definition
-             /statements/statement/actions -- Knowledge of these data
-             nodes can be used to attack the local router with a
-             Denial-of-Service (DoS) attack.</t>
+             Denial-of-Service (DoS) attack.  Additionally, policies and
+             their attendant conditions and actions should be considered
+             proprietary and disclosure could be used to ascertain
+             partners, customers, and supplies. Furthermore, the policies
+             themselves could represent intellectual property and disclosure
+             could diminish their corresponding business advantage.
+            </t>
         </list></t>
       <t>Routing policy configuration has a significant impact on network operations,
         and, as such, any related model carries potential security risks. Unauthorized
@@ -2009,7 +2033,7 @@ module: ietf-routing-policy
       <t>
       Below we show examples of XML-encoded configuration data using
       the routing policy and BGP models to illustrate both how policies
-      are defined, and also how they can be applied.  Note that the XML
+      are defined, and how they can be applied.  Note that the XML
       has been simplified for readability.
       </t>
       <t>The following example shows how prefix-set and tag-set can be
