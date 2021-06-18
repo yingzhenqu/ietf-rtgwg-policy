@@ -48,7 +48,7 @@
       'http://xml.resource.org/public/rfc/bibxml-ids/reference.I-D.draft-ietf-netmod-sub-intf-vlan-model-07.xml'>
     ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
-<rfc docName="draft-ietf-rtgwg-policy-model-28" ipr="trust200902" category="std">
+<rfc docName="draft-ietf-rtgwg-policy-model-29" ipr="trust200902" category="std">
 <?rfc toc="yes"?>
   <front>
     <title abbrev="Routing Policy Model">A YANG Data Model for Routing Policy</title>
@@ -408,7 +408,6 @@
                |  +--rw source-protocol?
                |  +--rw match-interface
                |  |  +--rw interface?
-               |  |  +--rw subinterface?
                |  +--rw match-prefix-set
                |  |  +--rw prefix-set?
                |  |  +--rw match-set-options?
@@ -454,7 +453,7 @@
                     |  +--rw metric-type?   identityref
                     +--rw set-route-level
                     |  +--rw route-level?   identityref
-                    +--rw set-preference?        uint16
+                    +--rw set-route-preference?      uint16
                     +--rw set-tag?               tag-type
                     +--rw set-application-tag?   tag-type
           </artwork>
@@ -522,8 +521,7 @@
       policy statement is evaluated. If there are multiple policies
       in the policy chain, subsequent policies are not
       evaluated.  Policy chains are sequences of
-      policy definitions (as described in <xref target="expression">.
-      </xref>).
+      policy definitions (as described in <xref target="expression"/>).
       </t>
 
       <t>
@@ -623,11 +621,6 @@ rw routing-policy
            |  +--rw match-interface
            |  |  +--rw interface?      -> /if:interfaces/interface
            |  |                        /name
-           |  |  +--rw subinterface?   -> /if:interfaces/interface
-           |  |                        /if-ext:encapsulation
-           |  |                        /if-flex:flexible/match
-           |  |                        /dot1q-vlan-tagged
-           |  |                        /outer-tag/vlan-id
            |  +--rw match-prefix-set
            |  |  +--rw prefix-set?     -> ../../../../../../..
            |  |                        /defined-sets/prefix-sets
@@ -652,7 +645,7 @@ rw routing-policy
               |  +--rw metric-type?   identityref
               +--rw set-route-level
               |  +--rw route-level?   identityref
-              +--rw set-preference?        uint16
+              +--rw set-route-preference?        uint16
               +--rw set-tag?               tag-type
               +--rw set-application-tag?   tag-type
      </artwork>
@@ -671,7 +664,7 @@ rw routing-policy
       </t>
         <figure>
         <artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing-policy@2021-06-07.yang"
+<CODE BEGINS> file "ietf-routing-policy@2021-06-18.yang"
 module ietf-routing-policy {
 
   yang-version "1.1";
@@ -699,21 +692,6 @@ module ietf-routing-policy {
     prefix "rt";
     reference "RFC 8349: A YANG Data Model for Routing
                Management (NMDA Version)";
-  }
-
-  import ietf-if-extensions {
-    prefix "if-ext";
-    reference "RFC YYYY: Common Interface Extension YANG
-               Data Models. Please replace YYYY with
-               published RFC number for
-               draft-ietf-netmod-intf-ext-yang.";
-  }
-
-  import ietf-if-flexible-encapsulation {
-    prefix "if-flex";
-    reference "RFC ZZZZ: Sub-interface VLAN YANG Data Models.
-               Please replace ZZZZ with published RFC number
-               for draft-ietf-netmod-sub-intf-vlan-model.";
   }
 
   organization
@@ -765,8 +743,8 @@ module ietf-routing-policy {
      and only when, they appear in all capitals, as shown here.";
 
   reference "RFC XXXX: A YANG Data Model for Routing Policy.";
-
-  revision "2021-06-07" {
+    
+  revision "2021-06-18" {
     description
       "Initial revision.";
     reference
@@ -1196,24 +1174,8 @@ module ietf-routing-policy {
           path "/if:interfaces/if:interface/if:name";
         }
         description
-          "Reference to a base interface.  If a reference to a
-           subinterface is required, this leaf MUST be specified
-           to indicate the base interface.";
+          "Reference to a base interface.";
       }
-      leaf subinterface {
-        type leafref {
-          path "/if:interfaces/if:interface/if-ext:encapsulation"
-             + "/if-flex:flexible/if-flex:match"
-             + "/if-flex:dot1q-vlan-tagged"
-             + "/if-flex:outer-tag/if-flex:vlan-id";
-        }
-        description
-          "Reference to a subinterface -- this requires the base
-           interface to be specified using the interface leaf in
-           this container.  If only a reference to a base interface
-           is required, this leaf MUST NOT be set.";
-      }
-
       description
         "Container for interface match conditions";
     }
@@ -1621,7 +1583,7 @@ module ietf-routing-policy {
                   "Set the level for importation or
                    exportation of routes.";
               }
-              leaf set-preference {
+              leaf set-route-preference {
                 type uint16;
                 description
                   "Set the preference for the route. It is also 
@@ -1932,7 +1894,6 @@ module: ietf-routing-policy
               |  +--rw source-protocol?          identityref
               |  +--rw match-interface
               |  |  +--rw interface?
-              |  |  +--rw subinterface?
               |  +--rw match-prefix-set
               |  |  +--rw prefix-set?       prefix-set/name
               |  |  +--rw match-set-options?   match-set-options-type
@@ -1969,7 +1930,7 @@ module: ietf-routing-policy
                  |  +--rw metric-type?   identityref
                  +--rw set-route-level
                  |  +--rw route-level?   identityref
-                 +--rw set-preference?        uint16
+                 +--rw set-route-preference?        uint16
                  +--rw set-tag?               tag-type
                  +--rw set-application-tag?   tag-type
                  +--rw bp:bgp-actions

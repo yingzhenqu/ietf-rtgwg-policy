@@ -27,21 +27,6 @@ module ietf-routing-policy {
                Management (NMDA Version)";
   }
 
-  import ietf-if-extensions {
-    prefix "if-ext";
-    reference "RFC YYYY: Common Interface Extension YANG
-               Data Models. Please replace YYYY with
-               published RFC number for
-               draft-ietf-netmod-intf-ext-yang.";
-  }
-
-  import ietf-if-flexible-encapsulation {
-    prefix "if-flex";
-    reference "RFC ZZZZ: Sub-interface VLAN YANG Data Models.
-               Please replace ZZZZ with published RFC number
-               for draft-ietf-netmod-sub-intf-vlan-model.";
-  }
-
   organization
     "IETF RTGWG - Routing Area Working Group";
   contact
@@ -92,7 +77,7 @@ module ietf-routing-policy {
 
   reference "RFC XXXX: A YANG Data Model for Routing Policy.";
     
-  revision "2021-06-07" {
+  revision "2021-06-18" {
     description
       "Initial revision.";
     reference
@@ -522,24 +507,8 @@ module ietf-routing-policy {
           path "/if:interfaces/if:interface/if:name";
         }
         description
-          "Reference to a base interface.  If a reference to a
-           subinterface is required, this leaf MUST be specified
-           to indicate the base interface.";
+          "Reference to a base interface.";
       }
-      leaf subinterface {
-        type leafref {
-          path "/if:interfaces/if:interface/if-ext:encapsulation"
-             + "/if-flex:flexible/if-flex:match"
-             + "/if-flex:dot1q-vlan-tagged"
-             + "/if-flex:outer-tag/if-flex:vlan-id";
-        }
-        description
-          "Reference to a subinterface -- this requires the base
-           interface to be specified using the interface leaf in
-           this container.  If only a reference to a base interface
-           is required, this leaf MUST NOT be set.";
-      }
-
       description
         "Container for interface match conditions";
     }
@@ -947,7 +916,7 @@ module ietf-routing-policy {
                   "Set the level for importation or
                    exportation of routes.";
               }
-              leaf set-preference {
+              leaf set-route-preference {
                 type uint16;
                 description
                   "Set the preference for the route. It is also 
