@@ -81,17 +81,18 @@ module ietf-routing-policy {
      Relating to IETF Documents
      (https://trustee.ietf.org/license-info).
 
+     This version of this YANG module is part of RFC XXXX;
+     see the RFC itself for full legal notices.
+
      The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
      NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'NOT
      RECOMMENDED', 'MAY', and 'OPTIONAL' in this document are to be
      interpreted as described in BCP 14 (RFC 2119) (RFC 8174) when,
-     and only when, they appear in all capitals, as shown here.
+     and only when, they appear in all capitals, as shown here.";
 
-     This version of this YANG module is part of RFC XXXX;
-     see the RFC itself for full legal notices.";
-
-
-  revision "2021-06-01" {
+  reference "RFC XXXX: A YANG Data Model for Routing Policy.";
+    
+  revision "2021-06-07" {
     description
       "Initial revision.";
     reference
