@@ -1718,8 +1718,8 @@ module ietf-routing-policy {
             </t>
         </list></t>
       <t>Routing policy configuration has a significant impact on network operations,
-        and, as such, any related model carries potential security risks. Unauthorized
-        access or invalid data could cause major disruption.</t>
+      and, as such, other YANG models that reference routing policies are also
+      susceptible to vulnerabilities relating the YANG data nodes specified above.</t> 
 
     </section>
 
