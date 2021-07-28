@@ -81,7 +81,7 @@ module ietf-routing-policy {
 
   reference "RFC XXXX: A YANG Data Model for Routing Policy.";
     
-  revision "2021-07-27" {
+  revision "2021-07-28" {
     description
       "Initial revision.";
     reference
@@ -462,45 +462,6 @@ module ietf-routing-policy {
     }
   }
 
-  grouping match-set-options-group {
-    description
-      "Grouping containing options relating to how a particular set
-       will be matched.";
-
-    leaf match-set-options {
-      type match-set-options-type;
-      description
-        "Optional parameter that governs the behavior of the
-         match operation.";
-    }
-  }
-
-  grouping match-set-options-restricted-group {
-    description
-      "Grouping for a restricted set of match operation
-       modifiers.";
-
-    leaf match-set-options {
-      type match-set-options-type {
-        enum any {
-          description
-            "Match is true if given value matches any
-             member of the defined set.";
-        }
-        enum invert {
-          description
-            "Match is true if given value does not match
-             any member of the defined set.";
-        }
-      }
-      description
-        "Optional parameter that governs the behavior of the
-         match operation. This leaf only supports matching on
-         'any' member of the set or 'invert' the match.
-         Matching on 'all' is not supported.";
-    }
-  }
-
   grouping match-interface-condition {
     description
       "This grouping provides interface match condition.";
@@ -547,7 +508,26 @@ module ietf-routing-policy {
         description
           "References a defined prefix set.";
       }
-      uses match-set-options-restricted-group;
+
+      leaf match-set-options {
+        type match-set-options-type {
+          enum any {
+            description
+              "Match is true if given value matches any
+               member of the defined set.";
+          }
+          enum invert {
+            description
+              "Match is true if given value does not match
+               any member of the defined set.";
+          }
+        }
+        description
+          "Optional parameter that governs the behavior of the
+           match operation. This leaf only supports matching on
+           'any' member of the set or 'invert' the match.
+           Matching on 'all' is not supported.";
+      }
 
       description
         "Match a referenced prefix-set according to the logic
@@ -589,7 +569,13 @@ module ietf-routing-policy {
         description
           "References a defined tag set.";
       }
-      uses match-set-options-group;
+      
+      leaf match-set-options {
+        type match-set-options-type;
+        description
+          "Optional parameter that governs the behavior of the
+           match operation.";
+      }
 
       description
         "Match a referenced tag set according to the logic defined
