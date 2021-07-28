@@ -42,13 +42,9 @@
       'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8349.xml'>
     <!ENTITY RFC8446 PUBLIC ''
       'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8446.xml'>
-    <!ENTITY I-D.ietf-netmod-intf-ext-yang PUBLIC ''
-      'http://xml.resource.org/public/rfc/bibxml-ids/reference.I-D.draft-ietf-netmod-intf-ext-yang-10.xml'>
-    <!ENTITY I-D.ietf-netmod-sub-intf-vlan-model PUBLIC ''
-      'http://xml.resource.org/public/rfc/bibxml-ids/reference.I-D.draft-ietf-netmod-sub-intf-vlan-model-07.xml'>
     ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
-<rfc docName="draft-ietf-rtgwg-policy-model-29" ipr="trust200902" category="std">
+<rfc docName="draft-ietf-rtgwg-policy-model-30" ipr="trust200902" category="std">
 <?rfc toc="yes"?>
   <front>
     <title abbrev="Routing Policy Model">A YANG Data Model for Routing Policy</title>
@@ -218,8 +214,6 @@
           <c>rt</c><c>ietf-routing</c><c><xref target="RFC8349"/></c>
           <c>yang</c><c>ietf-yang-types</c><c><xref target="RFC6991"/></c>
           <c>inet</c><c>ietf-inet-types</c><c><xref target="RFC6991"/></c>
-          <c>if-ext</c><c>ietf-if-extensions</c><c><xref target="INTF-EXT-YANG"/></c>
-          <c>if-flex</c><c>ietf-if-flexible-encapsulation</c><c><xref target="SUB-INTF-VLAN-YANG"/></c>
         </texttable>
       </section>
     </section>
@@ -276,6 +270,7 @@
       <figure>
         <artwork>
    +--rw routing-policy
+      +--ro match-modified-attributes?   boolean
       +--rw policy-definitions
          +--rw policy-definition* [name]
             +--rw name          string
@@ -536,10 +531,13 @@
       </t>
 
       <t>
-      Note that the route's pre-policy attributes are always used for
-      testing policy statement conditions. In other words, if actions modify
-      the policy application-specific attributes, those modifications are
-      not used for policy statement conditions.
+      Whether or not the route's pre-policy attributes are used for
+      testing policy statement conditions is dependent on the implementation
+      specific value of the match-modified-attributes leaf. If match-modified-attributes 
+      is false and actions modify route attributes, these modifications are not used for 
+      policy statement conditions.  Conversely, if match-modified-attributes is true and
+      actions modify the policy application-specific attributes, the attributes as 
+      modified by the policy are used for policy condition statements.
       </t>
 
     </section>
@@ -608,6 +606,7 @@ rw routing-policy
   |        +--rw name         string
   |        +--rw tag-value*   tag-type
   +--rw policy-definitions
+   +--ro match-modified-attributes?   boolean
    +--rw policy-definition* [name]
      +--rw name          string
      +--rw statements
@@ -674,23 +673,27 @@ module ietf-routing-policy {
 
   import ietf-inet-types {
     prefix "inet";
-    reference "RFC 6991: Common YANG Data Types";
+    reference
+      "RFC 6991: Common YANG Data Types";
   }
 
   import ietf-yang-types {
     prefix "yang";
-    reference "RFC 6991: Common YANG Data Types";
+    reference
+      "RFC 6991: Common YANG Data Types";
   }
 
   import ietf-interfaces {
     prefix "if";
-    reference "RFC 8343: A YANG Data Model for Interface
-               Management (NMDA Version)";
+    reference 
+      "RFC 8343: A YANG Data Model for Interface
+                 Management (NMDA Version)";
   }
 
   import ietf-routing {
     prefix "rt";
-    reference "RFC 8349: A YANG Data Model for Routing
+    reference
+      "RFC 8349: A YANG Data Model for Routing
                Management (NMDA Version)";
   }
 
@@ -744,11 +747,11 @@ module ietf-routing-policy {
 
   reference "RFC XXXX: A YANG Data Model for Routing Policy.";
     
-  revision "2021-06-18" {
+  revision "2021-07-27" {
     description
       "Initial revision.";
     reference
-     "RFC XXXX: A YANG Data Model for Routing Policy Management.";
+      "RFC XXXX: A YANG Data Model for Routing Policy Management.";
   }
 
   /* Identities */
@@ -764,7 +767,7 @@ module ietf-routing-policy {
       "Identity for the OSPF type 1 external metric types. It
        is only applicable to OSPF routes.";
     reference
-      "RFC 2328 - OSPF Version 2";
+      "RFC 2328: OSPF Version 2";
   }
 
   identity ospf-type-2-metric {
@@ -773,7 +776,7 @@ module ietf-routing-policy {
       "Identity for the OSPF type 2 external metric types. It
        is only applicable to OSPF routes.";
     reference
-      "RFC 2328 - OSPF Version 2";
+      "RFC 2328: OSPF Version 2";
   }
 
   identity isis-internal-metric {
@@ -782,7 +785,7 @@ module ietf-routing-policy {
       "Identity for the IS-IS internal metric types. It is only
        applicable to IS-IS routes.";
     reference
-      "RFC 5302 - Domain-Wide Prefix Distribution with
+      "RFC 5302: Domain-Wide Prefix Distribution with
        Two-Level IS-IS";
   }
 
@@ -792,7 +795,7 @@ module ietf-routing-policy {
       "Identity for the IS-IS external metric types. It is only
        applicable to IS-IS routes.";
     reference
-      "RFC 5302 - Domain-Wide Prefix Distribution with
+      "RFC 5302: Domain-Wide Prefix Distribution with
        Two-Level IS-IS";
   }
 
@@ -808,7 +811,7 @@ module ietf-routing-policy {
        It is only applicable to routes imported
        into the OSPF protocol.";
     reference
-      "RFC 2328 - OSPF Version 2";
+      "RFC 2328: OSPF Version 2";
   }
 
   identity ospf-nssa-only {
@@ -837,7 +840,7 @@ module ietf-routing-policy {
       "Identity for IS-IS Level 1 area importation. It is only
        applicable to routes imported into the IS-IS protocol.";
     reference
-      "RFC 5302 - Domain-Wide Prefix Distribution with
+      "RFC 5302: Domain-Wide Prefix Distribution with
        Two-Level IS-IS";
   }
 
@@ -847,7 +850,7 @@ module ietf-routing-policy {
       "Identity for IS-IS Level 2 area importation. It is only
        applicable to routes imported into the IS-IS protocol.";
     reference
-      "RFC 5302 - Domain-Wide Prefix Distribution with
+      "RFC 5302: Domain-Wide Prefix Distribution with
        Two-Level IS-IS";
   }
 
@@ -858,7 +861,7 @@ module ietf-routing-policy {
        is only applicable to routes imported into the IS-IS
        protocol.";
     reference
-      "RFC 5302 - Domain-Wide Prefix Distribution with
+      "RFC 5302: Domain-Wide Prefix Distribution with
        Two-Level IS-IS";
   }
 
@@ -873,7 +876,7 @@ module ietf-routing-policy {
       "Identity for IS-IS Level 1 route type. It is only
        applicable to IS-IS routes.";
     reference
-      "RFC 5302 - Domain-Wide Prefix Distribution with
+      "RFC 5302: Domain-Wide Prefix Distribution with
        Two-Level IS-IS";
   }
 
@@ -883,7 +886,7 @@ module ietf-routing-policy {
       "Identity for IS-IS Level 2 route type. It is only
        applicable to IS-IS routes.";
     reference
-      "RFC 5302 - Domain-Wide Prefix Distribution with
+      "RFC 5302: Domain-Wide Prefix Distribution with
        Two-Level IS-IS";
   }
 
@@ -893,7 +896,7 @@ module ietf-routing-policy {
       "Identity for OSPF intra-area or inter-area route type.
        It is only applicable to OSPF routes.";
     reference
-      "RFC 2328 - OSPF Version 2";
+      "RFC 2328: OSPF Version 2";
   }
 
   identity ospf-external-type {
@@ -902,7 +905,7 @@ module ietf-routing-policy {
       "Identity for OSPF external type 1/2 route type.
        It is only applicable to OSPF routes.";
     reference
-      "RFC 2328 - OSPF Version 2";
+      "RFC 2328: OSPF Version 2";
   }
 
   identity ospf-external-t1-type {
@@ -911,7 +914,7 @@ module ietf-routing-policy {
       "Identity for OSPF external type 1 route type.
        It is only applicable to OSPF routes.";
     reference
-      "RFC 2328 - OSPF Version 2";
+      "RFC 2328: OSPF Version 2";
   }
 
   identity ospf-external-t2-type {
@@ -920,7 +923,7 @@ module ietf-routing-policy {
       "Identity for OSPF external type 2 route type.
        It is only applicable to OSPF routes.";
     reference
-      "RFC 2328 - OSPF Version 2";
+      "RFC 2328: OSPF Version 2";
   }
 
   identity ospf-nssa-type {
@@ -1013,9 +1016,9 @@ module ietf-routing-policy {
        including IS-IS and OSPF; may be expressed as either decimal
        or hexadecimal integer.";
     reference
-      "RFC 2328 - OSPF Version 2
-       RFC 5130 - A Policy Control Mechanism in IS-IS Using
-                  Administrative Tags";
+      "RFC 2328: OSPF Version 2
+       RFC 5130: A Policy Control Mechanism in IS-IS Using
+                 Administrative Tags";
   }
 
   typedef match-set-options-type {
@@ -1234,8 +1237,7 @@ module ietf-routing-policy {
       }
 
       description
-        "Match a referenced neighbor set according to the logic
-         defined in the match-set-options-leaf.";
+        "Match a referenced neighbor set.";
     }
   }
 
@@ -1257,7 +1259,7 @@ module ietf-routing-policy {
 
       description
         "Match a referenced tag set according to the logic defined
-         in the match-options-set leaf.";
+         in the match-set-options leaf.";
     }
   }
 
@@ -1375,11 +1377,11 @@ module ietf-routing-policy {
             }
             description
               "Indicates the mode of the prefix set, in terms of
-               which address families (IPv4, IPv6, or both) are
-               present. The mode provides a hint, all prefixes MUST
-               be of the indicated type. The device MUST validate
-               that all prefixes and reject the configuration if
-               there is a discrepancy.";
+               which address families (IPv4 or IPv6) are present.
+               The mode provides a hint, all prefixes MUST be of 
+               the indicated type. The device MUST validate that
+               all prefixes and reject the configuration if there
+               is a discrepancy.";
           }
 
           container prefixes {
@@ -1459,6 +1461,15 @@ module ietf-routing-policy {
         "Enclosing container for the list of top-level policy
          definitions.";
 
+      leaf match-modified-attributes {
+        type boolean;
+        config false;
+        description
+          "This boolean value dictates whether matches are performed 
+           on the actual route attributes or route attributes 
+           modified by policy statements preceding the match.";
+      }
+
       list policy-definition {
         key "name";
         description
@@ -1484,8 +1495,7 @@ module ietf-routing-policy {
             description
               "Policy statements group conditions and actions
                within a policy definition.  They are evaluated in
-               the order specified (see the description of policy
-               evaluation at the top of this module.";
+               the order specified.";
 
             leaf name {
               type string;
@@ -1647,7 +1657,6 @@ module ietf-routing-policy {
         effect on network operations. These are the subtrees and data nodes
         and their sensitivity/vulnerability:
         <list style="empty">
-          <t>/routing-policy</t>
           <t>/routing-policy/defined-sets/prefix-sets -- Modification to 
             prefix-sets could result in a Denial-of-Service (DoS) 
             attack. An attacker may try to modify prefix-sets and redirect 
@@ -1655,7 +1664,7 @@ module ietf-routing-policy {
             a more elaborate attack to either collect sensitive
             information or masquerade a service. Additionally, a control-plane
             DoS attack could be accomplished by allowing a large number of
-            routes to be leaked into a routing protocol domian (e.g., BGP).</t>
+            routes to be leaked into a routing protocol domain (e.g., BGP).</t>
           <t>/routing-policy/defined-sets/neighbor-sets -- Modification to
              the neighbor-sets could be used to mount a DoS attack or more
              elaborate attack as with prefix-sets. For 
@@ -1669,7 +1678,6 @@ module ietf-routing-policy {
             intent must be understood to recognize the breach. Conversely, 
             the implications of prefix-set or neighbor set modification are
             easier to recognize.</t>
-          <t>/routing-policy/policy-definitions</t>
           <t>/routing-policy/policy-definitions/policy-definition
              /statements/statement/conditions -- Modification to the conditions
              could be used to mount a DoS attack or other attack.
@@ -1694,7 +1702,7 @@ module ietf-routing-policy {
         <list style="empty">
           <t>/routing-policy/defined-sets/prefix-sets -- Knowledge of
             these data nodes can be used to ascertain which local prefixes
-            are suspectable to a Denial-of-Service (DoS) attack.</t>
+            are susceptible to a Denial-of-Service (DoS) attack.</t>
           <t>/routing-policy/defined-sets/prefix-sets -- Knowledge of
             these data nodes can be used to ascertain local neighbors
             against whom to mount a Denial-of-Service (DoS) attack.</t>
@@ -1779,44 +1787,6 @@ module ietf-routing-policy {
       &RFC8343;
       &RFC8349;
       &RFC8446;
-      <reference anchor="INTF-EXT-YANG"
-
-    target="https://datatracker.ietf.org/doc/draft-ietf-netmod-intf-ext-yang/">
-
-  <front>
-
-   <title>Common Interface Extension YANG Data Models</title>
-
-   <author>
-
-     <organization>Wilton, R., Ball, D., tapsingh@cisco.com, t., and S. Sivaraj,</organization>
-
-   </author>
-
-   <date year="2019" />
-
-       </front>
-
-     </reference>
-      <reference anchor="SUB-INTF-VLAN-YANG"
-
-    target="https://datatracker.ietf.org/doc/draft-ietf-netmod-sub-intf-vlan-model/">
-
-  <front>
-
-   <title>Sub-interface VLAN YANG Data Model</title>
-
-   <author>
-
-     <organization>Wilton, R., Ball, D., tapsingh@cisco.com, t., and S. Sivaraj</organization>
-
-   </author>
-
-   <date year="2019" />
-
-       </front>
-
-     </reference>
     </references>
 
     <references title="Informative references">
@@ -1884,6 +1854,7 @@ module: ietf-routing-policy
   |           +--rw bp:name      string
   |           +--rw bp:member*   string
   +--rw policy-definitions
+     +--ro match-modified-attributes?   boolean
      +--rw policy-definition* [name]
         +--rw name          string
         +--rw statements
