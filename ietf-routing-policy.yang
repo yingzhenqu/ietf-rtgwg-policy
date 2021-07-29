@@ -19,7 +19,7 @@ module ietf-routing-policy {
 
   import ietf-interfaces {
     prefix "if";
-    reference 
+    reference
       "RFC 8343: A YANG Data Model for Interface
                  Management (NMDA Version)";
   }
@@ -80,7 +80,7 @@ module ietf-routing-policy {
      and only when, they appear in all capitals, as shown here.";
 
   reference "RFC XXXX: A YANG Data Model for Routing Policy.";
-    
+
   revision "2021-07-28" {
     description
       "Initial revision.";
@@ -501,63 +501,6 @@ module ietf-routing-policy {
     }
   }
 
-  grouping apply-policy-import {
-    description
-      "Grouping for applying import policies.";
-
-    leaf-list import-policy {
-      type leafref {
-        path "/rt-pol:routing-policy/rt-pol:policy-definitions/" +
-          "rt-pol:policy-definition/rt-pol:name";
-        require-instance true;
-      }
-      ordered-by user;
-      description
-        "List of policy names in sequence to be applied on
-         receiving redistributed routes from another routing protocol
-         or receiving a routing update in the current context, e.g.,
-         for the current peer group, neighbor, address family,
-         etc.";
-    }
-
-    leaf default-import-policy {
-      type default-policy-type;
-      default reject-route;
-      description
-        "Explicitly set a default policy if no policy definition
-         in the import policy chain is satisfied.";
-    }
-
-  }
-
-  grouping apply-policy-export {
-    description
-      "Grouping for applying export policies.";
-
-    leaf-list export-policy {
-      type leafref {
-        path "/rt-pol:routing-policy/rt-pol:policy-definitions/" +
-          "rt-pol:policy-definition/rt-pol:name";
-        require-instance true;
-      }
-      ordered-by user;
-      description
-        "List of policy names in sequence to be applied on
-         redistributing routes from one routing protocol to another
-         or sending a routing update in the current context, e.g.,
-         for the current peer group, neighbor, address family,
-         etc.";
-    }
-
-    leaf default-export-policy {
-      type default-policy-type;
-      default reject-route;
-      description
-        "Explicitly set a default policy if no policy definition
-         in the export policy chain is satisfied.";
-    }
-  }
-
   grouping apply-policy-group {
     description
       "Top level container for routing policy applications. This
@@ -571,9 +514,49 @@ module ietf-routing-policy {
          routing table, i.e., export (send) and import (receive),
          depending on the context.";
 
-      uses apply-policy-import;
-      uses apply-policy-export;
+      leaf-list import-policy {
+        type leafref {
+          path "/rt-pol:routing-policy/rt-pol:policy-definitions/" +
+          "rt-pol:policy-definition/rt-pol:name";
+          require-instance true;
+        }
+        ordered-by user;
+        description
+          "List of policy names in sequence to be applied on
+          receiving redistributed routes from another routing protocol
+          or receiving a routing update in the current context, e.g.,
+          for the current peer group, neighbor, address family, etc.";
+      }
 
+      leaf default-import-policy {
+        type default-policy-type;
+        default reject-route;
+        description
+          "Explicitly set a default policy if no policy definition
+           in the import policy chain is satisfied.";
+      }
+
+      leaf-list export-policy {
+        type leafref {
+          path "/rt-pol:routing-policy/rt-pol:policy-definitions/" +
+            "rt-pol:policy-definition/rt-pol:name";
+          require-instance true;
+        }
+        ordered-by user;
+        description
+          "List of policy names in sequence to be applied on
+          redistributing routes from one routing protocol to another
+          or sending a routing update in the current context, e.g.,
+          for the current peer group, neighbor, address family, etc.";
+      }
+
+      leaf default-export-policy {
+        type default-policy-type;
+        default reject-route;
+        description
+          "Explicitly set a default policy if no policy definition
+           in the export policy chain is satisfied.";
+      }
     }
   }
 
@@ -616,7 +599,7 @@ module ietf-routing-policy {
             description
               "Indicates the mode of the prefix set, in terms of
                which address families (IPv4 or IPv6) are present.
-               The mode provides a hint, all prefixes MUST be of 
+               The mode provides a hint, all prefixes MUST be of
                the indicated type. The device MUST validate that
                all prefixes and reject the configuration if there
                is a discrepancy.";
@@ -703,8 +686,8 @@ module ietf-routing-policy {
         type boolean;
         config false;
         description
-          "This boolean value dictates whether matches are performed 
-           on the actual route attributes or route attributes 
+          "This boolean value dictates whether matches are performed
+           on the actual route attributes or route attributes
            modified by policy statements preceding the match.";
       }
 
@@ -904,10 +887,10 @@ module ietf-routing-policy {
               leaf set-route-preference {
                 type uint16;
                 description
-                  "Set the preference for the route. It is also 
-                   known as 'administrative distance', allows for 
-                   selecting the preferred route among routes with 
-                   the same destination prefix. A smaller value is 
+                  "Set the preference for the route. It is also
+                   known as 'administrative distance', allows for
+                   selecting the preferred route among routes with
+                   the same destination prefix. A smaller value is
                    more preferred.";
               }
               leaf set-tag {
@@ -919,12 +902,12 @@ module ietf-routing-policy {
                 type tag-type;
                 description
                   "Set the application tag for the route.
-                   The application-specific tag is an additional tag 
-                   that can be used by applications that require 
-                   semantics and/or policy different from that of the 
-                   tag. For example, the tag is usually automatically 
-                   advertised in OSPF AS-External Link State 
-                   Advertisements (LSAs) while this application-specific 
+                   The application-specific tag is an additional tag
+                   that can be used by applications that require
+                   semantics and/or policy different from that of the
+                   tag. For example, the tag is usually automatically
+                   advertised in OSPF AS-External Link State
+                   Advertisements (LSAs) while this application-specific
                    tag is not advertised implicitly.";
               }
             }
