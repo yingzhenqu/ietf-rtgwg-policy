@@ -28,7 +28,7 @@ module ietf-routing-policy {
     prefix "rt";
     reference
       "RFC 8349: A YANG Data Model for Routing
-               Management (NMDA Version)";
+                 Management (NMDA Version)";
   }
 
   organization
