@@ -44,7 +44,7 @@
       'http://xml.resource.org/public/rfc/bibxml/reference.RFC.8446.xml'>
     ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
-<rfc docName="draft-ietf-rtgwg-policy-model-30" ipr="trust200902" category="std">
+<rfc docName="draft-ietf-rtgwg-policy-model-31" ipr="trust200902" category="std">
 <?rfc toc="yes"?>
   <front>
     <title abbrev="Routing Policy Model">A YANG Data Model for Routing Policy</title>
@@ -61,7 +61,7 @@
       </address>
     </author>
     <author fullname="Jeff Tantsura" initials="J" surname="Tantsura">
-      <organization>Juniper Networks</organization>
+      <organization>Microsoft</organization>
       <address>
         <email>jefftant.ietf@gmail.com</email>
       </address>
@@ -106,7 +106,7 @@
       <t>This document describes a YANG <xref target="RFC7950"/> data model for routing
       policy configuration based on operational usage and best practices in a variety
       of service provider networks.  The model is intended to be vendor-neutral,
-      to allow operators to manage policy configuration in a consistent way in 
+      to allow operators to manage policy configuration consistently in 
       environments with routers supplied by multiple vendors.
       </t>
       <t> The YANG modules in this document conform to the Network Management
@@ -158,9 +158,8 @@
       <t>Routing policy: A routing policy defines how routes are
       imported, exported, modified, and advertised between routing
       protocol instances or within a single routing protocol instance.</t>
-      <t>Policy chain: A policy chain is a sequence of policy definitions 
-        (described in  <xref target="expression"/>). They can be referenced 
-        from different contexts.</t>
+      <t>Policy chain: A policy chain is a sequence of policy definitions. 
+        They can be referenced from different contexts.</t>
       <t>Policy statement: Policy statements consist of a set of conditions 
         and actions (either of which may be empty). </t>
       <t>The following terms are defined in <xref target="RFC8342"/>:
@@ -262,7 +261,7 @@
       definitions each of which consists of a sequence of policy statements.
       Policy statements in turn consist of simple condition-action
       tuples. Conditions may include multiple match or comparison
-      operations, and similarly, actions may effect multiple changes to
+      operations, and similarly, actions may include multiple changes to
       route attributes, or indicate a final disposition of accepting
       or rejecting the route.  This structure is shown below.
       </t>
@@ -498,7 +497,7 @@
         are a convenience in many routing policy constructions but
         creating policies nested beyond a small number of levels (e.g., 2-3)
         is discouraged. Also, implementations MUST validate
-        to ensure that there is no recursion amongst nested routing policies.
+        to ensure that there is no recursion among nested routing policies.
         </t>
 
       </section>
@@ -532,7 +531,7 @@
       </t>
 
       <t>
-      Whether or not the route's pre-policy attributes are used for
+      Whether the route's pre-policy attributes are used for
       testing policy statement conditions is dependent on the implementation
       specific value of the match-modified-attributes leaf. If match-modified-attributes 
       is false and actions modify route attributes, these modifications are not used for 
@@ -664,7 +663,7 @@ rw routing-policy
       </t>
         <figure>
         <artwork><![CDATA[
-<CODE BEGINS> file "ietf-routing-policy@2021-07-28.yang"
+<CODE BEGINS> file "ietf-routing-policy@2021-08-12.yang"
 module ietf-routing-policy {
 
   yang-version "1.1";
@@ -748,7 +747,7 @@ module ietf-routing-policy {
 
   reference "RFC XXXX: A YANG Data Model for Routing Policy.";
 
-  revision "2021-07-28" {
+  revision "2021-08-12" {
     description
       "Initial revision.";
     reference
@@ -858,8 +857,8 @@ module ietf-routing-policy {
   identity isis-level-1-2 {
     base route-level;
     description
-      "Identity for IS-IS Level 1 and Level 2 area importation. It
-       is only applicable to routes imported into the IS-IS
+      "Identity for IS-IS importation into both Level 1 and Level 2 
+       areas. It is only applicable to routes imported into the IS-IS
        protocol.";
     reference
       "RFC 5302: Domain-Wide Prefix Distribution with
@@ -1056,13 +1055,13 @@ module ietf-routing-policy {
       enum  add-metric {
         description
           "Add the specified value to the existing metric.
-           If the result would overflow the maximum metric
+           If the result overflows the maximum metric
            (0xffffffff), set the metric to the maximum.";
       }
       enum  subtract-metric {
         description
           "Subtract the specified value from the existing metric. If
-           the result would be less than 0, set the metric to 0.";
+           the result is less than 0, set the metric to 0.";
       }
     }
     description
@@ -1665,7 +1664,7 @@ module ietf-routing-policy {
             these data nodes can be used to ascertain local neighbors
             against whom to mount a Denial-of-Service (DoS) attack.</t>
           <t>/routing-policy/policy-definitions/policy-definition
-             /statements/ -- Knowledge of these data
+            /statements/ -- Knowledge of these data
              nodes can be used to attack the local router with a
              Denial-of-Service (DoS) attack.  Additionally, policies and
              their attendant conditions and actions should be considered
@@ -1717,7 +1716,7 @@ module ietf-routing-policy {
       Carl Moberg, Eric Osborne, Steve Padgett, Juergen Schoenwaelder,
       Jim Uttaro, Russ White, and John Heasley.
       </t>
-      <t>Thanks to Mahesh Jethanandani, John Scudder, Chris Bower and 
+      <t>Thanks to Mahesh Jethanandani, John Scudder, Chris Bowers and 
         Tom Petch for their reviews and comments.</t>
     </section>
   </middle>
